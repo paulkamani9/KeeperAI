@@ -162,6 +162,13 @@ This document outlines the coding standards, naming conventions, testing require
 - Optimize API calls with caching
 - Minimize bundle size
 
+## Development Workflow
+
+- Check for linting errors after implementing a feature using the linting tools
+- Only restart the development server (`npm run dev`) when necessary (configuration changes, etc.)
+- If the development server is already running, avoid restarting it unnecessarily
+- Use the linting feedback to fix issues before committing code
+
 ## Git Workflow
 
 - Create feature branches from `main`
