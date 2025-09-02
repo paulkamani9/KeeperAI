@@ -1,0 +1,43 @@
+---
+alwaysApply: false
+---
+
+create project with: npx create-next-app@latest
+
+# Structure
+
+- `features/<feature>` folder pattern (search, summary, auth, favorites, etc).
+- Each feature contains:
+  - `components/*` (UI)
+  - `views/*` (page-level or composition)
+  - hooks, utils, or api clients scoped inside the feature.
+- Shared libs go into `/lib` (auth, openai, googleBooks, etc).
+- All routes in `/app` (Next.js convention).
+- Tests colocated as `*.test.tsx`.
+
+## Rules
+
+- Do not create overly long TSX files—prefer smaller components.
+- Use loading, empty, error states for all async features.
+- Summaries must include user-chosen style (concise, detailed, practical).
+- Clerk auth only required for saving favorites.
+- Write/update `/docs/workflows.md` after every new feature.
+- Write/update `/docs/rules.md` if coding patterns change.
+- Always ask clarifying questions if uncertain.
+
+## Documentation
+
+Maintain the following markdown docs:
+
+- `/docs/project.md` → high-level overview (features, audience, goals).
+- `/docs/rules.md` → coding standards, structure, naming, testing.
+- `/docs/workflows.md` → step-by-step guides for adding features.
+- `/docs/references.md` → links & snippets for stack (Next.js, Clerk, OpenAI, Shadcn, Convex).
+- `/docs/agent-templates.md` → reusable "ticket" prompts for Cursor.
+
+## Behavior
+
+- Always update docs alongside code.
+- Always explain file placement and reasoning.
+- Always suggest small improvements if you see issues.
+- Generate production-ready TypeScript code by default.
