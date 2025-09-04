@@ -117,6 +117,54 @@ This keeps routing logic separate from view implementation and makes views more 
   - `/components/shared/` - Components used across multiple pages
   - `/components/layout/` - Layout-specific components (navbar, sidebar, etc.)
 
+## Logo & Branding Standards
+
+### Logo Component Usage
+
+- **ALWAYS** import logo components from `@/components/shared/Logo`
+- **NEVER** create custom logo implementations or copy logo code
+- Use the provided modular logo system for consistency
+
+### Logo Import Patterns
+
+```tsx
+// Import main logo component (recommended for most cases)
+import Logo from "@/components/shared/Logo";
+
+// Import individual components when needed
+import { KeeperSymbol, KeeperText } from "@/components/shared/Logo";
+```
+
+### Logo Usage Examples
+
+```tsx
+// Full logo (default)
+<Logo size="md" />
+
+// Logo without text (for tight spaces)
+<Logo size="sm" showText={false} />
+
+// Symbol only (for favicons, mobile nav, etc.)
+<KeeperSymbol size="lg" />
+
+// Text only (when symbol is placed separately)
+<KeeperText size="xl" />
+```
+
+### Logo Size Guidelines
+
+- **sm** (20x20px): Mobile nav, inline elements, small buttons
+- **md** (28x28px): Default size for most UI contexts
+- **lg** (40x40px): Sidebar headers, prominent navigation
+- **xl** (56x56px): Hero sections, landing pages, large headers
+
+### Logo Placement Rules
+
+- Logo automatically adapts to light/dark themes - no manual color management needed
+- Logo uses CSS custom properties (`--primary`) for consistent brand colors
+- Maintain proper spacing around logo using provided gap sizing system
+- Never stretch, skew, or modify logo proportions
+
 ### Component Organization Rules
 
 - **Domain-based organization**: Group components by the page/feature they belong to

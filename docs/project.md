@@ -8,6 +8,23 @@ Target users: Productivity nerds (self-help, business, psychology, history reade
 
 Design: Minimalist, IMDb-inspired card layout. Mobile-first.
 
+### Logo & Branding
+
+The KeeperAI logo consists of a modular design with:
+
+- **Symbol**: Geometric "K" in protective container (represents knowledge keeping and security)
+- **Wordmark**: "Keeper" in bold + "AI" in medium weight with primary color accent
+- **Adaptive**: Automatically switches between light/dark themes using CSS custom properties
+
+**Logo Usage Guidelines:**
+
+- Always import from `@/components/shared/Logo` with proper component references
+- Use `<Logo />` for full logo with symbol and text
+- Use `<KeeperSymbol />` for symbol-only contexts (favicons, tight spaces)
+- Use `<KeeperText />` for text-only contexts (when symbol is separate)
+- Available sizes: "sm", "md", "lg", "xl"
+- Use `showText={false}` to hide wordmark when needed
+
 ## Key Features
 
 - **Book Search**: Search for books using the Google Books API
