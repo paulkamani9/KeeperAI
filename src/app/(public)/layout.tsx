@@ -7,7 +7,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
     <SidebarProvider>
       <MainSidebar />
-      <main className="min-h-screen min-w-full">
+      <main className="min-h-screen">
         <MobileNavbar />
         {children}
       </main>
