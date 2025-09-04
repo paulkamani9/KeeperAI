@@ -6,5 +6,6 @@
 - **Google Books API** → https://developers.google.com/books/docs/v1/using
 - **OpenAI API** → https://platform.openai.com/docs/api-reference
 - **Shadcn UI** → https://ui.shadcn.com/docs
+- **Shadcn UI Sidebar** ->  https://ui.shadcn.com/docs/components/sidebar
 - **TailwindCSS** → https://tailwindcss.com/docs
 - **Vitest** → https://vitest.dev/guide/

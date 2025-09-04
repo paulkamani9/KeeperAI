@@ -1,4 +1,4 @@
-import { MainSidebar } from "@/components/Main/MainSidebar";
+import { MainSidebar } from "@/components/Sidebar/MainSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ReactNode } from "react";
 
