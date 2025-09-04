@@ -14,10 +14,10 @@ const SidebarUserButton = () => {
     <div className="flex items-center gap-4 p-2 border rounded-md shadow-sm">
       <UserButton />
       <div className="flex flex-col">
-        <p className="text-sm text-muted-foreground font-medium">
+        <p className="text-sm text-muted-foreground font-medium truncate">
           {user.firstName} {user.lastName}
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground truncate">
           {user.emailAddresses[0].emailAddress}
         </p>
       </div>

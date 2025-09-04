@@ -14,6 +14,7 @@ import {
 } from "../ui/sidebar";
 import { SidebarNavItem } from "./SidebarNavItem";
 import SidebarUserButton from "./SidebarUserButton";
+import { ModeToggle } from "../ModeToggle";
 
 // Navigation menu items
 const navigationItems = [
@@ -36,7 +37,7 @@ export const MainSidebar = () => {
         <Logo size="xl" />
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className="mt-4">
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -53,8 +54,16 @@ export const MainSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
+        <SidebarMenu className="">
           <SidebarUserButton />
+          <div className="flex items-center justify-between pl-2">
+            <div className="text-xs text-muted-foreground text-center flex-1">
+              <p>© {new Date().getFullYear()} Keeper AI.</p>
+              <a href="/terms" className="text-muted-foreground underline">Terms and Conditions</a>
+             
+            </div>
+            <ModeToggle />
+          </div>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
