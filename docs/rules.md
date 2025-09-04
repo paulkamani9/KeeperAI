@@ -42,33 +42,46 @@ This document outlines the coding standards, naming conventions, testing require
 
 - Follow Next.js App Router conventions with `app/` folder
 - Never mix UI and API logic in the same file
-- Organize code by features in the `/features` directory
+- **Page Structure Rule**: All `page.tsx` files should only contain view components
+- Create actual view components in `/src/views` directory
 - Keep shared utilities in `/lib`
 - Organize files by feature/domain:
   ```
   /app
-    /page.tsx
+    /page.tsx                    # Only imports and renders HomePage view
     /book
       /[id]
-        /page.tsx
+        /page.tsx               # Only imports and renders BookDetailPage view
     /favorites
-      /page.tsx
+      /page.tsx                 # Only imports and renders FavoritesPage view
     /api
       /search
         /route.ts
       /summarize
         /route.ts
-  /features
-    /search
-      /components
-      /views
-    /summary
-      /components
-      /views
-    /favorites
-      /components
-      /views
+  /views
+    /HomePage.tsx               # Actual home page implementation
+    /SearchPage.tsx             # Actual search page implementation
+    /BookDetailPage.tsx         # Actual book detail page implementation
+    /FavoritesPage.tsx          # Actual favorites page implementation
+  /components
+    /ui                         # Reusable UI components
+    /layout                     # Layout-specific components
   ```
+
+### Page Structure Pattern
+
+All `page.tsx` files should follow this minimal pattern:
+
+```tsx
+import { ViewName } from "@/views/ViewName";
+
+export default function PageName() {
+  return <ViewName />;
+}
+```
+
+This keeps routing logic separate from view implementation and makes views more reusable and testable.
 
 ## Component Structure
 
@@ -97,8 +110,44 @@ This document outlines the coding standards, naming conventions, testing require
 
 - Use ShadCN UI components as a foundation
 - Style components with TailwindCSS
-- Create reusable UI components in `/components/ui`
-- Create feature-specific components in `/components/features`
+- Organize components by domain/feature:
+  - `/components/ui/` - Base ShadCN UI components (button, card, input, etc.)
+  - `/components/home/` - Home page specific components
+  - `/components/search/` - Search page specific components
+  - `/components/shared/` - Components used across multiple pages
+  - `/components/layout/` - Layout-specific components (navbar, sidebar, etc.)
+
+### Component Organization Rules
+
+- **Domain-based organization**: Group components by the page/feature they belong to
+- **Shared components**: Place reusable components that are used across multiple domains in `/shared/`
+- **Base UI components**: Keep ShadCN and other foundational UI components in `/ui/`
+- **Layout components**: Keep navigation, headers, and layout components in `/layout/`
+
+Example structure:
+
+```
+components/
+├── home/
+│   ├── hero-section.tsx
+│   ├── feature-card.tsx
+│   ├── how-it-works-section.tsx
+│   └── cta-section.tsx
+├── search/
+│   ├── book-card.tsx
+│   ├── search-filters.tsx
+│   └── search-results.tsx
+├── shared/
+│   ├── page-footer.tsx
+│   └── loading-spinner.tsx
+├── layout/
+│   ├── Navbar.tsx
+│   └── Sidebar.tsx
+└── ui/                     # ShadCN components
+    ├── button.tsx
+    ├── card.tsx
+    └── input.tsx
+```
 
 ## API Integration
 

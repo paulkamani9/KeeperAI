@@ -1,5 +1,16 @@
 # Keeper AI Development Workflows
 
+## Current Project Status
+
+**Phase 1 Completed**: ✅ Basic project setup with Next.js, TailwindCSS, ShadCN, and Convex
+
+- Modern UI design with animated gradients
+- Responsive layout with mobile-first approach
+- Theme toggle and dark mode support
+- Basic navigation structure
+
+**Next Phase**: 🚧 Google Books API integration and search functionality
+
 ## Add a new feature
 
 1. Create `/features/<feature>/components` and `/features/<feature>/views`.
@@ -13,34 +24,77 @@
 
 ## Example: Add Google Books Search
 
-- Add `lib/googleBooks.ts` → typed client.
-- Add `features/search/components/SearchBar.tsx`.
-- Add `features/search/components/BookCard.tsx`.
-- Add `features/search/views/SearchView.tsx`.
-- Add `/app/page.tsx` → uses `SearchView`.
-- Add `/api/search/route.ts` → calls Google Books via server.
-- Test with Vitest.
+**Priority: HIGH** - Core functionality for the application
+
+- Add `lib/api/google-books.ts` → typed client with proper error handling.
+- Add `features/search/components/SearchBar.tsx` → enhanced search with filters.
+- Add `features/search/components/BookCard.tsx` → IMDb-inspired card design.
+- Add `features/search/components/BookGrid.tsx` → responsive grid layout.
+- Add `features/search/views/SearchView.tsx` → main search page composition.
+- Add `/app/search/page.tsx` → dedicated search route.
+- Add `/app/api/search/route.ts` → proxy API calls to Google Books.
+- Add loading states, error boundaries, and empty states.
+- Implement pagination for search results.
+- Test with Vitest and add E2E tests.
 - Commit + update docs.
 
-## Example: Add Summarization
+## Example: Add AI Summarization
 
-- Add `lib/openai.ts`.
-- Add API route `/api/summarize/route.ts`.
-- Add summary components in `features/summary`.
-- Wire button on book detail page.
-- Test minimal path.
+**Priority: HIGH** - Core AI functionality
+
+- Add `lib/api/openai.ts` → OpenAI client with proper prompting.
+- Add API route `/app/api/summarize/route.ts` → server-side AI calls.
+- Add `features/summary/components/SummaryOptions.tsx` → customizable summary types.
+- Add `features/summary/components/SummaryCard.tsx` → display generated summaries.
+- Add `features/summary/views/SummaryView.tsx` → summary page composition.
+- Add `/app/book/[id]/page.tsx` → book details with summary integration.
+- Implement different summary types (overview, key insights, actionable takeaways).
+- Add rate limiting and usage tracking for AI calls.
+- Test minimal path and edge cases.
 - Commit + update docs.
 
 ## Example: Add Clerk Authentication
 
+**Priority: MEDIUM** - Required for favorites and billing features
+
 - Install Clerk: `npm install @clerk/nextjs`
 - Create authentication utility in `lib/auth.ts`
-- Add middleware in `/app/middleware.ts` for route protection
-- Add authentication components to layout
-- Update environment variables
-- Protect the favorites route
-- Add sign in and sign up UI components
-- Test authentication flow
+- Add middleware in `/middleware.ts` for route protection
+- Add authentication components to layout (sign in/out buttons)
+- Update environment variables with Clerk keys
+- Protect the favorites route and premium features
+- Add sign in and sign up UI components with custom styling
+- Implement user profile management
+- Add authentication state management
+- Test authentication flow thoroughly
+- Commit + update docs.
+
+## Example: Add Favorites System
+
+**Priority: MEDIUM** - Requires authentication
+
+- Create Convex schema for user favorites
+- Add `convex/favorites.ts` → queries and mutations for favorites
+- Add `features/favorites/components/FavoriteButton.tsx` → toggle favorites
+- Add `features/favorites/components/FavoriteList.tsx` → display user's favorites
+- Add `features/favorites/views/FavoritesView.tsx` → favorites page
+- Add `/app/favorites/page.tsx` → protected favorites route
+- Integrate with book search and details pages
+- Add bulk operations (clear all, export)
+- Test with authenticated and unauthenticated users
+- Commit + update docs.
+
+## Example: Add Billing System
+
+**Priority: LOW** - Premium features
+
+- Install Stripe: `npm install stripe @stripe/stripe-js`
+- Create Stripe webhook handlers
+- Add subscription management in Convex
+- Add billing components and pricing page
+- Implement usage tracking and limits
+- Add subscription management UI
+- Test payment flows and edge cases
 - Commit + update docs.
 
 ## Initial Setup
@@ -65,7 +119,6 @@
    ```
 
 4. Add your API keys to `.env.local`:
-
    - `GOOGLE_BOOKS_API_KEY`: Get from [Google Cloud Console](https://console.cloud.google.com/)
    - `OPENAI_API_KEY`: Get from [OpenAI Dashboard](https://platform.openai.com/account/api-keys)
    - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`: Get from [Clerk Dashboard](https://dashboard.clerk.dev/)
