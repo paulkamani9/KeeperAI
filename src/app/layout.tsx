@@ -12,7 +12,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Book Keeper - Powerful AI Powered Book search with AI generated summaries",
+  title:
+    "Book Keeper - Powerful AI Powered Book search with AI generated summaries",
   description:
     "Book Keeper helps you discover books and get AI-generated summaries",
 };
@@ -33,7 +34,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <main>{children}</main>
+              {children}
             </ThemeProvider>
           </ConvexClientProvider>
         </ClerkProvider>
