@@ -43,3 +43,11 @@ next-env.d.ts
 .cursor/
 .vscode/    
 /docs
+
+# Github
+.github/
+.github/*
+
+# Documentation
+docs
+docs/*

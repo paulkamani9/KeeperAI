@@ -7,6 +7,10 @@
  * These types aim to be permissive and resilient to variations in the
  * JSON returned by each API (fields may be missing, in different shapes,
  * or be present in multiple formats).
+ */
+
+import { Id } from "../../convex/_generated/dataModel";
+
 // small helpers
 type MaybeArray<T> = T | T[] | undefined | null;
 type Maybe<T> = T | undefined | null;
@@ -232,5 +236,254 @@ export type FetcherResult<T> = {
   raw?: any;
   error?: any;
 };
+
+/** KeeperAI Backend Infrastructure Types */
+
+// Database Document Types (Generated from Convex)
+export interface User {
+  _id: Id<"users">;
+  _creationTime: number;
+  name: string;
+  email: string;
+  externalId: string;
+  preferences: string[];
+  createdAt: number;
+}
+
+export interface Favorite {
+  _id: Id<"favorites">;
+  _creationTime: number;
+  userId: Id<"users">;
+  bookId: string;
+  bookTitle: string;
+  bookAuthor: string;
+  genre?: string;
+  addedAt: number;
+}
+
+export interface Summary {
+  _id: Id<"summaries">;
+  _creationTime: number;
+  userId: Id<"users">;
+  bookId: string;
+  content: string;
+  mode: "brief" | "detailed" | "analysis";
+  generatedAt: number;
+}
+
+// API Response Types
+export interface APIResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  hasMore: boolean;
+  nextCursor?: string;
+  total?: number;
+}
+
+// Search Types
+export interface SearchQuery {
+  query: string;
+  mode: "searchMode" | "promptMode";
+  filters?: {
+    genre?: string;
+    author?: string;
+    publishYear?: string;
+    language?: string;
+  };
+  pagination?: {
+    limit: number;
+    offset: number;
+  };
+}
+
+export interface NormalizedBook {
+  id: string;
+  title: string;
+  authors: string[];
+  description?: string;
+  publishedDate?: string;
+  isbn?: string;
+  imageUrl?: string;
+  categories?: string[];
+  pageCount?: number;
+  language?: string;
+  source: "google" | "openlibrary";
+  score?: number; // Relevance score
+  confidence?: number; // For AI recommendations
+}
+
+export interface SearchResult {
+  books: NormalizedBook[];
+  totalResults: number;
+  searchTime: number;
+  source: "cache" | "api";
+  query: SearchQuery;
+  mode: "searchMode" | "promptMode";
+}
+
+// Enhanced Search Request/Response Types
+export interface SearchRequest {
+  query: string;
+  mode: "searchMode" | "promptMode";
+  userId?: string;
+  maxResults?: number;
+  useCache?: boolean;
+}
+
+export interface SearchResponse {
+  success: boolean;
+  data?: SearchResult;
+  error?: string;
+  message?: string;
+  cached: boolean;
+  processingTime: number;
+}
+
+// Book API Service Types
+export interface BookAPIResponse<T> {
+  success: boolean;
+  data: T[];
+  source: string;
+  error?: string;
+  processingTime: number;
+}
+
+export interface APIServiceConfig {
+  timeout: number;
+  maxRetries: number;
+  retryDelay: number;
+}
+
+// User Preference Update Types
+export interface PreferenceUpdate {
+  userId: string;
+  type: "search" | "favorite" | "comment";
+  bookTitle?: string;
+  searchTerm?: string;
+  genre?: string;
+  timestamp: number;
+}
+
+export interface UserPreferenceData {
+  searchTerm?: string;
+  bookName?: string;
+  genre?: string;
+  timestamp: number;
+}
+
+// Recommendation Types
+export interface RecommendationRequest {
+  userId?: string;
+  preferences: string[];
+  excludeBooks?: string[];
+  maxRecommendations?: number;
+  category?: string;
+  context?: "home" | "book-preview";
+}
+
+export interface BookRecommendation {
+  book: NormalizedBook;
+  reason: string;
+  confidence: number;
+  category?: string;
+}
+
+export interface RecommendationResponse {
+  recommendations: BookRecommendation[];
+  reasoning: string;
+  confidence: number;
+  generatedAt: number;
+  source: "ai" | "fallback";
+}
+
+// AI Service Types
+export interface PromptAnalysis {
+  intent: "search" | "recommendation" | "summary" | "question";
+  searchTerms?: string[];
+  filters?: SearchQuery["filters"];
+  confidence: number;
+  explanation: string;
+}
+
+export interface SummaryRequest {
+  book: Pick<NormalizedBook, "title" | "authors" | "description">;
+  mode: Summary["mode"];
+  userId: string;
+}
+
+// Cache Types
+export interface CacheMetadata {
+  key: string;
+  ttl: number;
+  createdAt: number;
+  hitCount?: number;
+  source: string;
+}
+
+export interface CachedItem<T> {
+  data: T;
+  metadata: CacheMetadata;
+}
+
+// Service Configuration Types
+export interface ServiceConfig {
+  redis: {
+    url: string;
+    token: string;
+  };
+  openai: {
+    apiKey: string;
+    model?: string;
+  };
+  googleBooks?: {
+    apiKey: string;
+  };
+  rateLimit?: {
+    maxRequests: number;
+    windowMs: number;
+  };
+}
+
+// Error Types
+export interface ServiceError {
+  code: string;
+  message: string;
+  service: "redis" | "openai" | "google-books" | "open-library" | "convex";
+  details?: any;
+  timestamp: number;
+}
+
+// Analytics Types
+export interface SearchAnalytics {
+  query: string;
+  resultCount: number;
+  searchTime: number;
+  source: string;
+  userId?: string;
+  timestamp: number;
+}
+
+export interface UserActivity {
+  userId: string;
+  action: "search" | "favorite" | "summary" | "recommendation";
+  metadata: any;
+  timestamp: number;
+}
+
+// Environment Types
+export interface EnvironmentConfig {
+  UPSTASH_REDIS_REST_URL: string;
+  UPSTASH_REDIS_REST_TOKEN: string;
+  OPENAI_API_KEY: string;
+  GOOGLE_BOOKS_API_KEY?: string;
+  NEXT_PUBLIC_CONVEX_URL: string;
+  CONVEX_DEPLOYMENT: string;
+}
 
 /** End of types */

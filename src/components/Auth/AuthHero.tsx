@@ -1,5 +1,5 @@
 import React from "react";
-import { BookOpen, Brain, Search, Zap } from "lucide-react";
+import { BookOpen, Search, Zap } from "lucide-react";
 import Logo from "@/components/shared/Logo";
 
 export const AuthHero = () => {

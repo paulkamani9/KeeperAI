@@ -15,8 +15,9 @@ export const upsertFromClerk = internalMutation({
     const userAttributes = {
       name: `${data.first_name} ${data.last_name}`,
       email: data.email_addresses[0].email_address,
-      imageUrl: data.image_url,
       externalId: data.id,
+      preferences: [] as string[], // Initialize empty preferences array
+      createdAt: Date.now(),
     };
 
     const user = await userByExternalId(ctx, data.id);
@@ -64,14 +65,49 @@ async function userByExternalId(ctx: QueryCtx, externalId: string) {
     .unique();
 }
 
-export const getUser = async (ctx:QueryCtx)=>{
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-        throw new Error("Called getUser without authentication present");
-    }
-    const user = await userByExternalId(ctx, identity.subject);
+export const getUser = async (ctx: QueryCtx) => {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) {
+    throw new Error("Called getUser without authentication present");
+  }
+  const user = await userByExternalId(ctx, identity.subject);
+  if (!user) {
+    throw new Error("Called getUser without authentication present");
+  }
+  return user;
+};
+
+export const updatePreferences = internalMutation({
+  args: {
+    userId: v.id("users"),
+    newPreference: v.string(),
+    maxPreferences: v.optional(v.number()),
+  },
+  async handler(ctx, { userId, newPreference, maxPreferences = 20 }) {
+    const user = await ctx.db.get(userId);
     if (!user) {
-        throw new Error("Called getUser without authentication present");
+      throw new Error("User not found");
     }
-    return user;
-}
+
+    const updatedPreferences = [
+      newPreference,
+      ...user.preferences.filter((p) => p !== newPreference),
+    ].slice(0, maxPreferences);
+
+    await ctx.db.patch(userId, {
+      preferences: updatedPreferences,
+    });
+  },
+});
+
+export const getPreferences = query({
+  args: {},
+  returns: v.array(v.string()),
+  async handler(ctx) {
+    const user = await getCurrentUser(ctx);
+    if (!user) {
+      return [];
+    }
+    return user.preferences;
+  },
+});
