@@ -7,6 +7,7 @@ import { Search, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useRef } from "react";
 
 type SearchMode = "search" | "prompt";
 
@@ -22,7 +23,28 @@ export function HeroSearchBar({
   const [query, setQuery] = useState("");
   const [mode, setMode] = useState<SearchMode>("search");
   const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
+
+  // Autofocus input on mount, unless minimal is true
+  React.useEffect(() => {
+    if (minimal) return;
+    // slight delay to ensure element is mounted and visible
+    const t = setTimeout(() => {
+      try {
+        inputRef.current?.focus();
+        const val = inputRef.current?.value ?? "";
+        if (inputRef.current && typeof val === "string") {
+          inputRef.current.selectionStart = val.length;
+          inputRef.current.selectionEnd = val.length;
+        }
+      } catch (e) {
+        // noop
+      }
+    }, 120);
+
+    return () => clearTimeout(t);
+  }, [minimal]);
 
   const handleSearch = () => {
     if (!query.trim()) return;
@@ -43,6 +65,21 @@ export function HeroSearchBar({
 
   const handleModeChange = (newMode: SearchMode) => {
     setMode(newMode);
+    // Keep focus on the input after switching modes
+    // Slight timeout to let button blur complete then focus input
+    setTimeout(() => {
+      try {
+        inputRef.current?.focus();
+        // Move cursor to end
+        const val = inputRef.current?.value ?? "";
+        if (inputRef.current && typeof val === "string") {
+          inputRef.current.selectionStart = val.length;
+          inputRef.current.selectionEnd = val.length;
+        }
+      } catch (e) {
+        // no-op if focus fails
+      }
+    }, 0);
   };
 
   return (
@@ -67,6 +104,8 @@ export function HeroSearchBar({
                 onKeyDown={handleKeyDown}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                // Attach ref to underlying input element. Input component should forwardRef.
+                ref={inputRef}
                 placeholder={
                   mode === "search"
                     ? "Search for books, authors, or topics..."
