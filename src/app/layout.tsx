@@ -39,7 +39,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <main className="min-h-screen min-w-full">{children}</main>
+              <main>{children}</main>
             </ThemeProvider>
           </ConvexClientProvider>
         </ClerkProvider>

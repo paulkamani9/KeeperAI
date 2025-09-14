@@ -1,5 +1,7 @@
-import { HomePage } from "@/views/HomePage";
 
-export default function Home() {
-  return <HomePage />;
+
+export default function HomePage() {
+  return (
+    <div>Restart</div>
+  )
 }
