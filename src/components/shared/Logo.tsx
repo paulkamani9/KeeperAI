@@ -70,7 +70,7 @@ const KeeperSymbol = ({ size = "md", className }: LogoSymbolProps) => {
         cx="22"
         cy="10"
         r="2"
-        fill="#00afa7"
+        fill="white"
         className="opacity-90"
       />
     </svg>
