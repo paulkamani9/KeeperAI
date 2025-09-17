@@ -65,7 +65,13 @@ class UpstashCache implements CacheAdapter {
         }
       );
 
-      if (!response.ok) return null;
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(
+          `Cache GET error: HTTP ${response.status} ${response.statusText} for key "${key}". Response body: ${errorText}`
+        );
+        return null;
+      }
 
       const data = await response.json();
       return data.result;
