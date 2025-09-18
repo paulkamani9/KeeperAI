@@ -1,11 +1,11 @@
 /**
  * Standardized Error Handling System
- * 
+ *
  * Provides consistent error types, handling, and user-friendly messages
  * across all services and components in the application.
  */
 
-import * as React from 'react';
+import * as React from "react";
 
 /**
  * Standard error categories for consistent handling
@@ -14,7 +14,7 @@ export enum ErrorCategory {
   /** Network connectivity issues */
   NETWORK = "NETWORK",
   /** API service errors (rate limits, authentication, etc.) */
-  API = "API", 
+  API = "API",
   /** Client-side validation errors */
   VALIDATION = "VALIDATION",
   /** Application configuration errors */
@@ -22,7 +22,7 @@ export enum ErrorCategory {
   /** Unexpected runtime errors */
   RUNTIME = "RUNTIME",
   /** User permission/authorization errors */
-  AUTHORIZATION = "AUTHORIZATION"
+  AUTHORIZATION = "AUTHORIZATION",
 }
 
 /**
@@ -32,11 +32,11 @@ export enum ErrorSeverity {
   /** Low severity - informational, doesn't block functionality */
   LOW = "LOW",
   /** Medium severity - limits some functionality */
-  MEDIUM = "MEDIUM", 
+  MEDIUM = "MEDIUM",
   /** High severity - blocks core functionality */
   HIGH = "HIGH",
   /** Critical severity - application unusable */
-  CRITICAL = "CRITICAL"
+  CRITICAL = "CRITICAL",
 }
 
 /**
@@ -82,9 +82,11 @@ export function createStandardizedError(config: {
   originalError?: Error;
 }): StandardizedError {
   const errorId = generateErrorId();
-  
-  const error = new Error(config.technicalMessage || config.userMessage) as StandardizedError;
-  
+
+  const error = new Error(
+    config.technicalMessage || config.userMessage
+  ) as StandardizedError;
+
   error.name = `${config.category}_ERROR`;
   error.category = config.category;
   error.severity = config.severity;
@@ -119,16 +121,17 @@ export const ErrorFactories = {
     createStandardizedError({
       category: ErrorCategory.NETWORK,
       severity: ErrorSeverity.MEDIUM,
-      userMessage: "Network error. Please check your internet connection and try again.",
+      userMessage:
+        "Network error. Please check your internet connection and try again.",
       technicalMessage: "Network request failed",
       suggestions: [
         "Check your internet connection",
         "Try refreshing the page",
-        "Contact support if the problem persists"
+        "Contact support if the problem persists",
       ],
       retryable: true,
       originalError,
-      context
+      context,
     }),
 
   /**
@@ -142,12 +145,12 @@ export const ErrorFactories = {
       technicalMessage: "API rate limit exceeded",
       suggestions: [
         "Wait a few minutes before trying again",
-        "Reduce the frequency of your requests"
+        "Reduce the frequency of your requests",
       ],
       retryable: true,
       statusCode: 429,
       originalError,
-      context
+      context,
     }),
 
   /**
@@ -162,18 +165,22 @@ export const ErrorFactories = {
       suggestions: [
         "Sign in to your account",
         "Check your account permissions",
-        "Contact support if you believe this is an error"
+        "Contact support if you believe this is an error",
       ],
       retryable: false,
       statusCode: 401,
       originalError,
-      context
+      context,
     }),
 
   /**
    * Invalid user input
    */
-  validation: (field: string, reason: string, context?: Record<string, unknown>) =>
+  validation: (
+    field: string,
+    reason: string,
+    context?: Record<string, unknown>
+  ) =>
     createStandardizedError({
       category: ErrorCategory.VALIDATION,
       severity: ErrorSeverity.LOW,
@@ -181,17 +188,21 @@ export const ErrorFactories = {
       technicalMessage: `Validation failed for field '${field}': ${reason}`,
       suggestions: [
         `Please check your ${field} and try again`,
-        "Make sure all required fields are filled out correctly"
+        "Make sure all required fields are filled out correctly",
       ],
       retryable: false,
       statusCode: 400,
-      context: { field, reason, ...context }
+      context: { field, reason, ...context },
     }),
 
   /**
    * Service configuration error
    */
-  configuration: (service: string, originalError?: Error, context?: Record<string, unknown>) =>
+  configuration: (
+    service: string,
+    originalError?: Error,
+    context?: Record<string, unknown>
+  ) =>
     createStandardizedError({
       category: ErrorCategory.CONFIGURATION,
       severity: ErrorSeverity.CRITICAL,
@@ -199,17 +210,21 @@ export const ErrorFactories = {
       technicalMessage: `${service} service is not properly configured`,
       suggestions: [
         "Try again in a few minutes",
-        "Contact support if the problem persists"
+        "Contact support if the problem persists",
       ],
       retryable: true,
       originalError,
-      context: { service, ...context }
+      context: { service, ...context },
     }),
 
   /**
    * Unexpected runtime error
    */
-  runtime: (message: string, originalError?: Error, context?: Record<string, unknown>) =>
+  runtime: (
+    message: string,
+    originalError?: Error,
+    context?: Record<string, unknown>
+  ) =>
     createStandardizedError({
       category: ErrorCategory.RUNTIME,
       severity: ErrorSeverity.HIGH,
@@ -217,11 +232,11 @@ export const ErrorFactories = {
       technicalMessage: message,
       suggestions: [
         "Refresh the page and try again",
-        "Contact support if the problem continues"
+        "Contact support if the problem continues",
       ],
       retryable: true,
       originalError,
-      context
+      context,
     }),
 
   /**
@@ -237,28 +252,36 @@ export const ErrorFactories = {
         suggestions: [
           "Try different or broader search terms",
           "Check your spelling",
-          "Use fewer specific keywords"
+          "Use fewer specific keywords",
         ],
         retryable: false,
-        context: { query, ...context }
+        context: { query, ...context },
       }),
 
-    serviceUnavailable: (originalError?: Error, context?: Record<string, unknown>) =>
+    serviceUnavailable: (
+      originalError?: Error,
+      context?: Record<string, unknown>
+    ) =>
       createStandardizedError({
         category: ErrorCategory.API,
         severity: ErrorSeverity.HIGH,
-        userMessage: "Search service is temporarily unavailable. Please try again later.",
+        userMessage:
+          "Search service is temporarily unavailable. Please try again later.",
         technicalMessage: "Book search service is not accessible",
         suggestions: [
           "Try again in a few minutes",
-          "Use a different search method if available"
+          "Use a different search method if available",
         ],
         retryable: true,
         originalError,
-        context
+        context,
       }),
 
-    invalidQuery: (query: string, reason: string, context?: Record<string, unknown>) =>
+    invalidQuery: (
+      query: string,
+      reason: string,
+      context?: Record<string, unknown>
+    ) =>
       createStandardizedError({
         category: ErrorCategory.VALIDATION,
         severity: ErrorSeverity.LOW,
@@ -267,20 +290,23 @@ export const ErrorFactories = {
         suggestions: [
           "Make sure your search query is not empty",
           "Use only letters, numbers, and common punctuation",
-          "Keep queries under 200 characters"
+          "Keep queries under 200 characters",
         ],
         retryable: false,
-        context: { query, reason, ...context }
-      })
-  }
+        context: { query, reason, ...context },
+      }),
+  },
 };
 
 /**
  * Convert unknown error to standardized error
  */
-export function standardizeError(error: unknown, context?: Record<string, unknown>): StandardizedError {
+export function standardizeError(
+  error: unknown,
+  context?: Record<string, unknown>
+): StandardizedError {
   // Already standardized
-  if (error && typeof error === 'object' && 'category' in error) {
+  if (error && typeof error === "object" && "category" in error) {
     return error as StandardizedError;
   }
 
@@ -288,21 +314,27 @@ export function standardizeError(error: unknown, context?: Record<string, unknow
   if (error instanceof Error) {
     // Check for common error patterns
     const message = error.message.toLowerCase();
-    
-    if (message.includes('network') || message.includes('fetch')) {
+
+    if (message.includes("network") || message.includes("fetch")) {
       return ErrorFactories.network(error, context);
     }
-    
-    if (message.includes('rate limit') || message.includes('too many requests')) {
+
+    if (
+      message.includes("rate limit") ||
+      message.includes("too many requests")
+    ) {
       return ErrorFactories.rateLimit(error, context);
     }
-    
-    if (message.includes('unauthorized') || message.includes('authentication')) {
+
+    if (
+      message.includes("unauthorized") ||
+      message.includes("authentication")
+    ) {
       return ErrorFactories.unauthorized(error, context);
     }
-    
-    if (message.includes('not configured') || message.includes('missing')) {
-      return ErrorFactories.configuration('API', error, context);
+
+    if (message.includes("not configured") || message.includes("missing")) {
+      return ErrorFactories.configuration("API", error, context);
     }
 
     // Generic error wrapping
@@ -310,14 +342,14 @@ export function standardizeError(error: unknown, context?: Record<string, unknow
   }
 
   // String error
-  if (typeof error === 'string') {
+  if (typeof error === "string") {
     return ErrorFactories.runtime(error, undefined, context);
   }
 
   // Unknown error type
-  return ErrorFactories.runtime('An unknown error occurred', undefined, { 
+  return ErrorFactories.runtime("An unknown error occurred", undefined, {
     originalType: typeof error,
-    ...context 
+    ...context,
   });
 }
 
@@ -325,7 +357,10 @@ export function standardizeError(error: unknown, context?: Record<string, unknow
  * Error logging utility
  */
 export class ErrorLogger {
-  static log(error: StandardizedError, additionalContext?: Record<string, unknown>): void {
+  static log(
+    error: StandardizedError,
+    additionalContext?: Record<string, unknown>
+  ): void {
     const logData = {
       errorId: error.errorId,
       category: error.category,
@@ -333,25 +368,28 @@ export class ErrorLogger {
       userMessage: error.userMessage,
       technicalMessage: error.technicalMessage,
       timestamp: error.timestamp,
-      context: { ...error.context, ...additionalContext }
+      context: { ...error.context, ...additionalContext },
     };
 
     // In development, log full error details
-    if (process.env.NODE_ENV === 'development') {
-      console.error('StandardizedError:', logData);
+    if (process.env.NODE_ENV === "development") {
+      console.error("StandardizedError:", logData);
       if (error.originalError) {
-        console.error('Original Error:', error.originalError);
+        console.error("Original Error:", error.originalError);
       }
     }
 
     // In production, send to analytics/monitoring service
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === "production") {
       // TODO: Integrate with your logging service (e.g., Sentry, LogRocket)
       // Example: Sentry.captureException(error, { extra: logData });
     }
   }
 
-  static logAndThrow(error: StandardizedError, additionalContext?: Record<string, unknown>): never {
+  static logAndThrow(
+    error: StandardizedError,
+    additionalContext?: Record<string, unknown>
+  ): never {
     this.log(error, additionalContext);
     throw error;
   }
@@ -361,7 +399,10 @@ export class ErrorLogger {
  * React hook for error handling
  */
 export interface UseErrorHandlerReturn {
-  handleError: (error: unknown, context?: Record<string, unknown>) => StandardizedError;
+  handleError: (
+    error: unknown,
+    context?: Record<string, unknown>
+  ) => StandardizedError;
   clearError: () => void;
   currentError: StandardizedError | null;
 }
@@ -370,14 +411,18 @@ export interface UseErrorHandlerReturn {
  * Hook for consistent error handling in React components
  */
 export function useErrorHandler(): UseErrorHandlerReturn {
-  const [currentError, setCurrentError] = React.useState<StandardizedError | null>(null);
+  const [currentError, setCurrentError] =
+    React.useState<StandardizedError | null>(null);
 
-  const handleError = React.useCallback((error: unknown, context?: Record<string, unknown>): StandardizedError => {
-    const standardError = standardizeError(error, context);
-    ErrorLogger.log(standardError);
-    setCurrentError(standardError);
-    return standardError;
-  }, []);
+  const handleError = React.useCallback(
+    (error: unknown, context?: Record<string, unknown>): StandardizedError => {
+      const standardError = standardizeError(error, context);
+      ErrorLogger.log(standardError);
+      setCurrentError(standardError);
+      return standardError;
+    },
+    []
+  );
 
   const clearError = React.useCallback(() => {
     setCurrentError(null);
@@ -386,6 +431,6 @@ export function useErrorHandler(): UseErrorHandlerReturn {
   return {
     handleError,
     clearError,
-    currentError
+    currentError,
   };
 }

@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useRouter, useSearchParams } from "next/navigation";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";

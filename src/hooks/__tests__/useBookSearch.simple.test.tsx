@@ -32,8 +32,8 @@ function createTestWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        retry: false, 
-        gcTime: 0, 
+        retry: false,
+        gcTime: 0,
         staleTime: 0,
       },
     },
@@ -99,9 +99,12 @@ describe("useBookSearch - Simplified", () => {
         { wrapper }
       );
 
-      await waitFor(() => {
-        expect(result.current.isLoading).toBe(false);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.isLoading).toBe(false);
+        },
+        { timeout: 3000 }
+      );
 
       expect(mockSearchService.searchBooks).toHaveBeenCalledWith({
         query: "test query",
@@ -116,14 +119,16 @@ describe("useBookSearch - Simplified", () => {
       mockSearchService.searchBooks.mockRejectedValue(searchError);
       const wrapper = createTestWrapper();
 
-      const { result } = renderHook(
-        () => useBookSearch({ query: "test" }),
-        { wrapper }
-      );
+      const { result } = renderHook(() => useBookSearch({ query: "test" }), {
+        wrapper,
+      });
 
-      await waitFor(() => {
-        expect(result.current.isError).toBe(true);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.isError).toBe(true);
+        },
+        { timeout: 3000 }
+      );
 
       expect(result.current.error).toBeTruthy();
     });
@@ -142,9 +147,14 @@ describe("useBookSearch - Simplified", () => {
 
       renderHook(() => useBookSearch(searchParams), { wrapper });
 
-      await waitFor(() => {
-        expect(mockSearchService.searchBooks).toHaveBeenCalledWith(searchParams);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(mockSearchService.searchBooks).toHaveBeenCalledWith(
+            searchParams
+          );
+        },
+        { timeout: 3000 }
+      );
     });
   });
 
@@ -166,9 +176,12 @@ describe("useBookSearch - Simplified", () => {
       // Resolve the promise
       resolveSearch!(mockSearchResults);
 
-      await waitFor(() => {
-        expect(result.current.isLoading).toBe(false);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.isLoading).toBe(false);
+        },
+        { timeout: 3000 }
+      );
 
       expect(result.current.data).toEqual(mockSearchResults);
     });
