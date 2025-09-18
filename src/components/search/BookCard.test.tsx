@@ -3,11 +3,12 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { BookCard, type Book } from "./BookCard";
+import Image from "next/image";
 
 // Mock Next.js Image component
 vi.mock("next/image", () => ({
   default: ({ src, alt, className, ...props }: any) => (
-    <img src={src} alt={alt} className={className} {...props} />
+    <Image src={src} alt={alt} className={className} {...props} />
   ),
 }));
 
@@ -359,7 +360,6 @@ describe("BookCard", () => {
 
     it("does not call favorite toggle when loading", async () => {
       const mockOnFavoriteToggle = vi.fn();
-      const user = userEvent.setup();
 
       render(
         <BookCard

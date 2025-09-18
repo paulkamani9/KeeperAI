@@ -19,7 +19,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import Logo, { KeeperSymbol } from "@/components/shared/Logo";
+import { KeeperSymbol } from "@/components/shared/Logo";
 
 interface NavItem {
   href: string;
