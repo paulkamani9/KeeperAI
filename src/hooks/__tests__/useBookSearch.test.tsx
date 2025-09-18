@@ -12,6 +12,21 @@ vi.mock("../../services/searchService", () => ({
   createUnifiedSearchService: vi.fn(),
 }));
 
+// Mock Convex
+vi.mock("convex/react", () => ({
+  useConvex: vi.fn(() => ({})),
+}));
+
+// Mock search analytics
+vi.mock("../../lib/analytics/searchTracking", () => ({
+  createSearchAnalyticsService: vi.fn(() => ({
+    createSearchTimer: () => ({
+      start: vi.fn(),
+      end: vi.fn(() => 150),
+    }),
+  })),
+}));
+
 // Create test wrapper for React Query
 function createTestWrapper() {
   const queryClient = new QueryClient({

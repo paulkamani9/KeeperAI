@@ -247,12 +247,13 @@ describe("ResultsList", () => {
         <ResultsList results={mockResults} favoriteBookIds={favoriteIds} />
       );
 
-      const book1 = screen
-        .getByTestId("book-card")
-        .querySelector('[data-book-id="1"]');
-      const book2 = screen
-        .getByTestId("book-card")
-        .querySelector('[data-book-id="2"]');
+      const bookCards = screen.getAllByTestId("book-card");
+      const book1 = bookCards.find(
+        (card) => card.getAttribute("data-book-id") === "1"
+      );
+      const book2 = bookCards.find(
+        (card) => card.getAttribute("data-book-id") === "2"
+      );
 
       expect(book1).toHaveAttribute("data-favorite", "true");
       expect(book2).toHaveAttribute("data-favorite", "false");
@@ -263,9 +264,10 @@ describe("ResultsList", () => {
     it("displays results count and query", () => {
       render(<ResultsList results={mockResults} />);
 
-      expect(
-        screen.getByText(/Showing 1-10 of 25 results for "programming books"/)
-      ).toBeInTheDocument();
+      expect(screen.getByText("Showing")).toBeInTheDocument();
+      expect(screen.getByText("1-10")).toBeInTheDocument();
+      expect(screen.getByText(/of 25 results/)).toBeInTheDocument();
+      expect(screen.getByText('"programming books"')).toBeInTheDocument();
     });
 
     it("displays search time", () => {
@@ -419,7 +421,7 @@ describe("ResultsList", () => {
 
       render(<ResultsList results={manyPagesResults} />);
 
-      expect(screen.getByText("...")).toBeInTheDocument();
+      expect(screen.getAllByText("...")).toHaveLength(2);
     });
   });
 

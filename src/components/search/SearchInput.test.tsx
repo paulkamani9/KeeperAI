@@ -29,9 +29,6 @@ describe("SearchInput", () => {
     (useRouter as any).mockReturnValue({ push: mockPush });
     (useSearchParams as any).mockReturnValue(mockSearchParams);
     mockSearchParams.get.mockReturnValue(null);
-
-    // Mock timers for debouncing
-    vi.useFakeTimers();
   });
 
   afterEach(() => {
@@ -105,7 +102,7 @@ describe("SearchInput", () => {
 
   describe("User Input and Debouncing", () => {
     it("handles typing and updates input value", async () => {
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<SearchInput />);
 
       const input = screen.getByRole("textbox");
@@ -116,7 +113,7 @@ describe("SearchInput", () => {
     });
 
     it("debounces validation with 300ms delay", async () => {
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<SearchInput />);
 
       const input = screen.getByRole("textbox");
@@ -126,6 +123,11 @@ describe("SearchInput", () => {
 
       // Before debounce time, no error should be visible
       expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+
+      // Advance timers to trigger debounce
+      act(() => {
+        vi.advanceTimersByTime(300);
+      });
 
       // After debounce time, error should appear
       act(() => {
@@ -141,7 +143,7 @@ describe("SearchInput", () => {
     });
 
     it("shows loading indicator during validation debounce", async () => {
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<SearchInput />);
 
       const input = screen.getByRole("textbox");
@@ -324,7 +326,7 @@ describe("SearchInput", () => {
 
   describe("Validation", () => {
     it("shows error for queries over 200 characters", async () => {
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<SearchInput />);
 
       const input = screen.getByRole("textbox");
@@ -345,7 +347,7 @@ describe("SearchInput", () => {
     });
 
     it("prevents submission of invalid queries", async () => {
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<SearchInput />);
 
       const input = screen.getByRole("textbox");
@@ -370,7 +372,7 @@ describe("SearchInput", () => {
     });
 
     it("clears validation errors when input becomes valid", async () => {
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<SearchInput />);
 
       const input = screen.getByRole("textbox");
@@ -427,7 +429,7 @@ describe("SearchInput", () => {
     });
 
     it("associates error messages with input", async () => {
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<SearchInput />);
 
       const input = screen.getByRole("textbox");
@@ -449,7 +451,9 @@ describe("SearchInput", () => {
     it("provides keyboard navigation hints", () => {
       render(<SearchInput />);
 
-      expect(screen.getByText(/press.*ctrl\+k.*to focus/i)).toBeInTheDocument();
+      expect(screen.getByText("Press")).toBeInTheDocument();
+      expect(screen.getByText("Ctrl+K")).toBeInTheDocument();
+      expect(screen.getByText("to focus")).toBeInTheDocument();
     });
 
     it("hides keyboard hints in compact mode", () => {
