@@ -52,7 +52,7 @@ export default defineConfig({
     },
     // Test timeout settings - reduced to catch hanging tests faster
     testTimeout: 10000,
-    hookTimeout: 10000,
+    hookTimeout: 5000,
     // Retry failed tests once to handle flaky tests
     retry: 1,
     // Reporter configuration for better output
