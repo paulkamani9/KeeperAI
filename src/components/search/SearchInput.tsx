@@ -259,8 +259,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
               )}
               disabled
               title="Image search (coming soon)"
+              aria-label="Image search (coming soon)"
             >
-              <Image className={cn(isCompact ? "h-3 w-3" : "h-4 w-4")} />
+              <Image className={cn(isCompact ? "h-3 w-3" : "h-4 w-4")} aria-hidden="true" />
             </Button>
           </div>
 

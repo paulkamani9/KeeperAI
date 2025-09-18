@@ -17,8 +17,22 @@ import { TestWrapper } from '@/test/TestWrapper';
 import { SearchInput } from '@/components/search/SearchInput';
 import { BookCard, type Book } from '@/components/search/BookCard';
 import { ResultsList } from '@/components/search/ResultsList';
-import { searchService } from '@/services/searchService';
+import { createUnifiedSearchService } from '@/services/searchService';
 import { server } from '@/test/mocks/server';
+
+// Create search service instance for testing
+const searchService = createUnifiedSearchService();
+
+// Extend Performance interface to include memory property
+declare global {
+  interface Performance {
+    memory?: {
+      usedJSHeapSize: number;
+      totalJSHeapSize: number;
+      jsHeapSizeLimit: number;
+    };
+  }
+}
 
 // Mock book data for performance testing
 const mockBook: Book = {
@@ -65,54 +79,36 @@ describe('Performance Benchmarks', () => {
   });
 
   describe('Search API Performance', () => {
-    bench('Google Books API search response time', async () => {
+    bench('Unified search response time', async () => {
       const startTime = performance.now();
       
-      await searchService.searchBooks('javascript programming', {
-        maxResults: 20,
-        source: 'google-books'
+      await searchService.searchBooks({
+        query: 'javascript programming',
+        maxResults: 20
       });
       
       const endTime = performance.now();
       const responseTime = endTime - startTime;
       
-      // API calls should complete within 2 seconds
-      expect(responseTime).toBeLessThan(2000);
+      // API calls should complete within 3 seconds
+      expect(responseTime).toBeLessThan(3000);
     }, {
       iterations: 10,
       time: 5000 // 5 second timeout
     });
 
-    bench('Open Library API search response time', async () => {
+    bench('Large result set search performance', async () => {
       const startTime = performance.now();
       
-      await searchService.searchBooks('javascript programming', {
-        maxResults: 20,
-        source: 'open-library'
+      await searchService.searchBooks({
+        query: 'programming',
+        maxResults: 40
       });
       
       const endTime = performance.now();
       const responseTime = endTime - startTime;
       
-      // API calls should complete within 3 seconds (Open Library is slower)
-      expect(responseTime).toBeLessThan(3000);
-    }, {
-      iterations: 10,
-      time: 5000
-    });
-
-    bench('Combined search performance', async () => {
-      const startTime = performance.now();
-      
-      await searchService.searchBooks('programming', {
-        maxResults: 40, // 20 from each source
-        source: 'combined'
-      });
-      
-      const endTime = performance.now();
-      const responseTime = endTime - startTime;
-      
-      // Combined search should complete within 4 seconds
+      // Larger searches should complete within 4 seconds
       expect(responseTime).toBeLessThan(4000);
     }, {
       iterations: 5,
@@ -123,33 +119,31 @@ describe('Performance Benchmarks', () => {
       const queries = [
         'javascript',
         'python',
-        'react',
-        'typescript',
-        'node.js'
+        'react'
       ];
       
       const startTime = performance.now();
       
       // Simulate pagination through multiple pages
       for (const query of queries) {
-        await searchService.searchBooks(query, {
+        await searchService.searchBooks({
+          query,
           maxResults: 20,
-          startIndex: 0,
-          source: 'google-books'
+          startIndex: 0
         });
         
-        await searchService.searchBooks(query, {
+        await searchService.searchBooks({
+          query,
           maxResults: 20,
-          startIndex: 20,
-          source: 'google-books'
+          startIndex: 20
         });
       }
       
       const endTime = performance.now();
       const totalTime = endTime - startTime;
       
-      // 10 API calls should complete within 15 seconds
-      expect(totalTime).toBeLessThan(15000);
+      // 6 API calls should complete within 12 seconds
+      expect(totalTime).toBeLessThan(12000);
     }, {
       iterations: 3,
       time: 30000

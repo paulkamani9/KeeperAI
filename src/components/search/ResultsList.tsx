@@ -248,7 +248,7 @@ export const ResultsList: React.FC<ResultsListProps> = ({
                 {results.query && (
                   <>
                     {" "}
-                    for <span className="font-medium">"{results.query}"</span>
+                    for <span className="font-medium">&ldquo;{results.query}&rdquo;</span>
                   </>
                 )}
               </span>

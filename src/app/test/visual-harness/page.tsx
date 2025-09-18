@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { SearchInput } from "@/components/search/SearchInput";
 import { BookCard, type Book } from "@/components/search/BookCard";
 import {
@@ -84,11 +84,13 @@ function ComponentTest({ componentName, variant, state }: ComponentTestProps) {
     case "search-input":
       return (
         <div data-testid={testId}>
-          <SearchInput
-            placeholder="Search for books..."
-            variant={variant as "default" | "compact"}
-            onSearch={() => {}}
-          />
+          <Suspense fallback={<div>Loading search input...</div>}>
+            <SearchInput
+              placeholder="Search for books..."
+              variant={variant as "default" | "compact"}
+              onSearch={() => {}}
+            />
+          </Suspense>
         </div>
       );
 
@@ -251,7 +253,9 @@ export default function VisualTestHarness() {
                   Light Theme Components
                 </h3>
                 <div className="space-y-4">
-                  <ComponentTest componentName="search-input" />
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <ComponentTest componentName="search-input" />
+                  </Suspense>
                   <ComponentTest componentName="book-card" variant="default" />
                 </div>
               </div>
