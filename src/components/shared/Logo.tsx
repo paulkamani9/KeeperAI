@@ -17,13 +17,13 @@ interface LogoProps {
   showText?: boolean;
 }
 
-// Keeper AI Symbol Component - Abstract geometric "K" that suggests protection/keeping
+// Keeper AI Symbol Component - Modern, minimal "K" inspired by streaming platforms
 const KeeperSymbol = ({ size = "md", className }: LogoSymbolProps) => {
   const dimensions: Record<string, { width: number; height: number }> = {
-    sm: { width: 20, height: 20 },
-    md: { width: 28, height: 28 },
-    lg: { width: 40, height: 40 },
-    xl: { width: 56, height: 56 },
+    sm: { width: 24, height: 24 },
+    md: { width: 32, height: 32 },
+    lg: { width: 48, height: 48 },
+    xl: { width: 64, height: 64 },
   };
 
   const { width, height } = dimensions[size];
@@ -35,67 +35,79 @@ const KeeperSymbol = ({ size = "md", className }: LogoSymbolProps) => {
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn("flex-shrink-0", className)}
+      className={cn(
+        "flex-shrink-0 transition-transform duration-200 hover:scale-105",
+        className
+      )}
       aria-hidden="true"
     >
-      {/* Main protective container shape - inspired by vault/keeping concept */}
       <defs>
         <linearGradient id="keeperGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" className="[stop-color:hsl(var(--primary))]" />
           <stop
             offset="100%"
-            className="[stop-color:hsl(var(--primary)/0.8)]"
+            className="[stop-color:hsl(var(--primary)/0.7)]"
           />
         </linearGradient>
+
+        {/* Glow effect for dark mode */}
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+          <feMerge>
+            <feMergeNode in="coloredBlur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
       </defs>
 
-      {/* Outer protective frame */}
-      <path
-        d="M4 8C4 5.79086 5.79086 4 8 4H24C26.2091 4 28 5.79086 28 8V24C28 26.2091 26.2091 28 24 28H8C5.79086 28 4 26.2091 4 24V8Z"
+      {/* Modern circular container */}
+      <circle
+        cx="16"
+        cy="16"
+        r="14"
         fill="url(#keeperGradient)"
-        className="transition-colors duration-200"
+        className="transition-all duration-300"
+        filter="url(#glow)"
       />
 
-      {/* Inner geometric "K" - powerful and angular */}
+      {/* Sleek "K" - Netflix/Spotify inspired */}
       <path
-        d="M10 10V22M10 16L18 10M10 16L18 22"
+        d="M9 8V24M9 16L17 8M9 16L17 24"
         stroke="white"
-        strokeWidth="2.5"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        className="drop-shadow-sm"
       />
 
-      {/* AI accent dot - small but significant */}
-      <circle
-        cx="22"
-        cy="10"
-        r="2"
-        fill="white"
-        className="opacity-90"
-      />
+      {/* AI indicator - subtle blue dot */}
+      <circle cx="23" cy="9" r="2" fill="#4a9eff" className="animate-pulse" />
     </svg>
   );
 };
 
-// Keeper AI Text Component
+// Keeper AI Text Component - Modern, minimal typography
 const KeeperText = ({ size = "md", className }: LogoTextProps) => {
   const textSizes: Record<string, string> = {
     sm: "text-sm",
-    md: "text-base",
-    lg: "text-lg",
-    xl: "text-2xl",
+    md: "text-lg",
+    lg: "text-xl",
+    xl: "text-3xl",
   };
 
   return (
     <span
       className={cn(
-        "font-bold tracking-tight text-foreground",
-        "transition-colors duration-200",
+        "font-black tracking-tight text-foreground",
+        "transition-colors duration-300",
         textSizes[size],
         className
       )}
     >
-      Keeper <span className="text-primary font-medium">AI</span>
+      Keeper{" "}
+      <span className="font-black bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+        AI
+      </span>
     </span>
   );
 };

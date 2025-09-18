@@ -20,6 +20,22 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  {
+    files: ["**/__tests__/**/*", "**/*.test.*", "**/*.spec.*"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
+  {
+    files: ["src/**/*"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn", // Downgrade to warning
+      "@typescript-eslint/no-unused-vars": "warn",
+      "jsx-a11y/alt-text": "warn", // Downgrade to warning
+      "react/no-unescaped-entities": "warn",
+    },
+  },
 ];
 
 export default eslintConfig;

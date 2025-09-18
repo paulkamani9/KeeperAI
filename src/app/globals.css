@@ -46,97 +46,97 @@
 :root {
   --radius: 0.75rem;
 
-  /* KeeperAI Light Theme - Immersive & Book-Friendly */
-  /* Soft cream/off-white backgrounds */
-  --background: oklch(0.98 0.005 85);
-  --foreground: oklch(0.1 0.02 260);
-  --card: oklch(0.995 0.002 90);
-  --card-foreground: oklch(0.12 0.02 260);
-  --popover: oklch(0.995 0.002 90);
-  --popover-foreground: oklch(0.1 0.02 260);
+  /* KeeperAI Light Theme - Modern Minimalism */
+  /* Pure whites and subtle grays for clean, professional look */
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
 
-  /* Teal/Cyan primary accent - matching logo style */
-  --primary: oklch(0.45 0.15 200);
-  --primary-foreground: oklch(0.98 0.005 85);
+  /* Modern blue accent - professional and trustworthy */
+  --primary: #0066cc;
+  --primary-foreground: #ffffff;
 
-  /* Subtle secondary colors */
-  --secondary: oklch(0.92 0.01 220);
-  --secondary-foreground: oklch(0.2 0.02 260);
-  --muted: oklch(0.94 0.008 200);
-  --muted-foreground: oklch(0.5 0.02 250);
-  --accent: oklch(0.9 0.02 180);
-  --accent-foreground: oklch(0.15 0.02 260);
+  /* Subtle secondary colors for hierarchy */
+  --secondary: #f8f9fa;
+  --secondary-foreground: #1a1a1a;
+  --muted: #f5f5f5;
+  --muted-foreground: #5f6368;
+  --accent: #e8f0fe;
+  --accent-foreground: #1a1a1a;
 
-  /* Interactive states */
-  --destructive: oklch(0.6 0.25 25);
-  --destructive-foreground: oklch(0.98 0.005 85);
-  --border: oklch(0.87 0.01 220);
-  --input: oklch(0.95 0.005 200);
-  --ring: oklch(0.45 0.15 200);
+  /* Interactive and semantic states */
+  --destructive: #d93025;
+  --destructive-foreground: #ffffff;
+  --border: #e5e5e5;
+  --input: #ffffff;
+  --ring: #4285f4;
 
-  /* Charts - harmonious with theme */
-  --chart-1: oklch(0.5 0.18 200);
-  --chart-2: oklch(0.55 0.16 180);
-  --chart-3: oklch(0.6 0.14 160);
-  --chart-4: oklch(0.45 0.2 220);
-  --chart-5: oklch(0.65 0.12 140);
+  /* Chart colors - harmonious blues and complementary colors */
+  --chart-1: #4285f4;
+  --chart-2: #34a853;
+  --chart-3: #fbbc04;
+  --chart-4: #ea4335;
+  --chart-5: #9aa0a6;
 
-  /* Sidebar - slightly darker for hierarchy and contrast */
-  --sidebar: oklch(0.94 0.012 200);
-  --sidebar-foreground: oklch(0.15 0.02 260);
-  --sidebar-primary: oklch(0.45 0.15 200);
-  --sidebar-primary-foreground: oklch(0.98 0.005 85);
-  --sidebar-accent: oklch(0.88 0.025 180);
-  --sidebar-accent-foreground: oklch(0.2 0.02 260);
-  --sidebar-border: oklch(0.83 0.018 210);
-  --sidebar-ring: oklch(0.45 0.15 200);
+  /* Sidebar - pristine white with subtle shadows for depth */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #0066cc;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f8f9fa;
+  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #4285f4;
 }
 
 .dark {
-  /* KeeperAI Dark Theme - Deep & Immersive */
-  /* Deep gray/charcoal backgrounds */
-  --background: oklch(0.08 0.01 260);
-  --foreground: oklch(0.95 0.005 180);
-  --card: oklch(0.12 0.015 260);
-  --card-foreground: oklch(0.93 0.005 180);
-  --popover: oklch(0.12 0.015 260);
-  --popover-foreground: oklch(0.95 0.005 180);
+  /* KeeperAI Dark Theme - Cinema Immersion */
+  /* Pure blacks and rich darks inspired by premium streaming platforms */
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #141414;
+  --card-foreground: #ffffff;
+  --popover: #1a1a1a;
+  --popover-foreground: #ffffff;
 
-  /* Brighter teal/cyan for dark mode visibility */
-  --primary: oklch(67.99% 0.11781 189.056);
-  --primary-foreground: oklch(0.08 0.01 260);
+  /* Soft blue accent - Netflix/Prime Video inspired */
+  --primary: #4a9eff;
+  --primary-foreground: #000000;
 
-  /* Elevated secondary elements */
-  --secondary: oklch(0.18 0.02 250);
-  --secondary-foreground: oklch(0.9 0.005 180);
-  --muted: oklch(0.15 0.02 240);
-  --muted-foreground: oklch(0.65 0.01 200);
-  --accent: oklch(0.2 0.03 200);
-  --accent-foreground: oklch(0.9 0.005 180);
+  /* Elevated surfaces for depth and hierarchy */
+  --secondary: #2a2a2a;
+  --secondary-foreground: #ffffff;
+  --muted: #1a1a1a;
+  --muted-foreground: #b3b3b3;
+  --accent: #333333;
+  --accent-foreground: #ffffff;
 
-  /* Interactive states for dark theme */
-  --destructive: oklch(0.65 0.22 25);
-  --destructive-foreground: oklch(0.95 0.005 180);
-  --border: oklch(0.22 0.02 250);
-  --input: oklch(0.16 0.02 250);
-  --ring: oklch(0.65 0.18 190);
+  /* Interactive states optimized for dark viewing */
+  --destructive: #ff6b6b;
+  --destructive-foreground: #000000;
+  --border: #262626;
+  --input: #1a1a1a;
+  --ring: #4a9eff;
 
-  /* Dark mode chart colors */
-  --chart-1: oklch(0.6 0.2 190);
-  --chart-2: oklch(0.65 0.18 170);
-  --chart-3: oklch(0.7 0.16 150);
-  --chart-4: oklch(0.55 0.22 210);
-  --chart-5: oklch(0.75 0.14 130);
+  /* Chart colors - vibrant but not overwhelming in dark mode */
+  --chart-1: #4a9eff;
+  --chart-2: #00c851;
+  --chart-3: #ffbb33;
+  --chart-4: #ff4444;
+  --chart-5: #aa66cc;
 
-  /* Darker sidebar for hierarchy and contrast in dark mode */
-  --sidebar: oklch(0.06 0.02 250);
-  --sidebar-foreground: oklch(0.9 0.005 180);
-  --sidebar-primary: oklch(0.65 0.18 190);
-  --sidebar-primary-foreground: oklch(0.08 0.01 260);
-  --sidebar-accent: oklch(0.18 0.035 200);
-  --sidebar-accent-foreground: oklch(0.85 0.005 180);
-  --sidebar-border: oklch(0.22 0.025 240);
-  --sidebar-ring: oklch(0.65 0.18 190);
+  /* Sidebar - deep black for cinematic feel */
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #4a9eff;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #262626;
+  --sidebar-ring: #4a9eff;
 }
 
 @layer base {
@@ -165,15 +165,17 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
     transition:
-      color 0.3s ease,
-      background-color 0.3s ease,
-      border-color 0.3s ease;
+      color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   body {
@@ -183,53 +185,84 @@
       "calt" 1;
     line-height: 1.6;
     letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
-  /* Enhanced typography for reading comfort */
+  /* Immersive typography - minimal but impactful */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    line-height: 1.3;
-    letter-spacing: -0.02em;
-    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+  }
+
+  h1 {
+    font-size: clamp(1.875rem, 4vw, 3rem);
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
   }
 
   p {
     line-height: 1.7;
+    color: hsl(var(--muted-foreground));
   }
 
-  /* Smooth transitions for interactive elements */
+  /* Smooth, premium interactions */
   button,
   a,
   [role="button"] {
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Focus styles for accessibility */
+  /* Enhanced focus for accessibility and aesthetics */
   :focus-visible {
     outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
-  }
-
-  /* Scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: hsl(var(--muted));
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: hsl(var(--muted-foreground) / 0.3);
     border-radius: 4px;
   }
 
+  /* Premium scrollbar - thin and unobtrusive */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.2);
+    border-radius: 3px;
+  }
+
   ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.4);
+  }
+
+  /* Dark mode specific enhancements */
+  .dark {
+    color-scheme: dark;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--muted-foreground) / 0.5);
   }
 }
@@ -260,66 +293,153 @@
     line-clamp: 3;
   }
 
-  /* Enhanced shadow utilities */
-  .shadow-3xl {
+  /* Premium shadow system */
+  .shadow-glow {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+
+  .shadow-immersive {
     box-shadow:
-      0 35px 60px -12px rgba(0, 0, 0, 0.25),
-      0 0 0 1px rgba(0, 0, 0, 0.05);
+      0 25px 50px -12px rgba(0, 0, 0, 0.4),
+      0 0 0 1px hsl(var(--border) / 0.1);
   }
 
-  /* Glass morphism effects */
-  .glass {
+  .shadow-card-hover {
+    box-shadow:
+      0 20px 40px -8px rgba(0, 0, 0, 0.2),
+      0 8px 20px -4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Glass morphism - streaming platform inspired */
+  .glass-navbar {
     background: hsl(var(--background) / 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid hsl(var(--border) / 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid hsl(var(--border) / 0.2);
   }
 
-  .glass-dark {
-    background: hsl(var(--card) / 0.7);
+  .glass-card {
+    background: hsl(var(--card) / 0.9);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid hsl(var(--border) / 0.3);
   }
 
-  /* Animation utilities */
-  .animate-fade-in {
-    animation: fadeIn 0.4s ease-out;
+  /* Premium animations */
+  .animate-lift {
+    animation: lift 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .animate-slide-up {
-    animation: slideUp 0.4s ease-out;
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
   }
 
-  .animate-slide-right {
-    animation: slideRight 0.3s ease-out;
+  .animate-fade-up {
+    animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Layout spacing for readability */
-  .content-spacing > * + * {
-    margin-top: 1.5rem;
+  .animate-scale-in {
+    animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .reading-width {
-    max-width: 65ch;
+  /* Content-first utilities */
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
   }
 
-  /* Responsive container utilities */
+  .content-masonry {
+    columns: 200px;
+    column-gap: 1rem;
+    break-inside: avoid;
+  }
+
+  /* Immersive spacing */
+  .cinematic-spacing {
+    padding: clamp(1rem, 4vw, 3rem);
+  }
+
+  .content-max-width {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* Focus ring for immersive experience */
+  .focus-ring {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  /* Responsive utilities without @apply */
   .responsive-padding {
-    @apply px-4 sm:px-6 lg:px-8;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
-  .responsive-max-width {
-    @apply max-w-sm sm:max-w-md md:max-w-lg lg:max-w-4xl xl:max-w-6xl;
+  @media (min-width: 640px) {
+    .responsive-padding {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .responsive-padding {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
   }
 }
 
+/* Premium Keyframes */
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lift {
+  from {
+    transform: translateY(0) scale(1);
+  }
+  to {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.2);
+  }
+  to {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.4);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
