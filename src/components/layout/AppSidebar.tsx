@@ -50,7 +50,7 @@ export default function AppSidebar() {
       shortcut: "H",
     },
     {
-      href: "/search",
+      href: pathname.startsWith("/search") ? "#search-header" : "/search",
       label: "Search",
       icon: Search,
       shortcut: "S",

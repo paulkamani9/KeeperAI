@@ -165,6 +165,7 @@ export const SearchView = () => {
   return (
     <MainContent maxWidth="full" padding="lg">
       {/* Search Header */}
+      <div id="search-header" className="mb-10 md:mb-0" />
       <div className="mb-8">
         <SearchInput
           defaultValue={query}

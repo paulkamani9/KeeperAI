@@ -7,6 +7,7 @@
 
 import { ConvexReactClient } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 
 interface SearchAnalyticsParams {
   /** Search query string */
@@ -20,7 +21,7 @@ interface SearchAnalyticsParams {
   /** Whether result came from cache */
   cached: boolean;
   /** User ID if authenticated */
-  userId?: string;
+  userId?: Id<"users">;
 }
 
 interface UserActivityParams {
@@ -37,7 +38,7 @@ interface UserActivityParams {
   /** Additional metadata */
   metadata?: Record<string, unknown>;
   /** User ID if authenticated */
-  userId?: string;
+  userId?: Id<"users">;
 }
 
 /**

@@ -40,6 +40,7 @@ export default function ReactQueryProvider({
               return failureCount < 2;
             },
             retryDelay: (attemptIndex) =>
+              // Exponential backoff up to 30 seconds
               Math.min(1000 * 2 ** attemptIndex, 30000),
           },
           mutations: {

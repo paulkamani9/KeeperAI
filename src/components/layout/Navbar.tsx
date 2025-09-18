@@ -9,6 +9,7 @@ import { ModeToggle } from "@/components/ModeToggle";
 import { KeeperSymbol } from "@/components/shared/Logo";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { usePathname } from "next/navigation";
 
 interface NavbarProps {
   className?: string;
@@ -28,10 +29,11 @@ interface NavbarProps {
  */
 export default function Navbar({ className }: NavbarProps) {
   const isMobile = useIsMobile();
+  const pathname = usePathname();
 
   const mobileNavigationItems = [
     {
-      href: "/search",
+      href: pathname.startsWith("/search") ? "#search-header" : "/search",
       label: "Search",
       icon: Search,
     },
@@ -41,7 +43,7 @@ export default function Navbar({ className }: NavbarProps) {
       icon: Heart,
     },
     {
-      href: "/summaries",
+      href: "/summaries" ,
       label: "Books",
       icon: BookOpen,
     },
