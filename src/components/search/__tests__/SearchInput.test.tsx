@@ -9,7 +9,7 @@ import {
 import userEvent from "@testing-library/user-event";
 import { useRouter, useSearchParams } from "next/navigation";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { SearchInput } from "./SearchInput";
+import { SearchInput } from "../SearchInput";
 
 // Mock Next.js navigation
 vi.mock("next/navigation", () => ({

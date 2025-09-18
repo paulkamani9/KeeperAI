@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { BookCard, type Book } from "./BookCard";
+import { BookCard, type Book } from "../BookCard";
 import Image from "next/image";
 
 // Mock Next.js Image component

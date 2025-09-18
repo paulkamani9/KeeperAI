@@ -6,8 +6,8 @@ import {
   ResultsList,
   type SearchResults,
   type PaginationInfo,
-} from "./ResultsList";
-import { type Book } from "./BookCard";
+} from "../ResultsList";
+import { type Book } from "../BookCard";
 
 // Mock BookCard component to avoid complex rendering in tests
 vi.mock("./BookCard", () => ({
