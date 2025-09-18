@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import ConvexClientProvider from "@/providers/ConvexClientProvider";
 import { ClerkProvider } from "@/providers/ClerkProvider";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,15 +30,17 @@ export default function RootLayout({
       <body className={`${inter.variable} antialiased`}>
         <ClerkProvider>
           <ConvexClientProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-              <Analytics />
-            </ThemeProvider>
+            <ReactQueryProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+                <Analytics />
+              </ThemeProvider>
+            </ReactQueryProvider>
           </ConvexClientProvider>
         </ClerkProvider>
       </body>
