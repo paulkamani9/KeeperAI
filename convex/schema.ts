@@ -71,4 +71,44 @@ export default defineSchema({
     .index("byQuery", ["query"])
     .index("byUserId", ["userId"])
     .index("byTimestamp", ["timestamp"]),
+
+  // New: Summary generation analytics
+  summaryAnalytics: defineTable({
+    bookId: v.string(),
+    summaryType: v.union(
+      v.literal("concise"),
+      v.literal("detailed"),
+      v.literal("analysis"),
+      v.literal("practical")
+    ),
+    userId: v.optional(v.id("users")),
+    generationTime: v.number(), // milliseconds
+    success: v.boolean(),
+    errorType: v.optional(v.string()), // Error category if failed
+    errorMessage: v.optional(v.string()),
+    aiModel: v.string(),
+    promptVersion: v.string(),
+    tokenUsage: v.optional(
+      v.object({
+        promptTokens: v.number(),
+        completionTokens: v.number(),
+        totalTokens: v.number(),
+        estimatedCost: v.optional(v.number()),
+      })
+    ),
+    cacheHit: v.boolean(),
+    bookMetadata: v.object({
+      title: v.string(),
+      authors: v.array(v.string()),
+      source: v.union(v.literal("google-books"), v.literal("open-library")),
+      hadDescription: v.boolean(),
+    }),
+    timestamp: v.number(),
+  })
+    .index("byBookId", ["bookId"])
+    .index("bySummaryType", ["summaryType"])
+    .index("byUserId", ["userId"])
+    .index("byTimestamp", ["timestamp"])
+    .index("bySuccess", ["success"])
+    .index("byBookAndType", ["bookId", "summaryType"]),
 });

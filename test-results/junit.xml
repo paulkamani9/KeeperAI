@@ -1,0 +1,404 @@
+<testsuites id="" name="" tests="25" failures="25" skipped="0" errors="0" time="3.857632999999914">
+<testsuite name="components/search/__tests__/search.visual.test.ts" timestamp="2025-09-19T11:01:26.021Z" hostname="chromium" tests="25" failures="25" skipped="0" time="0.083" errors="0">
+<testcase name="SearchInput Visual Tests › should match SearchInput default state" classname="components/search/__tests__/search.visual.test.ts" time="0.004">
+<failure message="search.visual.test.ts:16:7 should match SearchInput default state" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:16:7 › SearchInput Visual Tests › should match SearchInput default state 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="SearchInput Visual Tests › should match SearchInput with focus state" classname="components/search/__tests__/search.visual.test.ts" time="0.003">
+<failure message="search.visual.test.ts:29:7 should match SearchInput with focus state" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:29:7 › SearchInput Visual Tests › should match SearchInput with focus state 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="SearchInput Visual Tests › should match SearchInput with error state" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:44:7 should match SearchInput with error state" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:44:7 › SearchInput Visual Tests › should match SearchInput with error state 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="SearchInput Visual Tests › should match SearchInput compact variant" classname="components/search/__tests__/search.visual.test.ts" time="0.003">
+<failure message="search.visual.test.ts:56:7 should match SearchInput compact variant" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:56:7 › SearchInput Visual Tests › should match SearchInput compact variant 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="BookCard Visual Tests › should match BookCard default variant" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:70:7 should match BookCard default variant" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:70:7 › BookCard Visual Tests › should match BookCard default variant 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="BookCard Visual Tests › should match BookCard compact variant" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:84:7 should match BookCard compact variant" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:84:7 › BookCard Visual Tests › should match BookCard compact variant 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="BookCard Visual Tests › should match BookCard with favorite state" classname="components/search/__tests__/search.visual.test.ts" time="0.004">
+<failure message="search.visual.test.ts:98:7 should match BookCard with favorite state" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:98:7 › BookCard Visual Tests › should match BookCard with favorite state 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="BookCard Visual Tests › should match BookCard loading state" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:112:7 should match BookCard loading state" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:112:7 › BookCard Visual Tests › should match BookCard loading state 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="ResultsList Visual Tests › should match ResultsList with results grid" classname="components/search/__tests__/search.visual.test.ts" time="0.006">
+<failure message="search.visual.test.ts:128:7 should match ResultsList with results grid" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:128:7 › ResultsList Visual Tests › should match ResultsList with results grid 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="ResultsList Visual Tests › should match ResultsList loading state" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:142:7 should match ResultsList loading state" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:142:7 › ResultsList Visual Tests › should match ResultsList loading state 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="ResultsList Visual Tests › should match ResultsList empty state" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:156:7 should match ResultsList empty state" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:156:7 › ResultsList Visual Tests › should match ResultsList empty state 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="ResultsList Visual Tests › should match ResultsList with pagination" classname="components/search/__tests__/search.visual.test.ts" time="0.003">
+<failure message="search.visual.test.ts:170:7 should match ResultsList with pagination" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:170:7 › ResultsList Visual Tests › should match ResultsList with pagination 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Responsive Visual Tests › should match mobile layout" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:186:7 should match mobile layout" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:186:7 › Responsive Visual Tests › should match mobile layout 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Responsive Visual Tests › should match tablet layout" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:196:7 should match tablet layout" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:196:7 › Responsive Visual Tests › should match tablet layout 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Responsive Visual Tests › should match desktop layout" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:205:7 should match desktop layout" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:205:7 › Responsive Visual Tests › should match desktop layout 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Responsive Visual Tests › should match search results responsive grid" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:214:7 should match search results responsive grid" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:214:7 › Responsive Visual Tests › should match search results responsive grid 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Theme Visual Tests › should match light theme" classname="components/search/__tests__/search.visual.test.ts" time="0.003">
+<failure message="search.visual.test.ts:236:7 should match light theme" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:236:7 › Theme Visual Tests › should match light theme 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Theme Visual Tests › should match dark theme" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:249:7 should match dark theme" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:249:7 › Theme Visual Tests › should match dark theme 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Theme Visual Tests › should match components in both themes" classname="components/search/__tests__/search.visual.test.ts" time="0.006">
+<failure message="search.visual.test.ts:262:7 should match components in both themes" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:262:7 › Theme Visual Tests › should match components in both themes 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Interaction State Visual Tests › should match hover states" classname="components/search/__tests__/search.visual.test.ts" time="0.002">
+<failure message="search.visual.test.ts:294:7 should match hover states" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:294:7 › Interaction State Visual Tests › should match hover states 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Interaction State Visual Tests › should match focus states" classname="components/search/__tests__/search.visual.test.ts" time="0.003">
+<failure message="search.visual.test.ts:305:7 should match focus states" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:305:7 › Interaction State Visual Tests › should match focus states 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Interaction State Visual Tests › should match button states" classname="components/search/__tests__/search.visual.test.ts" time="0.012">
+<failure message="search.visual.test.ts:314:7 should match button states" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:314:7 › Interaction State Visual Tests › should match button states 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Error State Visual Tests › should match search validation errors" classname="components/search/__tests__/search.visual.test.ts" time="0.004">
+<failure message="search.visual.test.ts:335:7 should match search validation errors" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:335:7 › Error State Visual Tests › should match search validation errors 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Error State Visual Tests › should match network error state" classname="components/search/__tests__/search.visual.test.ts" time="0.007">
+<failure message="search.visual.test.ts:349:7 should match network error state" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:349:7 › Error State Visual Tests › should match network error state 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+<testcase name="Error State Visual Tests › should match empty results state" classname="components/search/__tests__/search.visual.test.ts" time="0.001">
+<failure message="search.visual.test.ts:362:7 should match empty results state" type="FAILURE">
+<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:362:7 › Error State Visual Tests › should match empty results state 
+
+    Error: browserType.launch: Executable doesn't exist at /Users/paulkamani/Library/Caches/ms-playwright/chromium_headless_shell-1187/chrome-mac/headless_shell
+    ╔═════════════════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright Test or Playwright was just installed or updated. ║
+    ║ Please run the following command to download new browsers:              ║
+    ║                                                                         ║
+    ║     npx playwright install                                              ║
+    ║                                                                         ║
+    ║ <3 Playwright Team                                                      ║
+    ╚═════════════════════════════════════════════════════════════════════════╝
+]]>
+</failure>
+</testcase>
+</testsuite>
+</testsuites>

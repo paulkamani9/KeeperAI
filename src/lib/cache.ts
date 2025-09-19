@@ -158,6 +158,143 @@ export const cache = getDefaultCache();
 
 // Helper functions for common cache operations
 export const cacheKeys = {
-  bookSummary: (bookId: string) => `summary:${bookId}`,
   bookSearch: (query: string) => `search:${encodeForCache(query)}`,
+  bookSummary: (bookId: string, summaryType: string) =>
+    `summary:${bookId}:${summaryType}`,
+  summaryGeneration: (bookId: string, summaryType: string) =>
+    `gen:summary:${bookId}:${summaryType}`,
 } as const;
+
+/**
+ * Cache configuration for different content types
+ */
+export const cacheTTL = {
+  /** Search results cache for 15 minutes */
+  search: 900,
+  /** Generated summaries cache for 24 hours */
+  summary: 86400, // 24 hours
+  /** Generation locks/status cache for 5 minutes */
+  generation: 300,
+  /** Default TTL for other content */
+  default: 900,
+} as const;
+
+/**
+ * Summary-specific cache operations
+ */
+export class SummaryCache {
+  private cacheAdapter: CacheAdapter;
+
+  constructor(cacheAdapter?: CacheAdapter) {
+    this.cacheAdapter = cacheAdapter || cache;
+  }
+
+  /**
+   * Get a cached summary
+   */
+  async getSummary(
+    bookId: string,
+    summaryType: string
+  ): Promise<string | null> {
+    const key = cacheKeys.bookSummary(bookId, summaryType);
+    return await this.cacheAdapter.get(key);
+  }
+
+  /**
+   * Store a summary in cache
+   */
+  async setSummary(
+    bookId: string,
+    summaryType: string,
+    summary: string
+  ): Promise<void> {
+    const key = cacheKeys.bookSummary(bookId, summaryType);
+    await this.cacheAdapter.set(key, summary, cacheTTL.summary);
+  }
+
+  /**
+   * Check if summary generation is in progress (to prevent duplicate requests)
+   */
+  async isGenerationInProgress(
+    bookId: string,
+    summaryType: string
+  ): Promise<boolean> {
+    const key = cacheKeys.summaryGeneration(bookId, summaryType);
+    const status = await this.cacheAdapter.get(key);
+    return status === "generating";
+  }
+
+  /**
+   * Mark summary generation as in progress
+   */
+  async markGenerationInProgress(
+    bookId: string,
+    summaryType: string
+  ): Promise<void> {
+    const key = cacheKeys.summaryGeneration(bookId, summaryType);
+    await this.cacheAdapter.set(key, "generating", cacheTTL.generation);
+  }
+
+  /**
+   * Clear generation status (on completion or error)
+   */
+  async clearGenerationStatus(
+    bookId: string,
+    summaryType: string
+  ): Promise<void> {
+    const key = cacheKeys.summaryGeneration(bookId, summaryType);
+    await this.cacheAdapter.delete(key);
+  }
+
+  /**
+   * Delete a cached summary
+   */
+  async deleteSummary(bookId: string, summaryType: string): Promise<void> {
+    const key = cacheKeys.bookSummary(bookId, summaryType);
+    await this.cacheAdapter.delete(key);
+  }
+
+  /**
+   * Delete all summaries for a book
+   */
+  async deleteAllSummariesForBook(bookId: string): Promise<void> {
+    const summaryTypes = ["concise", "detailed", "analysis", "practical"];
+
+    // Delete all summary types for this book
+    await Promise.all(
+      summaryTypes.map((type) => this.deleteSummary(bookId, type))
+    );
+
+    // Clear any generation statuses
+    await Promise.all(
+      summaryTypes.map((type) => this.clearGenerationStatus(bookId, type))
+    );
+  }
+
+  /**
+   * Get cache statistics for summaries
+   */
+  async getCacheStats(): Promise<{
+    adapter: string;
+    summaryTTL: number;
+    generationTTL: number;
+  }> {
+    return {
+      adapter: this.cacheAdapter.constructor.name,
+      summaryTTL: cacheTTL.summary,
+      generationTTL: cacheTTL.generation,
+    };
+  }
+}
+
+/**
+ * Create default summary cache instance
+ */
+export function createSummaryCache(cacheAdapter?: CacheAdapter): SummaryCache {
+  return new SummaryCache(cacheAdapter);
+}
+
+/**
+ * Default summary cache instance
+ */
+export const summaryCache = createSummaryCache();
