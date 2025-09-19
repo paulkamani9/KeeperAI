@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Star,
   Calendar,
@@ -21,10 +21,12 @@ import {
   SummaryTypeSelector,
   type SummaryType,
 } from "@/components/summary/SummaryTypeSelector";
+import { SummaryGenerationProgress } from "@/components/summary/SummaryGenerationProgress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
+import { useSummaryGeneration } from "@/hooks/useSummaryGeneration";
 
 interface BookDetailViewProps {
   /** Book data to display */
@@ -48,7 +50,30 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
   const router = useRouter();
   const [selectedSummaryType, setSelectedSummaryType] =
     useState<SummaryType>("concise");
-  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+
+  // Initialize summary generation hook
+  const {
+    summary,
+    isGenerating,
+    error,
+    progress,
+    estimatedTime,
+    generateSummary,
+    canGenerate,
+  } = useSummaryGeneration({
+    book,
+    summaryType: selectedSummaryType,
+    enabled: false, // Manual generation only
+  });
+
+  // Handlers for summary generation
+  const handleGenerateSummary = () => {
+    generateSummary();
+  };
+
+  const handleRetryGeneration = () => {
+    generateSummary();
+  };
 
   // Extract primary image for hero background
   const heroImage =
@@ -86,24 +111,13 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
     };
   };
 
-  // Handle summary generation
-  const handleGenerateSummary = async () => {
-    setIsGeneratingSummary(true);
-
-    try {
-      // TODO: Implement actual summary generation in Phase 2.3
-      // For now, simulate the process
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Navigate to summary page (placeholder)
-      router.push(`/summaries/${book.id}?type=${selectedSummaryType}`);
-    } catch (error) {
-      console.error("Error generating summary:", error);
-      // TODO: Add proper error handling and toast notifications
-    } finally {
-      setIsGeneratingSummary(false);
+  // Navigate to summary when generation is complete
+  React.useEffect(() => {
+    if (summary && !isGenerating && !error) {
+      // Navigate to summary page when generation is successful
+      router.push(`/summaries/${summary.id}`);
     }
-  };
+  }, [summary, isGenerating, error, router]);
 
   // Handle add to favorites
   const handleAddToFavorites = () => {
@@ -251,27 +265,32 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
                       <SummaryTypeSelector
                         value={selectedSummaryType}
                         onValueChange={setSelectedSummaryType}
-                        loading={isGeneratingSummary}
-                        disabled={isGeneratingSummary}
+                        loading={isGenerating}
+                        disabled={isGenerating || !canGenerate}
                       />
-                      <Button
-                        onClick={handleGenerateSummary}
-                        disabled={isGeneratingSummary}
-                        className="w-full"
-                        size="lg"
-                      >
-                        {isGeneratingSummary ? (
-                          <>
-                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent mr-2" />
-                            Generating Summary...
-                          </>
-                        ) : (
-                          <>
-                            <Sparkles className="h-4 w-4 mr-2" />
-                            Generate Summary
-                          </>
-                        )}
-                      </Button>
+
+                      {/* Show progress during generation */}
+                      {isGenerating || error ? (
+                        <SummaryGenerationProgress
+                          isGenerating={isGenerating}
+                          progress={progress}
+                          estimatedTime={estimatedTime}
+                          error={error}
+                          canRetry={!isGenerating}
+                          summaryType={selectedSummaryType}
+                          onRetry={handleRetryGeneration}
+                        />
+                      ) : (
+                        <Button
+                          onClick={handleGenerateSummary}
+                          disabled={!canGenerate}
+                          className="w-full"
+                          size="lg"
+                        >
+                          <Sparkles className="h-4 w-4 mr-2" />
+                          Generate Summary
+                        </Button>
+                      )}
                     </CardContent>
                   </Card>
 
