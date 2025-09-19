@@ -1,0 +1,78 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - generic [ref=e9]:
+        - link "KeeperAI Home" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11] [cursor=pointer]
+        - generic [ref=e16]: KeeperAI
+      - generic [ref=e17]:
+        - button "Toggle Sidebar" [ref=e19]:
+          - img
+          - generic [ref=e20]: Toggle Sidebar
+        - generic [ref=e21]:
+          - generic [ref=e22]: Main Menu
+          - list [ref=e24]:
+            - listitem [ref=e25]:
+              - link "Home H" [ref=e26] [cursor=pointer]:
+                - /url: /
+                - img [ref=e27] [cursor=pointer]
+                - generic: Home
+                - generic [ref=e30] [cursor=pointer]: H
+            - listitem [ref=e31]:
+              - link "Search S" [ref=e32] [cursor=pointer]:
+                - /url: "#search-header"
+                - img [ref=e33] [cursor=pointer]
+                - generic: Search
+                - generic [ref=e36] [cursor=pointer]: S
+            - listitem [ref=e37]:
+              - link "Favorites F" [ref=e38] [cursor=pointer]:
+                - /url: /favorites
+                - img [ref=e39] [cursor=pointer]
+                - generic: Favorites
+                - generic [ref=e41] [cursor=pointer]: F
+            - listitem [ref=e42]:
+              - link "Summaries R" [ref=e43] [cursor=pointer]:
+                - /url: /summaries
+                - img [ref=e44] [cursor=pointer]
+                - generic: Summaries
+                - generic [ref=e46] [cursor=pointer]: R
+      - paragraph [ref=e49]: KeeperAI v1.0
+    - generic [ref=e50]:
+      - banner [ref=e51]:
+        - navigation "Primary navigation" [ref=e52]:
+          - button "Toggle theme" [ref=e54]:
+            - img
+            - generic [ref=e55]: Toggle theme
+      - main [ref=e56]:
+        - generic [ref=e57]:
+          - generic [ref=e60]:
+            - img [ref=e62]
+            - textbox "Search for books" [ref=e65]
+            - generic [ref=e66]:
+              - generic [ref=e67]:
+                - button "Voice search (coming soon)" [disabled]:
+                  - img
+                - button "Image search (coming soon)" [disabled]:
+                  - img
+              - button "Search (Enter)" [disabled]:
+                - img
+          - generic [ref=e70]:
+            - img [ref=e71]
+            - heading "No books found" [level=3] [ref=e73]
+            - paragraph [ref=e74]: Start typing to search for books.
+            - generic [ref=e75]:
+              - generic [ref=e76]: • Try different keywords
+              - generic [ref=e77]: • Check your spelling
+              - generic [ref=e78]: • Use more general terms
+  - generic [ref=e79]:
+    - img [ref=e81]
+    - button "Open Tanstack query devtools" [ref=e129] [cursor=pointer]:
+      - img [ref=e130] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e183] [cursor=pointer]:
+    - img [ref=e184] [cursor=pointer]
+  - alert [ref=e187]
+```

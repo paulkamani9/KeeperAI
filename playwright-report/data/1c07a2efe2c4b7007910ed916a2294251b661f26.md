@@ -1,0 +1,443 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - generic [ref=e9]:
+        - link "KeeperAI Home" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11] [cursor=pointer]
+        - generic [ref=e16]: KeeperAI
+      - generic [ref=e17]:
+        - button "Toggle Sidebar" [ref=e19]:
+          - img
+          - generic [ref=e20]: Toggle Sidebar
+        - generic [ref=e21]:
+          - generic [ref=e22]: Main Menu
+          - list [ref=e24]:
+            - listitem [ref=e25]:
+              - link "Home H" [ref=e26] [cursor=pointer]:
+                - /url: /
+                - img [ref=e27] [cursor=pointer]
+                - generic: Home
+                - generic [ref=e30] [cursor=pointer]: H
+            - listitem [ref=e31]:
+              - link "Search S" [ref=e32] [cursor=pointer]:
+                - /url: "#search-header"
+                - img [ref=e33] [cursor=pointer]
+                - generic: Search
+                - generic [ref=e36] [cursor=pointer]: S
+            - listitem [ref=e37]:
+              - link "Favorites F" [ref=e38] [cursor=pointer]:
+                - /url: /favorites
+                - img [ref=e39] [cursor=pointer]
+                - generic: Favorites
+                - generic [ref=e41] [cursor=pointer]: F
+            - listitem [ref=e42]:
+              - link "Summaries R" [ref=e43] [cursor=pointer]:
+                - /url: /summaries
+                - img [ref=e44] [cursor=pointer]
+                - generic: Summaries
+                - generic [ref=e46] [cursor=pointer]: R
+      - paragraph [ref=e49]: KeeperAI v1.0
+    - generic [ref=e50]:
+      - banner [ref=e51]:
+        - navigation "Primary navigation" [ref=e52]:
+          - button "Toggle theme" [ref=e54]:
+            - img
+            - generic [ref=e55]: Toggle theme
+      - main [ref=e56]:
+        - generic [ref=e57]:
+          - generic [ref=e60]:
+            - img [ref=e62]
+            - textbox "Search for books" [ref=e65]: programming
+            - generic [ref=e66]:
+              - generic [ref=e67]:
+                - button "Voice search (coming soon)" [disabled]:
+                  - img
+                - button "Image search (coming soon)" [disabled]:
+                  - img
+              - button "Clear search (Esc)" [ref=e68]:
+                - img
+              - button "Search (Enter)" [ref=e69]:
+                - img
+          - generic [ref=e70]:
+            - generic [ref=e73]:
+              - text: Showing 1-20 of 1,000,000 results for
+              - generic [ref=e74]: “programming”
+            - generic [ref=e75]:
+              - link [ref=e76] [cursor=pointer]:
+                - /url: /book/google-books-euV7e2f-RzsC
+                - generic [ref=e77] [cursor=pointer]:
+                  - generic [ref=e79] [cursor=pointer]:
+                    - img [ref=e83] [cursor=pointer]
+                    - generic [ref=e85] [cursor=pointer]:
+                      - generic [ref=e86] [cursor=pointer]: C# for Programmers
+                      - generic [ref=e87] [cursor=pointer]: Harvey M. Deitel, Paul J. Deitel
+                    - button "Add to favorites" [ref=e89]:
+                      - img
+                  - paragraph [ref=e91] [cursor=pointer]: "The practicing programmer's DEITEL® guide to C# and the powerful Microsoft .NET Framework Written for programmers with a background in C++, Java, or other high-level languages, this book applies the Deitel signature live-code approach to teaching programming and explores Microsoft's C# language and the new .NET 2.0 in depth. The book is updated for Visual Studio® 2005 and C# 2.0, and presents C# concepts in the context of fully tested programs, complete with syntax shading, detailed line-by-line code descriptions, and program outputs. The book features 200+ C# applications with 16,000+ lines of proven C# code, as well as 300+ programming tips that will help you build robust applications. Start with a concise introduction to C# fundamentals using an early classes and objects approach, then rapidly move on to more advanced topics, including multithreading, XML, ADO.NET 2.0, ASP.NET 2.0, Web services, network programming, and .NET remoting. Along the way you will enjoy the Deitels' classic treatment of object-oriented programming and a new, OOD/UML™ ATM case study, including a complete C# implementation. When you are finished, you will have everything you need to build next-generation Windows applications, Web applications, and Web services. Dr. Harvey M. Deitel and Paul J. Deitel are the founders of Deitel & Associates, Inc., the internationally recognized programming languages content-creation and corporate-training organization. Together with their colleagues at Deitel & Associates, Inc., they have written many international best-selling programming languages textbooks that millions of people worldwide have used to master C, C++, Java™, C#, XML, Visual Basic®, Perl, Python, and Internet and Web programming. The DEITEL® Developer Series is designed for practicing programmers. The series presents focused treatments of emerging technologies, including .NET, J2EE, Web services, and more. Practical, Example-Rich Coverage Of: C# 2.0, .NET 2.0, FCL ASP.NET 2.0, Web Forms and Controls Database, SQL, and ADO.NET 2.0 Networking and .NET Remoting XML, Web Services Generics, Collections GUI/Windows® Forms OOP: Classes, Inheritance, and Polymorphism OOD/UML™ ATM Case Study Graphics and Multimedia Multithreading Exception Handling And more... VISIT WWW.DEITEL.COM Download code examples To receive updates on this book, subscribe to the free DEITEL® BUZZ ONLINE e-mail newsletter at www.deitel.com/newsletter/subscribe.html Read archived Issues of the DEITEL® BUZZ ONLINE Get corporate training information"
+                  - generic [ref=e94] [cursor=pointer]:
+                    - generic [ref=e95] [cursor=pointer]:
+                      - img [ref=e96] [cursor=pointer]
+                      - generic [ref=e98] [cursor=pointer]: "2005"
+                    - generic [ref=e99] [cursor=pointer]:
+                      - img [ref=e100] [cursor=pointer]
+                      - generic [ref=e102] [cursor=pointer]: 1357 pages
+              - 'link "Programming Languages: Concepts and Implementation Saverio Perugini Programming Languages: Concepts and Implementation teaches language concepts from two complementary perspectives: implementation and paradigms. It covers the implementation of concepts through the incremental construction of a progressive series of interpreters in Python, and Racket Scheme, for purposes of its combined simplicity and power, and assessing the differences in the resulting languages. 2021 889 pages" [ref=e103] [cursor=pointer]':
+                - /url: /book/google-books-4MlcEAAAQBAJ
+                - generic [ref=e104] [cursor=pointer]:
+                  - generic [ref=e106] [cursor=pointer]:
+                    - img [ref=e110] [cursor=pointer]
+                    - generic [ref=e112] [cursor=pointer]:
+                      - generic [ref=e113] [cursor=pointer]: "Programming Languages: Concepts and Implementation"
+                      - generic [ref=e114] [cursor=pointer]: Saverio Perugini
+                    - button "Add to favorites" [ref=e116]:
+                      - img
+                  - paragraph [ref=e118] [cursor=pointer]: "Programming Languages: Concepts and Implementation teaches language concepts from two complementary perspectives: implementation and paradigms. It covers the implementation of concepts through the incremental construction of a progressive series of interpreters in Python, and Racket Scheme, for purposes of its combined simplicity and power, and assessing the differences in the resulting languages."
+                  - generic [ref=e121] [cursor=pointer]:
+                    - generic [ref=e122] [cursor=pointer]:
+                      - img [ref=e123] [cursor=pointer]
+                      - generic [ref=e125] [cursor=pointer]: "2021"
+                    - generic [ref=e126] [cursor=pointer]:
+                      - img [ref=e127] [cursor=pointer]
+                      - generic [ref=e129] [cursor=pointer]: 889 pages
+              - link "Management Concepts for Civil Engineers K. Anbuvelan 2005 348 pages" [ref=e130] [cursor=pointer]:
+                - /url: /book/google-books-lMi-RDghde0C
+                - generic [ref=e131] [cursor=pointer]:
+                  - generic [ref=e133] [cursor=pointer]:
+                    - img [ref=e137] [cursor=pointer]
+                    - generic [ref=e139] [cursor=pointer]:
+                      - generic [ref=e140] [cursor=pointer]: Management Concepts for Civil Engineers
+                      - generic [ref=e141] [cursor=pointer]: K. Anbuvelan
+                    - button "Add to favorites" [ref=e143]:
+                      - img
+                  - generic [ref=e146] [cursor=pointer]:
+                    - generic [ref=e147] [cursor=pointer]:
+                      - img [ref=e148] [cursor=pointer]
+                      - generic [ref=e150] [cursor=pointer]: "2005"
+                    - generic [ref=e151] [cursor=pointer]:
+                      - img [ref=e152] [cursor=pointer]
+                      - generic [ref=e154] [cursor=pointer]: 348 pages
+              - link [ref=e155] [cursor=pointer]:
+                - /url: /book/google-books-7tNUu92d5PkC
+                - generic [ref=e156] [cursor=pointer]:
+                  - generic [ref=e158] [cursor=pointer]:
+                    - img [ref=e162] [cursor=pointer]
+                    - generic [ref=e164] [cursor=pointer]:
+                      - generic [ref=e165] [cursor=pointer]: Quantitative Techniques for Managerial Decisions
+                      - generic [ref=e166] [cursor=pointer]: U. K. Srivastava, G. V. Shenoy, S. C. Sharma
+                    - button "Add to favorites" [ref=e168]:
+                      - img
+                  - paragraph [ref=e170] [cursor=pointer]: "This Book Is Designed To Serve As A Text For Management, Economics, Accountancy (Chartered And Cost Accountancy), And Commerce Students. The Book Covers Concepts, Illustrations And Problems In Statistics And Operations Research. Part I Deals With Statistical Techniques For Decision Making. Part Ii Studies Various Operations Research Techniques For Managerial Decisions.The Book Contains Illustrations And Problems, Drawn Extensively From Various Functional Areas Of Management, Viz., Production, Finance, Marketing And Personnel, Which Are Designed To Understand Real Life Decision Making Situations. In Order To Make The Book Self-Contained, All Relevant Mathematical Concepts And Their Applications Have Been Included. To Enhance The Understanding Of The Subject Matter By The Students Belonging To Different Disciplines, The Approach Adopted In This Book, Both In Statistics And Operations Research, Is Conceptional Rather Than Mathematical. Hence Complicated Mathematical Proofs Have Been Avoided.This Book Would Be An Ideal Reference To Executives, Computer Professionals, Industrial Engineers, Economic Planners And Social Scientists. The Other Books By The Same Authors Are: Operations Research For Management And Business Statistics."
+                  - generic [ref=e173] [cursor=pointer]:
+                    - generic [ref=e174] [cursor=pointer]:
+                      - img [ref=e175] [cursor=pointer]
+                      - generic [ref=e177] [cursor=pointer]: "1989"
+                    - generic [ref=e178] [cursor=pointer]:
+                      - img [ref=e179] [cursor=pointer]
+                      - generic [ref=e181] [cursor=pointer]: 962 pages
+              - link "Industrial Robotics Handbook V. Daniel Hunt Presents information obtained from a variety of knowledgeable sources. Provides an extensive list of various robotics systems, and the potential of \"smart robots\" grouped into types of models. Includes important technical material on tolerances, load carrying capacities, price, and names and addresses of companies and individuals to contact for further information. 1983 454 pages" [ref=e182] [cursor=pointer]:
+                - /url: /book/google-books-fHZTIZ8K-lUC
+                - generic [ref=e183] [cursor=pointer]:
+                  - generic [ref=e185] [cursor=pointer]:
+                    - img [ref=e189] [cursor=pointer]
+                    - generic [ref=e191] [cursor=pointer]:
+                      - generic [ref=e192] [cursor=pointer]: Industrial Robotics Handbook
+                      - generic [ref=e193] [cursor=pointer]: V. Daniel Hunt
+                    - button "Add to favorites" [ref=e195]:
+                      - img
+                  - paragraph [ref=e197] [cursor=pointer]: Presents information obtained from a variety of knowledgeable sources. Provides an extensive list of various robotics systems, and the potential of "smart robots" grouped into types of models. Includes important technical material on tolerances, load carrying capacities, price, and names and addresses of companies and individuals to contact for further information.
+                  - generic [ref=e200] [cursor=pointer]:
+                    - generic [ref=e201] [cursor=pointer]:
+                      - img [ref=e202] [cursor=pointer]
+                      - generic [ref=e204] [cursor=pointer]: "1983"
+                    - generic [ref=e205] [cursor=pointer]:
+                      - img [ref=e206] [cursor=pointer]
+                      - generic [ref=e208] [cursor=pointer]: 454 pages
+              - link [ref=e209] [cursor=pointer]:
+                - /url: /book/google-books-Wmq1DwAAQBAJ
+                - generic [ref=e210] [cursor=pointer]:
+                  - generic [ref=e212] [cursor=pointer]:
+                    - img [ref=e216] [cursor=pointer]
+                    - generic [ref=e218] [cursor=pointer]:
+                      - generic [ref=e219] [cursor=pointer]: "Access Database for Pragmatic Programmers: A Step by Step Guide to Create Database-Driven Application Using Python"
+                      - generic [ref=e220] [cursor=pointer]: Vivian Siahaan
+                    - button "Add to favorites" [ref=e222]:
+                      - img
+                  - paragraph [ref=e224] [cursor=pointer]: "This book covers microsoft acces-based GUI programming using pyqt. Intentionally designed for various levels of interest and ability of learners, this book is suitable for students, engineers, and even researchers in a variety of disciplines. No advanced programming experience is needed, and only a few school-level programming skill are needed. In the first chapter, you will learn to use several widgets in PyQt5: Display a welcome message; Use the Radio Button widget; Grouping radio buttons; Displays options in the form of a check box; and Display two groups of check boxes. In chapter two, you will learn to use the following topics: Using Signal / Slot Editor; Copy and place text from one Line Edit widget to another; Convert data types and make a simple calculator; Use the Spin Box widget; Use scrollbars and sliders; Using the Widget List; Select a number of list items from one Widget List and display them on another Widget List widget; Add items to the Widget List; Perform operations on the Widget List; Use the Combo Box widget; Displays data selected by the user from the Calendar Widget; Creating a hotel reservation application; and Display tabular data using Table Widgets. In third chapter, you will learn: How to create the initial three tables project in the School database: Teacher, Class, and Subject tables; How to create database configuration files; How to create a Python GUI for inserting and editing tables; How to create a Python GUI to join and query the three tables. In fourth chapter, you will learn how to: Create a main form to connect all forms; Create a project will add three more tables to the school database: Student, Parent, and Tuition tables; Create a Python GUI for inserting and editing tables; Create a Python GUI to join and query over the three tables. In the last chapter, you will join the six classes, Teacher, TClass, Subject, Student, Parent, and Tuition and make queries over those tables."
+                  - generic [ref=e227] [cursor=pointer]:
+                    - generic [ref=e228] [cursor=pointer]:
+                      - img [ref=e229] [cursor=pointer]
+                      - generic [ref=e231] [cursor=pointer]: "2019"
+                    - generic [ref=e232] [cursor=pointer]:
+                      - img [ref=e233] [cursor=pointer]
+                      - generic [ref=e235] [cursor=pointer]: 371 pages
+              - link "Python Programming in Context Bradley N. Miller, David L. Ranum, Julie Anderson Python Programming in Context, Third Edition provides a comprehensive and accessible introduction to Python fundamentals. Updated with the latest version of Python, the new Third Edition offers a thorough overview of multiple applied areas, including image processing, cryptography, astronomy, the Internet, and bioinformatics. Taking an active learning approach, each chapter starts with a comprehensive real-world project that teaches core design techniques and Python programming while engaging students. An ideal first language for learners entering the rapidly expanding field of computer science, Python gives students a solid platform of key problem-solving skills that translate easily across programming languages. 2019 516 pages" [ref=e236] [cursor=pointer]:
+                - /url: /book/google-books-b-2oDwAAQBAJ
+                - generic [ref=e237] [cursor=pointer]:
+                  - generic [ref=e239] [cursor=pointer]:
+                    - img [ref=e243] [cursor=pointer]
+                    - generic [ref=e245] [cursor=pointer]:
+                      - generic [ref=e246] [cursor=pointer]: Python Programming in Context
+                      - generic [ref=e247] [cursor=pointer]: Bradley N. Miller, David L. Ranum, Julie Anderson
+                    - button "Add to favorites" [ref=e249]:
+                      - img
+                  - paragraph [ref=e251] [cursor=pointer]: Python Programming in Context, Third Edition provides a comprehensive and accessible introduction to Python fundamentals. Updated with the latest version of Python, the new Third Edition offers a thorough overview of multiple applied areas, including image processing, cryptography, astronomy, the Internet, and bioinformatics. Taking an active learning approach, each chapter starts with a comprehensive real-world project that teaches core design techniques and Python programming while engaging students. An ideal first language for learners entering the rapidly expanding field of computer science, Python gives students a solid platform of key problem-solving skills that translate easily across programming languages.
+                  - generic [ref=e254] [cursor=pointer]:
+                    - generic [ref=e255] [cursor=pointer]:
+                      - img [ref=e256] [cursor=pointer]
+                      - generic [ref=e258] [cursor=pointer]: "2019"
+                    - generic [ref=e259] [cursor=pointer]:
+                      - img [ref=e260] [cursor=pointer]
+                      - generic [ref=e262] [cursor=pointer]: 516 pages
+              - 'link "Computer Literature Bibliography: 1946-1963 W. W. Youden 1965 478 pages" [ref=e263] [cursor=pointer]':
+                - /url: /book/google-books-otw9AQAAIAAJ
+                - generic [ref=e264] [cursor=pointer]:
+                  - generic [ref=e266] [cursor=pointer]:
+                    - img [ref=e270] [cursor=pointer]
+                    - generic [ref=e272] [cursor=pointer]:
+                      - generic [ref=e273] [cursor=pointer]: "Computer Literature Bibliography: 1946-1963"
+                      - generic [ref=e274] [cursor=pointer]: W. W. Youden
+                    - button "Add to favorites" [ref=e276]:
+                      - img
+                  - generic [ref=e279] [cursor=pointer]:
+                    - generic [ref=e280] [cursor=pointer]:
+                      - img [ref=e281] [cursor=pointer]
+                      - generic [ref=e283] [cursor=pointer]: "1965"
+                    - generic [ref=e284] [cursor=pointer]:
+                      - img [ref=e285] [cursor=pointer]
+                      - generic [ref=e287] [cursor=pointer]: 478 pages
+              - link "Computer Aided Manufacturing C. Elanchezhian, G. Shanmuga Sundar 2007 596 pages" [ref=e288] [cursor=pointer]:
+                - /url: /book/google-books-zL3rTMC8zi8C
+                - generic [ref=e289] [cursor=pointer]:
+                  - generic [ref=e291] [cursor=pointer]:
+                    - img [ref=e295] [cursor=pointer]
+                    - generic [ref=e297] [cursor=pointer]:
+                      - generic [ref=e298] [cursor=pointer]: Computer Aided Manufacturing
+                      - generic [ref=e299] [cursor=pointer]: C. Elanchezhian, G. Shanmuga Sundar
+                    - button "Add to favorites" [ref=e301]:
+                      - img
+                  - generic [ref=e304] [cursor=pointer]:
+                    - generic [ref=e305] [cursor=pointer]:
+                      - img [ref=e306] [cursor=pointer]
+                      - generic [ref=e308] [cursor=pointer]: "2007"
+                    - generic [ref=e309] [cursor=pointer]:
+                      - img [ref=e310] [cursor=pointer]
+                      - generic [ref=e312] [cursor=pointer]: 596 pages
+              - 'link "Computer Literature Bibliography: 1964-1967 W. W. Youden 1965 392 pages" [ref=e313] [cursor=pointer]':
+                - /url: /book/google-books-Pei5AF0ccGwC
+                - generic [ref=e314] [cursor=pointer]:
+                  - generic [ref=e316] [cursor=pointer]:
+                    - img [ref=e320] [cursor=pointer]
+                    - generic [ref=e322] [cursor=pointer]:
+                      - generic [ref=e323] [cursor=pointer]: "Computer Literature Bibliography: 1964-1967"
+                      - generic [ref=e324] [cursor=pointer]: W. W. Youden
+                    - button "Add to favorites" [ref=e326]:
+                      - img
+                  - generic [ref=e329] [cursor=pointer]:
+                    - generic [ref=e330] [cursor=pointer]:
+                      - img [ref=e331] [cursor=pointer]
+                      - generic [ref=e333] [cursor=pointer]: "1965"
+                    - generic [ref=e334] [cursor=pointer]:
+                      - img [ref=e335] [cursor=pointer]
+                      - generic [ref=e337] [cursor=pointer]: 392 pages
+              - link "Jython for Java Programmers Robert W. Bill Build Java-based Web applications with increased speed and salability using Jython. This book helps Java developers increase application development and deployment. A brief introduction is provided that shows the differences between Java and Jython. 2002 496 pages" [ref=e338] [cursor=pointer]:
+                - /url: /book/google-books--7MMHfZ8bc8C
+                - generic [ref=e339] [cursor=pointer]:
+                  - generic [ref=e341] [cursor=pointer]:
+                    - img [ref=e345] [cursor=pointer]
+                    - generic [ref=e347] [cursor=pointer]:
+                      - generic [ref=e348] [cursor=pointer]: Jython for Java Programmers
+                      - generic [ref=e349] [cursor=pointer]: Robert W. Bill
+                    - button "Add to favorites" [ref=e351]:
+                      - img
+                  - paragraph [ref=e353] [cursor=pointer]: Build Java-based Web applications with increased speed and salability using Jython. This book helps Java developers increase application development and deployment. A brief introduction is provided that shows the differences between Java and Jython.
+                  - generic [ref=e356] [cursor=pointer]:
+                    - generic [ref=e357] [cursor=pointer]:
+                      - img [ref=e358] [cursor=pointer]
+                      - generic [ref=e360] [cursor=pointer]: "2002"
+                    - generic [ref=e361] [cursor=pointer]:
+                      - img [ref=e362] [cursor=pointer]
+                      - generic [ref=e364] [cursor=pointer]: 496 pages
+              - link "FCC Record United States. Federal Communications Commission 2014 934 pages" [ref=e365] [cursor=pointer]:
+                - /url: /book/google-books-H6QW-F4UFw8C
+                - generic [ref=e366] [cursor=pointer]:
+                  - generic [ref=e368] [cursor=pointer]:
+                    - img [ref=e372] [cursor=pointer]
+                    - generic [ref=e374] [cursor=pointer]:
+                      - generic [ref=e375] [cursor=pointer]: FCC Record
+                      - generic [ref=e376] [cursor=pointer]: United States. Federal Communications Commission
+                    - button "Add to favorites" [ref=e378]:
+                      - img
+                  - generic [ref=e381] [cursor=pointer]:
+                    - generic [ref=e382] [cursor=pointer]:
+                      - img [ref=e383] [cursor=pointer]
+                      - generic [ref=e385] [cursor=pointer]: "2014"
+                    - generic [ref=e386] [cursor=pointer]:
+                      - img [ref=e387] [cursor=pointer]
+                      - generic [ref=e389] [cursor=pointer]: 934 pages
+              - link [ref=e390] [cursor=pointer]:
+                - /url: /book/google-books-sS7aPtrUuw4C
+                - generic [ref=e391] [cursor=pointer]:
+                  - generic [ref=e393] [cursor=pointer]:
+                    - img [ref=e397] [cursor=pointer]
+                    - generic [ref=e399] [cursor=pointer]:
+                      - generic [ref=e400] [cursor=pointer]: 97 Things Every Programmer Should Know
+                      - generic [ref=e401] [cursor=pointer]: Kevlin Henney
+                    - button "Add to favorites" [ref=e403]:
+                      - img
+                  - paragraph [ref=e405] [cursor=pointer]: "Tap into the wisdom of experts to learn what every programmer should know, no matter what language you use. With the 97 short and extremely useful tips for programmers in this book, you'll expand your skills by adopting new approaches to old problems, learning appropriate best practices, and honing your craft through sound advice. With contributions from some of the most experienced and respected practitioners in the industry--including Michael Feathers, Pete Goodliffe, Diomidis Spinellis, Cay Horstmann, Verity Stob, and many more--this book contains practical knowledge and principles that you can apply to all kinds of projects. A few of the 97 things you should know: \"Code in the Language of the Domain\" by Dan North \"Write Tests for People\" by Gerard Meszaros \"Convenience Is Not an -ility\" by Gregor Hohpe \"Know Your IDE\" by Heinz Kabutz \"A Message to the Future\" by Linda Rising \"The Boy Scout Rule\" by Robert C. Martin (Uncle Bob) \"Beware the Share\" by Udi Dahan"
+                  - generic [ref=e408] [cursor=pointer]:
+                    - generic [ref=e409] [cursor=pointer]:
+                      - img [ref=e410] [cursor=pointer]
+                      - generic [ref=e412] [cursor=pointer]: "2010"
+                    - generic [ref=e413] [cursor=pointer]:
+                      - img [ref=e414] [cursor=pointer]
+                      - generic [ref=e416] [cursor=pointer]: 259 pages
+              - link "United States Code United States 2006 1330 pages" [ref=e417] [cursor=pointer]:
+                - /url: /book/google-books-2Nnv2uXc4SgC
+                - generic [ref=e418] [cursor=pointer]:
+                  - generic [ref=e420] [cursor=pointer]:
+                    - img [ref=e424] [cursor=pointer]
+                    - generic [ref=e426] [cursor=pointer]:
+                      - generic [ref=e427] [cursor=pointer]: United States Code
+                      - generic [ref=e428] [cursor=pointer]: United States
+                    - button "Add to favorites" [ref=e430]:
+                      - img
+                  - generic [ref=e433] [cursor=pointer]:
+                    - generic [ref=e434] [cursor=pointer]:
+                      - img [ref=e435] [cursor=pointer]
+                      - generic [ref=e437] [cursor=pointer]: "2006"
+                    - generic [ref=e438] [cursor=pointer]:
+                      - img [ref=e439] [cursor=pointer]
+                      - generic [ref=e441] [cursor=pointer]: 1330 pages
+              - link [ref=e442] [cursor=pointer]:
+                - /url: /book/google-books-WGpL6Sk9qNAC
+                - generic [ref=e443] [cursor=pointer]:
+                  - generic [ref=e445] [cursor=pointer]:
+                    - img [ref=e449] [cursor=pointer]
+                    - generic [ref=e451] [cursor=pointer]:
+                      - generic [ref=e452] [cursor=pointer]: Real-Time Collision Detection
+                      - generic [ref=e453] [cursor=pointer]: Christer Ericson
+                    - button "Add to favorites" [ref=e455]:
+                      - img
+                  - paragraph [ref=e457] [cursor=pointer]: Written by an expert in the game industry, Christer Ericson's new book is a comprehensive guide to the components of efficient real-time collision detection systems. The book provides the tools and know-how needed to implement industrial-strength collision detection for the highly detailed dynamic environments of applications such as 3D games, virtual reality applications, and physical simulators. Of the many topics covered, a key focus is on spatial and object partitioning through a wide variety of grids, trees, and sorting methods. The author also presents a large collection of intersection and distance tests for both simple and complex geometric shapes. Sections on vector and matrix algebra provide the background for advanced topics such as Voronoi regions, Minkowski sums, and linear and quadratic programming. Of utmost importance to programmers but rarely discussed in this much detail in other books are the chapters covering numerical and geometric robustness, both essential topics for collision detection systems. Also unique are the chapters discussing how graphics hardware can assist in collision detection computations and on advanced optimization for modern computer architectures. All in all, this comprehensive book will become the industry standard for years to come.
+                  - generic [ref=e460] [cursor=pointer]:
+                    - generic [ref=e461] [cursor=pointer]:
+                      - img [ref=e462] [cursor=pointer]
+                      - generic [ref=e464] [cursor=pointer]: "2004"
+                    - generic [ref=e465] [cursor=pointer]:
+                      - img [ref=e466] [cursor=pointer]
+                      - generic [ref=e468] [cursor=pointer]: 634 pages
+              - link "A Selected Annotated Bibliography on the Analysis of Water Resource Systems 1969 514 pages" [ref=e469] [cursor=pointer]:
+                - /url: /book/google-books-9n76AqJg5tYC
+                - generic [ref=e470] [cursor=pointer]:
+                  - generic [ref=e472] [cursor=pointer]:
+                    - img [ref=e476] [cursor=pointer]
+                    - generic [ref=e479] [cursor=pointer]: A Selected Annotated Bibliography on the Analysis of Water Resource Systems
+                    - button "Add to favorites" [ref=e481]:
+                      - img
+                  - generic [ref=e484] [cursor=pointer]:
+                    - generic [ref=e485] [cursor=pointer]:
+                      - img [ref=e486] [cursor=pointer]
+                      - generic [ref=e488] [cursor=pointer]: "1969"
+                    - generic [ref=e489] [cursor=pointer]:
+                      - img [ref=e490] [cursor=pointer]
+                      - generic [ref=e492] [cursor=pointer]: 514 pages
+              - link [ref=e493] [cursor=pointer]:
+                - /url: /book/google-books-wonrLjj2GagC
+                - generic [ref=e494] [cursor=pointer]:
+                  - generic [ref=e496] [cursor=pointer]:
+                    - img [ref=e500] [cursor=pointer]
+                    - generic [ref=e502] [cursor=pointer]:
+                      - generic [ref=e503] [cursor=pointer]: Introduction to Genetic Algorithms
+                      - generic [ref=e504] [cursor=pointer]: S.N. Sivanandam, S. N. Deepa
+                    - button "Add to favorites" [ref=e506]:
+                      - img
+                  - paragraph [ref=e508] [cursor=pointer]: "Theoriginofevolutionaryalgorithmswasanattempttomimicsomeoftheprocesses taking place in natural evolution. Although the details of biological evolution are not completely understood (even nowadays), there exist some points supported by strong experimental evidence: • Evolution is a process operating over chromosomes rather than over organisms. The former are organic tools encoding the structure of a living being, i.e., a cr- ture is “built” decoding a set of chromosomes. • Natural selection is the mechanism that relates chromosomes with the ef ciency of the entity they represent, thus allowing that ef cient organism which is we- adapted to the environment to reproduce more often than those which are not. • The evolutionary process takes place during the reproduction stage. There exists a large number of reproductive mechanisms in Nature. Most common ones are mutation (that causes the chromosomes of offspring to be different to those of the parents) and recombination (that combines the chromosomes of the parents to produce the offspring). Based upon the features above, the three mentioned models of evolutionary c- puting were independently (and almost simultaneously) developed."
+                  - generic [ref=e511] [cursor=pointer]:
+                    - generic [ref=e512] [cursor=pointer]:
+                      - img [ref=e513] [cursor=pointer]
+                      - generic [ref=e515] [cursor=pointer]: "2007"
+                    - generic [ref=e516] [cursor=pointer]:
+                      - img [ref=e517] [cursor=pointer]
+                      - generic [ref=e519] [cursor=pointer]: 453 pages
+              - link "Code of Federal Regulations Special edition of the Federal Register, containing a codification of documents of general applicability and future effect ... with ancillaries. 1995 702 pages" [ref=e520] [cursor=pointer]:
+                - /url: /book/google-books-SVyoi8u4ROMC
+                - generic [ref=e521] [cursor=pointer]:
+                  - generic [ref=e523] [cursor=pointer]:
+                    - img [ref=e527] [cursor=pointer]
+                    - generic [ref=e530] [cursor=pointer]: Code of Federal Regulations
+                    - button "Add to favorites" [ref=e532]:
+                      - img
+                  - paragraph [ref=e534] [cursor=pointer]: Special edition of the Federal Register, containing a codification of documents of general applicability and future effect ... with ancillaries.
+                  - generic [ref=e537] [cursor=pointer]:
+                    - generic [ref=e538] [cursor=pointer]:
+                      - img [ref=e539] [cursor=pointer]
+                      - generic [ref=e541] [cursor=pointer]: "1995"
+                    - generic [ref=e542] [cursor=pointer]:
+                      - img [ref=e543] [cursor=pointer]
+                      - generic [ref=e545] [cursor=pointer]: 702 pages
+              - link "C# 2008 Programmer's Reference Wei-Meng Lee Have access to all aspects of the C# programming language at hand with the C# 2008 Programmer’s Reference, the only comprehensive reference guide for C# programmers. Regardless of your experience with C#, you will appreciate the detailed code samples, which offer a quick and easy way to help you refresh your understanding of important concepts. In this ideal C# resource, you will find an introduction to the .NET Framework, a guide to using Visual Studio 2008, and explanations of classes, objects, types, delegates and events, strings and regular expressions, and threading. 2009 844 pages" [ref=e546] [cursor=pointer]:
+                - /url: /book/google-books-ZDBl8CR4zjQC
+                - generic [ref=e547] [cursor=pointer]:
+                  - generic [ref=e549] [cursor=pointer]:
+                    - img [ref=e553] [cursor=pointer]
+                    - generic [ref=e555] [cursor=pointer]:
+                      - generic [ref=e556] [cursor=pointer]: C# 2008 Programmer's Reference
+                      - generic [ref=e557] [cursor=pointer]: Wei-Meng Lee
+                    - button "Add to favorites" [ref=e559]:
+                      - img
+                  - paragraph [ref=e561] [cursor=pointer]: Have access to all aspects of the C# programming language at hand with the C# 2008 Programmer’s Reference, the only comprehensive reference guide for C# programmers. Regardless of your experience with C#, you will appreciate the detailed code samples, which offer a quick and easy way to help you refresh your understanding of important concepts. In this ideal C# resource, you will find an introduction to the .NET Framework, a guide to using Visual Studio 2008, and explanations of classes, objects, types, delegates and events, strings and regular expressions, and threading.
+                  - generic [ref=e564] [cursor=pointer]:
+                    - generic [ref=e565] [cursor=pointer]:
+                      - img [ref=e566] [cursor=pointer]
+                      - generic [ref=e568] [cursor=pointer]: "2009"
+                    - generic [ref=e569] [cursor=pointer]:
+                      - img [ref=e570] [cursor=pointer]
+                      - generic [ref=e572] [cursor=pointer]: 844 pages
+              - link [ref=e573] [cursor=pointer]:
+                - /url: /book/google-books-9bgIEQAAQBAJ
+                - generic [ref=e574] [cursor=pointer]:
+                  - generic [ref=e576] [cursor=pointer]:
+                    - img [ref=e580] [cursor=pointer]
+                    - generic [ref=e582] [cursor=pointer]:
+                      - generic [ref=e583] [cursor=pointer]: Semantic Web Technologies and Applications in Artificial Intelligence of Things
+                      - generic [ref=e584] [cursor=pointer]: Ortiz-Rodriguez, Fernando, Leyva-Mederos, Amed, Tiwari, Sanju, Hernandez-Quintana, Ania R., Martinez-Rodriguez, Jose L.
+                    - button "Add to favorites" [ref=e586]:
+                      - img
+                  - paragraph [ref=e588] [cursor=pointer]: The confluence of Artificial Intelligence of Things (AIoT) and Semantic Web technologies is nothing short of revolutionary. The profound impact of this synergy extends far beyond the realms of industry, research, and society; it shapes the very fabric of our future. Semantic Web Technologies and Applications in Artificial Intelligence of Things is a meticulously crafted reference that not only acknowledges this significance but also serves as a guide for those navigating the complexities of Industry 4.0 and AIoT. This curated compendium of cutting-edge technologies acts as a veritable knowledge base for future developments. As academics, scholars, and industry professionals, the ideal audience of this book, will find meticulously curated content that caters to their diverse interests and expertise, covering topics ranging from smart agriculture, manufacturing, industry, health sciences, and government. Seasoned academics, students, and visionary industry leaders, will find this book to be an indispensable guide that paves the way for innovation and progress.
+                  - generic [ref=e591] [cursor=pointer]:
+                    - generic [ref=e592] [cursor=pointer]:
+                      - img [ref=e593] [cursor=pointer]
+                      - generic [ref=e595] [cursor=pointer]: "2024"
+                    - generic [ref=e596] [cursor=pointer]:
+                      - img [ref=e597] [cursor=pointer]
+                      - generic [ref=e599] [cursor=pointer]: 502 pages
+            - generic [ref=e600]:
+              - generic [ref=e601]: Page 1 of 50000
+              - generic [ref=e602]:
+                - button "Previous" [disabled]:
+                  - img
+                  - generic: Previous
+                - generic [ref=e603]:
+                  - button "1"
+                  - button "2" [ref=e604]
+                  - button "3" [ref=e605]
+                  - button "4" [ref=e606]
+                  - button "5" [ref=e607]
+                  - generic [ref=e608]: ...
+                  - button "50000" [ref=e609]
+                - button "Next" [ref=e610]:
+                  - generic [ref=e611]: Next
+                  - img
+  - generic [ref=e612]:
+    - img [ref=e614]
+    - button "Open Tanstack query devtools" [ref=e662] [cursor=pointer]:
+      - img [ref=e663] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e716] [cursor=pointer]:
+    - img [ref=e717] [cursor=pointer]
+  - alert [ref=e720]
+```

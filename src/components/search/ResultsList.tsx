@@ -8,7 +8,8 @@ import {
   BookOpen,
   Loader2,
 } from "lucide-react";
-import { BookCard, type Book } from "./BookCard";
+import { BookCard } from "./BookCard";
+import type { Book } from "@/types/book";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -54,8 +55,7 @@ interface ResultsListProps {
   skeletonCount?: number;
   /** Whether books are favorited (for favorite toggle state) */
   favoriteBookIds?: Set<string>;
-  /** Callback when a book is clicked */
-  onBookClick?: (book: Book) => void;
+
   /** Callback when favorite status changes */
   onFavoriteToggle?: (bookId: string, isFavorite: boolean) => void;
   /** Callback when page changes */
@@ -83,7 +83,7 @@ export const ResultsList: React.FC<ResultsListProps> = ({
   variant = "grid",
   skeletonCount = 12,
   favoriteBookIds = new Set(),
-  onBookClick,
+
   onFavoriteToggle,
   onPageChange,
   className,
@@ -191,7 +191,13 @@ export const ResultsList: React.FC<ResultsListProps> = ({
           {Array.from({ length: skeletonCount }, (_, index) => (
             <BookCard
               key={index}
-              book={{ id: `skeleton-${index}`, title: "", authors: "" }}
+              book={{
+                id: `skeleton-${index}`,
+                title: "",
+                authors: [],
+                source: "google-books",
+                originalId: `skeleton-${index}`,
+              }}
               isLoading
               variant={
                 variant === "list"
@@ -280,7 +286,6 @@ export const ResultsList: React.FC<ResultsListProps> = ({
                   : "default"
             }
             isFavorite={favoriteBookIds.has(book.id)}
-            onClick={onBookClick}
             onFavoriteToggle={onFavoriteToggle}
           />
         ))}
