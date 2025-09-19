@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
         pathname: "/books/content/**",
       },
       {
+        protocol: "https",
+        hostname: "books.google.com",
+        pathname: "/books/publisher/content/**",
+      },
+      {
+        protocol: "http",
+        hostname: "books.google.com",
+        pathname: "/books/publisher/content/**",
+      },
+      {
         protocol: "http",
         hostname: "books.google.com",
         pathname: "/books/content/**",

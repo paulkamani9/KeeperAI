@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Heart, ExternalLink, BookOpen, Calendar, Star } from "lucide-react";
 import {
@@ -15,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BookCover } from "@/components/shared/BookCover";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
 
@@ -62,13 +62,6 @@ export const BookCard: React.FC<BookCardProps> = ({
   const publicationYear = book.publishedDate
     ? new Date(book.publishedDate).getFullYear()
     : null;
-
-  // Get the best available cover image
-  const coverImage =
-    book.largeThumbnail ||
-    book.mediumThumbnail ||
-    book.thumbnail ||
-    book.smallThumbnail;
 
   // Handle favorite toggle
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -129,21 +122,26 @@ export const BookCard: React.FC<BookCardProps> = ({
             {/* Book Cover */}
             {!isCompact && (
               <div className="flex-shrink-0">
-                <div className="relative h-24 w-16 rounded-md overflow-hidden bg-muted">
-                  {coverImage ? (
-                    <Image
-                      src={coverImage}
-                      alt={`Cover of ${book.title}`}
-                      fill
-                      className="object-cover transition-transform group-hover:scale-105"
-                      sizes="64px"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-primary/10">
-                      <BookOpen className="h-6 w-6 text-primary/50" />
-                    </div>
-                  )}
-                </div>
+                <BookCover
+                  title={book.title}
+                  authors={book.authors}
+                  src={
+                    book.largeThumbnail ||
+                    book.mediumThumbnail ||
+                    book.thumbnail ||
+                    book.smallThumbnail
+                  }
+                  fallbackSrcs={
+                    [
+                      book.mediumThumbnail,
+                      book.thumbnail,
+                      book.smallThumbnail,
+                    ].filter(Boolean) as string[]
+                  }
+                  size="small"
+                  clickable={false}
+                  className="transition-transform group-hover:scale-105"
+                />
               </div>
             )}
 

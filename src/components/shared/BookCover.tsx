@@ -93,7 +93,7 @@ export const BookCover = forwardRef<HTMLDivElement, BookCoverProps>(
     // Prepare all possible image sources
     const allSrcs = [src, ...fallbackSrcs].filter(Boolean) as string[];
     const currentSrc = allSrcs[currentSrcIndex];
-    const hasImage = allSrcs.length > 0 && !imageError;
+    const hasImage = allSrcs.length > 0 && !imageError && currentSrc;
 
     // Get size configuration
     const config = sizeConfig[size];

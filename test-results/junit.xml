@@ -1,41 +1,8 @@
-<testsuites id="" name="" tests="25" failures="25" skipped="0" errors="0" time="52.29579600000009">
-<testsuite name="components/search/__tests__/search.visual.test.ts" timestamp="2025-09-19T11:32:01.925Z" hostname="chromium" tests="25" failures="25" skipped="0" time="154.381" errors="0">
-<testcase name="SearchInput Visual Tests › should match SearchInput default state" classname="components/search/__tests__/search.visual.test.ts" time="5.681">
-<failure message="search.visual.test.ts:16:7 should match SearchInput default state" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:16:7 › SearchInput Visual Tests › should match SearchInput default state 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-default-chromium-darwin.png, writing actual.
-
-      24 |     });
-      25 |
-    > 26 |     await expect(page.locator('#test-container')).toHaveScreenshot('search-input-default.png');
-         |     ^
-      27 |   });
-      28 |
-      29 |   test('should match SearchInput with focus state', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:26:5
-
-    attachment #1: search-input-default (image/png) ────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-input-default-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-9dddd-h-SearchInput-default-state-chromium/search-input-default-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-9dddd-h-SearchInput-default-state-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-default-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-9dddd-h-SearchInput-default-state-chromium/search-input-default-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-9dddd-h-SearchInput-default-state-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testsuites id="" name="" tests="25" failures="12" skipped="0" errors="0" time="55.57073100000061">
+<testsuite name="components/search/__tests__/search.visual.test.ts" timestamp="2025-09-19T12:58:25.730Z" hostname="chromium" tests="25" failures="12" skipped="0" time="163.945" errors="0">
+<testcase name="SearchInput Visual Tests › should match SearchInput default state" classname="components/search/__tests__/search.visual.test.ts" time="5.353">
 </testcase>
-<testcase name="SearchInput Visual Tests › should match SearchInput with focus state" classname="components/search/__tests__/search.visual.test.ts" time="30.056">
+<testcase name="SearchInput Visual Tests › should match SearchInput with focus state" classname="components/search/__tests__/search.visual.test.ts" time="30.157">
 <failure message="search.visual.test.ts:29:7 should match SearchInput with focus state" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:29:7 › SearchInput Visual Tests › should match SearchInput with focus state 
 
@@ -58,382 +25,124 @@
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
     ../test-results/components-search-__tests_-a5a9e-earchInput-with-focus-state-chromium/test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/components-search-__tests_-a5a9e-earchInput-with-focus-state-chromium/error-context.md
 ]]>
 </failure>
 <system-out>
 <![CDATA[
 [[ATTACHMENT|components-search-__tests_-a5a9e-earchInput-with-focus-state-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|components-search-__tests_-a5a9e-earchInput-with-focus-state-chromium/error-context.md]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="SearchInput Visual Tests › should match SearchInput with error state" classname="components/search/__tests__/search.visual.test.ts" time="5.668">
+<testcase name="SearchInput Visual Tests › should match SearchInput with error state" classname="components/search/__tests__/search.visual.test.ts" time="10.129">
 <failure message="search.visual.test.ts:44:7 should match SearchInput with error state" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:44:7 › SearchInput Visual Tests › should match SearchInput with error state 
 
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-error-chromium-darwin.png, writing actual.
+    Error: expect(locator).toHaveScreenshot(expected) failed
+
+    Timeout:  5000ms
+      Timeout 5000ms exceeded.
+
+      Snapshot: search-input-error.png
+
+    Call log:
+      - Expect "toHaveScreenshot(search-input-error.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - waiting for locator('#test-container')
+      - Timeout 5000ms exceeded.
+
 
       51 |     });
       52 |
     > 53 |     await expect(page.locator('#test-container')).toHaveScreenshot('search-input-error.png');
-         |     ^
+         |                                                   ^
       54 |   });
       55 |
       56 |   test('should match SearchInput compact variant', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:53:5
+        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:53:51
 
     attachment #1: search-input-error (image/png) ──────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-input-error-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-77f66-earchInput-with-error-state-chromium/search-input-error-actual.png
+    components/search/__tests__/search.visual.test.ts-snapshots/search-input-error-chromium-darwin.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
     ../test-results/components-search-__tests_-77f66-earchInput-with-error-state-chromium/test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/components-search-__tests_-77f66-earchInput-with-error-state-chromium/error-context.md
 ]]>
 </failure>
 <system-out>
 <![CDATA[
 [[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-error-chromium-darwin.png]]
 
-[[ATTACHMENT|components-search-__tests_-77f66-earchInput-with-error-state-chromium/search-input-error-actual.png]]
-
 [[ATTACHMENT|components-search-__tests_-77f66-earchInput-with-error-state-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|components-search-__tests_-77f66-earchInput-with-error-state-chromium/error-context.md]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="SearchInput Visual Tests › should match SearchInput compact variant" classname="components/search/__tests__/search.visual.test.ts" time="5.727">
-<failure message="search.visual.test.ts:56:7 should match SearchInput compact variant" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:56:7 › SearchInput Visual Tests › should match SearchInput compact variant 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-compact-chromium-darwin.png, writing actual.
-
-      63 |     });
-      64 |
-    > 65 |     await expect(page.locator('#test-container')).toHaveScreenshot('search-input-compact.png');
-         |     ^
-      66 |   });
-      67 | });
-      68 |
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:65:5
-
-    attachment #1: search-input-compact (image/png) ────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-input-compact-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-e56d0-SearchInput-compact-variant-chromium/search-input-compact-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-e56d0-SearchInput-compact-variant-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-compact-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-e56d0-SearchInput-compact-variant-chromium/search-input-compact-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-e56d0-SearchInput-compact-variant-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testcase name="SearchInput Visual Tests › should match SearchInput compact variant" classname="components/search/__tests__/search.visual.test.ts" time="5.359">
 </testcase>
-<testcase name="BookCard Visual Tests › should match BookCard default variant" classname="components/search/__tests__/search.visual.test.ts" time="1.995">
-<failure message="search.visual.test.ts:70:7 should match BookCard default variant" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:70:7 › BookCard Visual Tests › should match BookCard default variant 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-default-chromium-darwin.png, writing actual.
-
-      79 |     });
-      80 |
-    > 81 |     await expect(page.locator('#test-container')).toHaveScreenshot('book-card-default.png');
-         |     ^
-      82 |   });
-      83 |
-      84 |   test('should match BookCard compact variant', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:81:5
-
-    attachment #1: book-card-default (image/png) ───────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/book-card-default-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-f1fcb-ch-BookCard-default-variant-chromium/book-card-default-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-f1fcb-ch-BookCard-default-variant-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-default-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-f1fcb-ch-BookCard-default-variant-chromium/book-card-default-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-f1fcb-ch-BookCard-default-variant-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testcase name="BookCard Visual Tests › should match BookCard default variant" classname="components/search/__tests__/search.visual.test.ts" time="2.533">
 </testcase>
-<testcase name="BookCard Visual Tests › should match BookCard compact variant" classname="components/search/__tests__/search.visual.test.ts" time="2.658">
-<failure message="search.visual.test.ts:84:7 should match BookCard compact variant" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:84:7 › BookCard Visual Tests › should match BookCard compact variant 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-compact-chromium-darwin.png, writing actual.
-
-      93 |     });
-      94 |
-    > 95 |     await expect(page.locator('#test-container')).toHaveScreenshot('book-card-compact.png');
-         |     ^
-      96 |   });
-      97 |
-      98 |   test('should match BookCard with favorite state', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:95:5
-
-    attachment #1: book-card-compact (image/png) ───────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/book-card-compact-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-12d81-ch-BookCard-compact-variant-chromium/book-card-compact-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-12d81-ch-BookCard-compact-variant-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-compact-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-12d81-ch-BookCard-compact-variant-chromium/book-card-compact-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-12d81-ch-BookCard-compact-variant-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testcase name="BookCard Visual Tests › should match BookCard compact variant" classname="components/search/__tests__/search.visual.test.ts" time="1.962">
 </testcase>
-<testcase name="BookCard Visual Tests › should match BookCard with favorite state" classname="components/search/__tests__/search.visual.test.ts" time="2.512">
-<failure message="search.visual.test.ts:98:7 should match BookCard with favorite state" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:98:7 › BookCard Visual Tests › should match BookCard with favorite state 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-favorite-chromium-darwin.png, writing actual.
-
-      107 |     });
-      108 |
-    > 109 |     await expect(page.locator('#test-container')).toHaveScreenshot('book-card-favorite.png');
-          |     ^
-      110 |   });
-      111 |
-      112 |   test('should match BookCard loading state', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:109:5
-
-    attachment #1: book-card-favorite (image/png) ──────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/book-card-favorite-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-f41d7-ookCard-with-favorite-state-chromium/book-card-favorite-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-f41d7-ookCard-with-favorite-state-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-favorite-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-f41d7-ookCard-with-favorite-state-chromium/book-card-favorite-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-f41d7-ookCard-with-favorite-state-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testcase name="BookCard Visual Tests › should match BookCard with favorite state" classname="components/search/__tests__/search.visual.test.ts" time="1.772">
 </testcase>
-<testcase name="BookCard Visual Tests › should match BookCard loading state" classname="components/search/__tests__/search.visual.test.ts" time="1.818">
-<failure message="search.visual.test.ts:112:7 should match BookCard loading state" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:112:7 › BookCard Visual Tests › should match BookCard loading state 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-loading-chromium-darwin.png, writing actual.
-
-      121 |     });
-      122 |
-    > 123 |     await expect(page.locator('#test-container')).toHaveScreenshot('book-card-loading.png');
-          |     ^
-      124 |   });
-      125 | });
-      126 |
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:123:5
-
-    attachment #1: book-card-loading (image/png) ───────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/book-card-loading-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-cbf8c-atch-BookCard-loading-state-chromium/book-card-loading-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-cbf8c-atch-BookCard-loading-state-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-loading-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-cbf8c-atch-BookCard-loading-state-chromium/book-card-loading-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-cbf8c-atch-BookCard-loading-state-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testcase name="BookCard Visual Tests › should match BookCard loading state" classname="components/search/__tests__/search.visual.test.ts" time="1.907">
 </testcase>
-<testcase name="ResultsList Visual Tests › should match ResultsList with results grid" classname="components/search/__tests__/search.visual.test.ts" time="1.953">
-<failure message="search.visual.test.ts:128:7 should match ResultsList with results grid" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:128:7 › ResultsList Visual Tests › should match ResultsList with results grid 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-grid-chromium-darwin.png, writing actual.
-
-      137 |     });
-      138 |
-    > 139 |     await expect(page.locator('#test-container')).toHaveScreenshot('results-list-grid.png');
-          |     ^
-      140 |   });
-      141 |
-      142 |   test('should match ResultsList loading state', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:139:5
-
-    attachment #1: results-list-grid (image/png) ───────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/results-list-grid-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-e713f-sultsList-with-results-grid-chromium/results-list-grid-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-e713f-sultsList-with-results-grid-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-grid-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-e713f-sultsList-with-results-grid-chromium/results-list-grid-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-e713f-sultsList-with-results-grid-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testcase name="ResultsList Visual Tests › should match ResultsList with results grid" classname="components/search/__tests__/search.visual.test.ts" time="2.267">
 </testcase>
-<testcase name="ResultsList Visual Tests › should match ResultsList loading state" classname="components/search/__tests__/search.visual.test.ts" time="2.265">
-<failure message="search.visual.test.ts:142:7 should match ResultsList loading state" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:142:7 › ResultsList Visual Tests › should match ResultsList loading state 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-loading-chromium-darwin.png, writing actual.
-
-      151 |     });
-      152 |
-    > 153 |     await expect(page.locator('#test-container')).toHaveScreenshot('results-list-loading.png');
-          |     ^
-      154 |   });
-      155 |
-      156 |   test('should match ResultsList empty state', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:153:5
-
-    attachment #1: results-list-loading (image/png) ────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/results-list-loading-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-c8221-h-ResultsList-loading-state-chromium/results-list-loading-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-c8221-h-ResultsList-loading-state-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-loading-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-c8221-h-ResultsList-loading-state-chromium/results-list-loading-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-c8221-h-ResultsList-loading-state-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testcase name="ResultsList Visual Tests › should match ResultsList loading state" classname="components/search/__tests__/search.visual.test.ts" time="2.114">
 </testcase>
-<testcase name="ResultsList Visual Tests › should match ResultsList empty state" classname="components/search/__tests__/search.visual.test.ts" time="2.236">
-<failure message="search.visual.test.ts:156:7 should match ResultsList empty state" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:156:7 › ResultsList Visual Tests › should match ResultsList empty state 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-empty-chromium-darwin.png, writing actual.
-
-      165 |     });
-      166 |
-    > 167 |     await expect(page.locator('#test-container')).toHaveScreenshot('results-list-empty.png');
-          |     ^
-      168 |   });
-      169 |
-      170 |   test('should match ResultsList with pagination', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:167:5
-
-    attachment #1: results-list-empty (image/png) ──────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/results-list-empty-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-a8534-tch-ResultsList-empty-state-chromium/results-list-empty-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-a8534-tch-ResultsList-empty-state-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-empty-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-a8534-tch-ResultsList-empty-state-chromium/results-list-empty-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-a8534-tch-ResultsList-empty-state-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testcase name="ResultsList Visual Tests › should match ResultsList empty state" classname="components/search/__tests__/search.visual.test.ts" time="2.193">
 </testcase>
-<testcase name="ResultsList Visual Tests › should match ResultsList with pagination" classname="components/search/__tests__/search.visual.test.ts" time="1.93">
-<failure message="search.visual.test.ts:170:7 should match ResultsList with pagination" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:170:7 › ResultsList Visual Tests › should match ResultsList with pagination 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-pagination-chromium-darwin.png, writing actual.
-
-      179 |     });
-      180 |
-    > 181 |     await expect(page.locator('#test-container')).toHaveScreenshot('results-list-pagination.png');
-          |     ^
-      182 |   });
-      183 | });
-      184 |
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:181:5
-
-    attachment #1: results-list-pagination (image/png) ─────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/results-list-pagination-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-fdeb0-ResultsList-with-pagination-chromium/results-list-pagination-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-fdeb0-ResultsList-with-pagination-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-pagination-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-fdeb0-ResultsList-with-pagination-chromium/results-list-pagination-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-fdeb0-ResultsList-with-pagination-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testcase name="ResultsList Visual Tests › should match ResultsList with pagination" classname="components/search/__tests__/search.visual.test.ts" time="2.56">
 </testcase>
-<testcase name="Responsive Visual Tests › should match mobile layout" classname="components/search/__tests__/search.visual.test.ts" time="1.869">
+<testcase name="Responsive Visual Tests › should match mobile layout" classname="components/search/__tests__/search.visual.test.ts" time="2.887">
 <failure message="search.visual.test.ts:186:7 should match mobile layout" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:186:7 › Responsive Visual Tests › should match mobile layout 
 
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-page-mobile-chromium-darwin.png, writing actual.
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      4680 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: search-page-mobile.png
+
+    Call log:
+      - Expect "toHaveScreenshot(search-page-mobile.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 4680 pixels (ratio 0.02 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 4680 pixels (ratio 0.02 of all image pixels) are different.
+
 
       191 |     await page.waitForSelector('input[placeholder*="Search"]');
       192 |
     > 193 |     await expect(page).toHaveScreenshot('search-page-mobile.png');
-          |     ^
+          |                        ^
       194 |   });
       195 |
       196 |   test('should match tablet layout', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:193:5
+        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:193:24
 
     attachment #1: search-page-mobile (image/png) ──────────────────────────────────────────────────
     Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-page-mobile-chromium-darwin.png
     Received: ../test-results/components-search-__tests_-64074--should-match-mobile-layout-chromium/search-page-mobile-actual.png
+    Diff:     ../test-results/components-search-__tests_-64074--should-match-mobile-layout-chromium/search-page-mobile-diff.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
@@ -449,30 +158,60 @@
 
 [[ATTACHMENT|components-search-__tests_-64074--should-match-mobile-layout-chromium/search-page-mobile-actual.png]]
 
+[[ATTACHMENT|components-search-__tests_-64074--should-match-mobile-layout-chromium/search-page-mobile-diff.png]]
+
 [[ATTACHMENT|components-search-__tests_-64074--should-match-mobile-layout-chromium/test-failed-1.png]]
 
 [[ATTACHMENT|components-search-__tests_-64074--should-match-mobile-layout-chromium/error-context.md]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Responsive Visual Tests › should match tablet layout" classname="components/search/__tests__/search.visual.test.ts" time="1.929">
+<testcase name="Responsive Visual Tests › should match tablet layout" classname="components/search/__tests__/search.visual.test.ts" time="3.726">
 <failure message="search.visual.test.ts:196:7 should match tablet layout" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:196:7 › Responsive Visual Tests › should match tablet layout 
 
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-page-tablet-chromium-darwin.png, writing actual.
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      8932 pixels (ratio 0.02 of all image pixels) are different.
+
+      Snapshot: search-page-tablet.png
+
+    Call log:
+      - Expect "toHaveScreenshot(search-page-tablet.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 5145 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 3787 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 250ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 8932 pixels (ratio 0.02 of all image pixels) are different.
+
 
       200 |     await page.waitForSelector('input[placeholder*="Search"]');
       201 |
     > 202 |     await expect(page).toHaveScreenshot('search-page-tablet.png');
-          |     ^
+          |                        ^
       203 |   });
       204 |
       205 |   test('should match desktop layout', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:202:5
+        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:202:24
 
     attachment #1: search-page-tablet (image/png) ──────────────────────────────────────────────────
     Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-page-tablet-chromium-darwin.png
     Received: ../test-results/components-search-__tests_-026a3--should-match-tablet-layout-chromium/search-page-tablet-actual.png
+    Diff:     ../test-results/components-search-__tests_-026a3--should-match-tablet-layout-chromium/search-page-tablet-diff.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
@@ -488,30 +227,60 @@
 
 [[ATTACHMENT|components-search-__tests_-026a3--should-match-tablet-layout-chromium/search-page-tablet-actual.png]]
 
+[[ATTACHMENT|components-search-__tests_-026a3--should-match-tablet-layout-chromium/search-page-tablet-diff.png]]
+
 [[ATTACHMENT|components-search-__tests_-026a3--should-match-tablet-layout-chromium/test-failed-1.png]]
 
 [[ATTACHMENT|components-search-__tests_-026a3--should-match-tablet-layout-chromium/error-context.md]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Responsive Visual Tests › should match desktop layout" classname="components/search/__tests__/search.visual.test.ts" time="2.145">
+<testcase name="Responsive Visual Tests › should match desktop layout" classname="components/search/__tests__/search.visual.test.ts" time="3.983">
 <failure message="search.visual.test.ts:205:7 should match desktop layout" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:205:7 › Responsive Visual Tests › should match desktop layout 
 
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-page-desktop-chromium-darwin.png, writing actual.
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      8944 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: search-page-desktop.png
+
+    Call log:
+      - Expect "toHaveScreenshot(search-page-desktop.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 6707 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 5337 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 250ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 8944 pixels (ratio 0.01 of all image pixels) are different.
+
 
       209 |     await page.waitForSelector('input[placeholder*="Search"]');
       210 |
     > 211 |     await expect(page).toHaveScreenshot('search-page-desktop.png');
-          |     ^
+          |                        ^
       212 |   });
       213 |
       214 |   test('should match search results responsive grid', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:211:5
+        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:211:24
 
     attachment #1: search-page-desktop (image/png) ─────────────────────────────────────────────────
     Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-page-desktop-chromium-darwin.png
     Received: ../test-results/components-search-__tests_-73c45-should-match-desktop-layout-chromium/search-page-desktop-actual.png
+    Diff:     ../test-results/components-search-__tests_-73c45-should-match-desktop-layout-chromium/search-page-desktop-diff.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
@@ -527,13 +296,15 @@
 
 [[ATTACHMENT|components-search-__tests_-73c45-should-match-desktop-layout-chromium/search-page-desktop-actual.png]]
 
+[[ATTACHMENT|components-search-__tests_-73c45-should-match-desktop-layout-chromium/search-page-desktop-diff.png]]
+
 [[ATTACHMENT|components-search-__tests_-73c45-should-match-desktop-layout-chromium/test-failed-1.png]]
 
 [[ATTACHMENT|components-search-__tests_-73c45-should-match-desktop-layout-chromium/error-context.md]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Responsive Visual Tests › should match search results responsive grid" classname="components/search/__tests__/search.visual.test.ts" time="11.714">
+<testcase name="Responsive Visual Tests › should match search results responsive grid" classname="components/search/__tests__/search.visual.test.ts" time="11.886">
 <failure message="search.visual.test.ts:214:7 should match search results responsive grid" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:214:7 › Responsive Visual Tests › should match search results responsive grid 
 
@@ -566,24 +337,64 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Theme Visual Tests › should match light theme" classname="components/search/__tests__/search.visual.test.ts" time="2.366">
+<testcase name="Theme Visual Tests › should match light theme" classname="components/search/__tests__/search.visual.test.ts" time="5.793">
 <failure message="search.visual.test.ts:236:7 should match light theme" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:236:7 › Theme Visual Tests › should match light theme 
 
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-page-light-theme-chromium-darwin.png, writing actual.
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      5156 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: search-page-light-theme.png
+
+    Call log:
+      - Expect "toHaveScreenshot(search-page-light-theme.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 5156 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 33 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 250ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 33 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 500ms before taking screenshot
+      2 × taking page screenshot
+          - disabled all CSS animations
+        - waiting for fonts to load...
+        - fonts loaded
+        - 35 pixels (ratio 0.01 of all image pixels) are different.
+        - waiting 1000ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 5156 pixels (ratio 0.01 of all image pixels) are different.
+
 
       244 |     await page.waitForSelector('input[placeholder*="Search"]');
       245 |
     > 246 |     await expect(page).toHaveScreenshot('search-page-light-theme.png');
-          |     ^
+          |                        ^
       247 |   });
       248 |
       249 |   test('should match dark theme', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:246:5
+        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:246:24
 
     attachment #1: search-page-light-theme (image/png) ─────────────────────────────────────────────
     Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-page-light-theme-chromium-darwin.png
     Received: ../test-results/components-search-__tests_-fdc32-ts-should-match-light-theme-chromium/search-page-light-theme-actual.png
+    Diff:     ../test-results/components-search-__tests_-fdc32-ts-should-match-light-theme-chromium/search-page-light-theme-diff.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
@@ -599,30 +410,54 @@
 
 [[ATTACHMENT|components-search-__tests_-fdc32-ts-should-match-light-theme-chromium/search-page-light-theme-actual.png]]
 
+[[ATTACHMENT|components-search-__tests_-fdc32-ts-should-match-light-theme-chromium/search-page-light-theme-diff.png]]
+
 [[ATTACHMENT|components-search-__tests_-fdc32-ts-should-match-light-theme-chromium/test-failed-1.png]]
 
 [[ATTACHMENT|components-search-__tests_-fdc32-ts-should-match-light-theme-chromium/error-context.md]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Theme Visual Tests › should match dark theme" classname="components/search/__tests__/search.visual.test.ts" time="2.106">
+<testcase name="Theme Visual Tests › should match dark theme" classname="components/search/__tests__/search.visual.test.ts" time="2.537">
 <failure message="search.visual.test.ts:249:7 should match dark theme" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:249:7 › Theme Visual Tests › should match dark theme 
 
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-page-dark-theme-chromium-darwin.png, writing actual.
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      7768 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: search-page-dark-theme.png
+
+    Call log:
+      - Expect "toHaveScreenshot(search-page-dark-theme.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 7768 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 7768 pixels (ratio 0.01 of all image pixels) are different.
+
 
       257 |     await page.waitForSelector('input[placeholder*="Search"]');
       258 |
     > 259 |     await expect(page).toHaveScreenshot('search-page-dark-theme.png');
-          |     ^
+          |                        ^
       260 |   });
       261 |
       262 |   test('should match components in both themes', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:259:5
+        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:259:24
 
     attachment #1: search-page-dark-theme (image/png) ──────────────────────────────────────────────
     Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-page-dark-theme-chromium-darwin.png
     Received: ../test-results/components-search-__tests_-07167-sts-should-match-dark-theme-chromium/search-page-dark-theme-actual.png
+    Diff:     ../test-results/components-search-__tests_-07167-sts-should-match-dark-theme-chromium/search-page-dark-theme-diff.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
@@ -638,148 +473,17 @@
 
 [[ATTACHMENT|components-search-__tests_-07167-sts-should-match-dark-theme-chromium/search-page-dark-theme-actual.png]]
 
+[[ATTACHMENT|components-search-__tests_-07167-sts-should-match-dark-theme-chromium/search-page-dark-theme-diff.png]]
+
 [[ATTACHMENT|components-search-__tests_-07167-sts-should-match-dark-theme-chromium/test-failed-1.png]]
 
 [[ATTACHMENT|components-search-__tests_-07167-sts-should-match-dark-theme-chromium/error-context.md]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Theme Visual Tests › should match components in both themes" classname="components/search/__tests__/search.visual.test.ts" time="3.626">
-<failure message="search.visual.test.ts:262:7 should match components in both themes" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:262:7 › Theme Visual Tests › should match components in both themes 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-light-theme-chromium-darwin.png, writing actual.
-
-      285 |         }, component);
-      286 |
-    > 287 |         await expect(page.locator('#test-container')).toHaveScreenshot(`${component}-${theme}-theme.png`);
-          |         ^
-      288 |       }
-      289 |     }
-      290 |   });
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:287:9
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-light-theme-chromium-darwin.png, writing actual.
-
-      285 |         }, component);
-      286 |
-    > 287 |         await expect(page.locator('#test-container')).toHaveScreenshot(`${component}-${theme}-theme.png`);
-          |         ^
-      288 |       }
-      289 |     }
-      290 |   });
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:287:9
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-light-theme-chromium-darwin.png, writing actual.
-
-      285 |         }, component);
-      286 |
-    > 287 |         await expect(page.locator('#test-container')).toHaveScreenshot(`${component}-${theme}-theme.png`);
-          |         ^
-      288 |       }
-      289 |     }
-      290 |   });
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:287:9
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-dark-theme-chromium-darwin.png, writing actual.
-
-      285 |         }, component);
-      286 |
-    > 287 |         await expect(page.locator('#test-container')).toHaveScreenshot(`${component}-${theme}-theme.png`);
-          |         ^
-      288 |       }
-      289 |     }
-      290 |   });
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:287:9
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-dark-theme-chromium-darwin.png, writing actual.
-
-      285 |         }, component);
-      286 |
-    > 287 |         await expect(page.locator('#test-container')).toHaveScreenshot(`${component}-${theme}-theme.png`);
-          |         ^
-      288 |       }
-      289 |     }
-      290 |   });
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:287:9
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-dark-theme-chromium-darwin.png, writing actual.
-
-      285 |         }, component);
-      286 |
-    > 287 |         await expect(page.locator('#test-container')).toHaveScreenshot(`${component}-${theme}-theme.png`);
-          |         ^
-      288 |       }
-      289 |     }
-      290 |   });
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:287:9
-
-    attachment #1: search-input-light-theme (image/png) ────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-input-light-theme-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-034f8-h-components-in-both-themes-chromium/search-input-light-theme-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: book-card-light-theme (image/png) ───────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/book-card-light-theme-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-034f8-h-components-in-both-themes-chromium/book-card-light-theme-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #3: results-list-light-theme (image/png) ────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/results-list-light-theme-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-034f8-h-components-in-both-themes-chromium/results-list-light-theme-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #4: search-input-dark-theme (image/png) ─────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-input-dark-theme-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-034f8-h-components-in-both-themes-chromium/search-input-dark-theme-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #5: book-card-dark-theme (image/png) ────────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/book-card-dark-theme-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-034f8-h-components-in-both-themes-chromium/book-card-dark-theme-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #6: results-list-dark-theme (image/png) ─────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/results-list-dark-theme-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-034f8-h-components-in-both-themes-chromium/results-list-dark-theme-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #7: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-034f8-h-components-in-both-themes-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-light-theme-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-034f8-h-components-in-both-themes-chromium/search-input-light-theme-actual.png]]
-
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-light-theme-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-034f8-h-components-in-both-themes-chromium/book-card-light-theme-actual.png]]
-
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-light-theme-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-034f8-h-components-in-both-themes-chromium/results-list-light-theme-actual.png]]
-
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-dark-theme-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-034f8-h-components-in-both-themes-chromium/search-input-dark-theme-actual.png]]
-
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/book-card-dark-theme-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-034f8-h-components-in-both-themes-chromium/book-card-dark-theme-actual.png]]
-
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/results-list-dark-theme-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-034f8-h-components-in-both-themes-chromium/results-list-dark-theme-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-034f8-h-components-in-both-themes-chromium/test-failed-1.png]]
-]]>
-</system-out>
+<testcase name="Theme Visual Tests › should match components in both themes" classname="components/search/__tests__/search.visual.test.ts" time="3.659">
 </testcase>
-<testcase name="Interaction State Visual Tests › should match hover states" classname="components/search/__tests__/search.visual.test.ts" time="30.143">
+<testcase name="Interaction State Visual Tests › should match hover states" classname="components/search/__tests__/search.visual.test.ts" time="30.141">
 <failure message="search.visual.test.ts:294:7 should match hover states" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:294:7 › Interaction State Visual Tests › should match hover states 
 
@@ -814,70 +518,11 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Interaction State Visual Tests › should match focus states" classname="components/search/__tests__/search.visual.test.ts" time="1.897">
-<failure message="search.visual.test.ts:305:7 should match focus states" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:305:7 › Interaction State Visual Tests › should match focus states 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-focus-ring-chromium-darwin.png, writing actual.
-
-      309 |     await page.locator('input[placeholder*="Search"]').focus();
-      310 |
-    > 311 |     await expect(page.locator('form')).toHaveScreenshot('search-input-focus-ring.png');
-          |     ^
-      312 |   });
-      313 |
-      314 |   test('should match button states', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:311:5
-
-    attachment #1: search-input-focus-ring (image/png) ─────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-input-focus-ring-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-5d528-s-should-match-focus-states-chromium/search-input-focus-ring-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-5d528-s-should-match-focus-states-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ../test-results/components-search-__tests_-5d528-s-should-match-focus-states-chromium/error-context.md
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/search-input-focus-ring-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-5d528-s-should-match-focus-states-chromium/search-input-focus-ring-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-5d528-s-should-match-focus-states-chromium/test-failed-1.png]]
-
-[[ATTACHMENT|components-search-__tests_-5d528-s-should-match-focus-states-chromium/error-context.md]]
-]]>
-</system-out>
+<testcase name="Interaction State Visual Tests › should match focus states" classname="components/search/__tests__/search.visual.test.ts" time="1.944">
 </testcase>
-<testcase name="Interaction State Visual Tests › should match button states" classname="components/search/__tests__/search.visual.test.ts" time="13.149">
+<testcase name="Interaction State Visual Tests › should match button states" classname="components/search/__tests__/search.visual.test.ts" time="10.432">
 <failure message="search.visual.test.ts:314:7 should match button states" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:314:7 › Interaction State Visual Tests › should match button states 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/favorite-button-normal-chromium-darwin.png, writing actual.
-
-      320 |     
-      321 |     // Test normal state
-    > 322 |     await expect(favoriteButton).toHaveScreenshot('favorite-button-normal.png');
-          |     ^
-      323 |
-      324 |     // Test hover state
-      325 |     await favoriteButton.hover();
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:322:5
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/favorite-button-hover-chromium-darwin.png, writing actual.
-
-      324 |     // Test hover state
-      325 |     await favoriteButton.hover();
-    > 326 |     await expect(favoriteButton).toHaveScreenshot('favorite-button-hover.png');
-          |     ^
-      327 |
-      328 |     // Test active state (if applicable)
-      329 |     await favoriteButton.click();
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:326:5
 
     Error: expect(locator).toHaveScreenshot(expected) failed
 
@@ -903,17 +548,7 @@
       333 |
         at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:330:34
 
-    attachment #1: favorite-button-normal (image/png) ──────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/favorite-button-normal-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-e11e5--should-match-button-states-chromium/favorite-button-normal-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: favorite-button-hover (image/png) ───────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/favorite-button-hover-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-e11e5--should-match-button-states-chromium/favorite-button-hover-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
     ../test-results/components-search-__tests_-e11e5--should-match-button-states-chromium/test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -922,60 +557,15 @@
 </failure>
 <system-out>
 <![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/favorite-button-normal-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-e11e5--should-match-button-states-chromium/favorite-button-normal-actual.png]]
-
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/favorite-button-hover-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-e11e5--should-match-button-states-chromium/favorite-button-hover-actual.png]]
-
 [[ATTACHMENT|components-search-__tests_-e11e5--should-match-button-states-chromium/test-failed-1.png]]
 
 [[ATTACHMENT|components-search-__tests_-e11e5--should-match-button-states-chromium/error-context.md]]
 ]]>
 </system-out>
 </testcase>
-<testcase name="Error State Visual Tests › should match search validation errors" classname="components/search/__tests__/search.visual.test.ts" time="3.662">
-<failure message="search.visual.test.ts:335:7 should match search validation errors" type="FAILURE">
-<![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:335:7 › Error State Visual Tests › should match search validation errors 
-
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-validation-error-chromium-darwin.png, writing actual.
-
-      344 |     await page.waitForSelector('[role="alert"]');
-      345 |
-    > 346 |     await expect(page.locator('form')).toHaveScreenshot('search-validation-error.png');
-          |     ^
-      347 |   });
-      348 |
-      349 |   test('should match network error state', async ({ page }) => {
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:346:5
-
-    attachment #1: search-validation-error (image/png) ─────────────────────────────────────────────
-    Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-validation-error-chromium-darwin.png
-    Received: ../test-results/components-search-__tests_-07b56-ch-search-validation-errors-chromium/search-validation-error-actual.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ../test-results/components-search-__tests_-07b56-ch-search-validation-errors-chromium/test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ../test-results/components-search-__tests_-07b56-ch-search-validation-errors-chromium/error-context.md
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/search-validation-error-chromium-darwin.png]]
-
-[[ATTACHMENT|components-search-__tests_-07b56-ch-search-validation-errors-chromium/search-validation-error-actual.png]]
-
-[[ATTACHMENT|components-search-__tests_-07b56-ch-search-validation-errors-chromium/test-failed-1.png]]
-
-[[ATTACHMENT|components-search-__tests_-07b56-ch-search-validation-errors-chromium/error-context.md]]
-]]>
-</system-out>
+<testcase name="Error State Visual Tests › should match search validation errors" classname="components/search/__tests__/search.visual.test.ts" time="2.062">
 </testcase>
-<testcase name="Error State Visual Tests › should match network error state" classname="components/search/__tests__/search.visual.test.ts" time="12.466">
+<testcase name="Error State Visual Tests › should match network error state" classname="components/search/__tests__/search.visual.test.ts" time="11.917">
 <failure message="search.visual.test.ts:349:7 should match network error state" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:349:7 › Error State Visual Tests › should match network error state 
 
@@ -1008,23 +598,63 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="Error State Visual Tests › should match empty results state" classname="components/search/__tests__/search.visual.test.ts" time="2.81">
+<testcase name="Error State Visual Tests › should match empty results state" classname="components/search/__tests__/search.visual.test.ts" time="4.672">
 <failure message="search.visual.test.ts:362:7 should match empty results state" type="FAILURE">
 <![CDATA[  [chromium] › components/search/__tests__/search.visual.test.ts:362:7 › Error State Visual Tests › should match empty results state 
 
-    Error: A snapshot doesn't exist at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts-snapshots/search-empty-results-chromium-darwin.png, writing actual.
+    Error: expect(page).toHaveScreenshot(expected) failed
+
+      6175 pixels (ratio 0.01 of all image pixels) are different.
+
+      Snapshot: search-empty-results.png
+
+    Call log:
+      - Expect "toHaveScreenshot(search-empty-results.png)" with timeout 5000ms
+        - verifying given screenshot expectation
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 6210 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 100ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 33 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 250ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 33 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 500ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - 35 pixels (ratio 0.01 of all image pixels) are different.
+      - waiting 1000ms before taking screenshot
+      - taking page screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - captured a stable screenshot
+      - 6175 pixels (ratio 0.01 of all image pixels) are different.
+
 
       379 |     await page.waitForSelector('text=No results found');
       380 |
     > 381 |     await expect(page).toHaveScreenshot('search-empty-results.png');
-          |     ^
+          |                        ^
       382 |   });
       383 | });
-        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:381:5
+        at /Users/paulkamani/Documents/projects/KeeperAI/src/components/search/__tests__/search.visual.test.ts:381:24
 
     attachment #1: search-empty-results (image/png) ────────────────────────────────────────────────
     Expected: components/search/__tests__/search.visual.test.ts-snapshots/search-empty-results-chromium-darwin.png
     Received: ../test-results/components-search-__tests_-ccbbd-d-match-empty-results-state-chromium/search-empty-results-actual.png
+    Diff:     ../test-results/components-search-__tests_-ccbbd-d-match-empty-results-state-chromium/search-empty-results-diff.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
     attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
@@ -1039,6 +669,8 @@
 [[ATTACHMENT|../src/components/search/__tests__/search.visual.test.ts-snapshots/search-empty-results-chromium-darwin.png]]
 
 [[ATTACHMENT|components-search-__tests_-ccbbd-d-match-empty-results-state-chromium/search-empty-results-actual.png]]
+
+[[ATTACHMENT|components-search-__tests_-ccbbd-d-match-empty-results-state-chromium/search-empty-results-diff.png]]
 
 [[ATTACHMENT|components-search-__tests_-ccbbd-d-match-empty-results-state-chromium/test-failed-1.png]]
 

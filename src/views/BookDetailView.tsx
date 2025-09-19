@@ -22,7 +22,6 @@ import {
 } from "@/components/summary/SummaryTypeSelector";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
 
@@ -52,7 +51,10 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
 
   // Extract primary image for hero background
   const heroImage =
-    book.largeThumbnail || book.mediumThumbnail || book.thumbnail;
+    book.largeThumbnail ||
+    book.mediumThumbnail ||
+    book.thumbnail ||
+    book.smallThumbnail;
 
   // Format publication date
   const formatDate = (dateString?: string) => {
@@ -119,15 +121,15 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
         {heroImage && (
           <div className="absolute inset-0 h-64 sm:h-80 md:h-96 overflow-hidden">
             <div
-              className="absolute inset-0 bg-cover bg-center scale-110 filter blur-md opacity-20 dark:opacity-10"
+              className="absolute inset-0 bg-cover bg-center scale-105 filter blur-sm opacity-30 dark:opacity-15"
               style={{ backgroundImage: `url(${heroImage})` }}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/70 to-background" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/75 to-background" />
           </div>
         )}
 
         {/* Navigation */}
-        <div className="relative z-10 p-4 sm:p-6">
+        <div className="relative z-10 p-4 sm:p-6 pt-[50px]">
           <Button
             variant="ghost"
             size="sm"
@@ -141,10 +143,10 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
 
         {/* Hero Content */}
         <div className="relative z-10 px-4 sm:px-6 pb-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="flex flex-col lg:flex-row gap-8 items-start">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center lg:items-start justify-center">
               {/* Book Cover */}
-              <div className="flex-shrink-0 mx-auto lg:mx-0">
+              <div className="flex-shrink-0">
                 <BookCover
                   title={book.title}
                   authors={book.authors}
@@ -163,7 +165,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
               </div>
 
               {/* Book Information */}
-              <div className="flex-1 text-center lg:text-left space-y-6">
+              <div className="flex-1 max-w-2xl text-center lg:text-left space-y-6">
                 <div>
                   <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground leading-tight mb-3">
                     {book.title}
@@ -177,28 +179,37 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
                   )}
 
                   {/* Rating */}
-                  {ratingInfo && (
+                  {ratingInfo ? (
                     <div className="flex items-center justify-center lg:justify-start gap-2 mb-4">
                       <div className="flex items-center gap-1">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
                             className={cn(
-                              "h-4 w-4",
+                              "h-5 w-5 transition-colors",
                               i < ratingInfo.fullStars
-                                ? "text-yellow-400 fill-current"
+                                ? "text-yellow-500 fill-yellow-500"
                                 : i === ratingInfo.fullStars &&
                                     ratingInfo.hasHalfStar
-                                  ? "text-yellow-400 fill-current"
+                                  ? "text-yellow-500 fill-yellow-500"
                                   : "text-gray-300 dark:text-gray-600"
                             )}
                           />
                         ))}
                       </div>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-base font-medium text-foreground">
                         {ratingInfo.rating}
-                        {ratingInfo.count && ` (${ratingInfo.count} reviews)`}
                       </span>
+                      {ratingInfo.count && (
+                        <span className="text-sm text-muted-foreground">
+                          ({ratingInfo.count} reviews)
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center lg:justify-start gap-2 mb-4 text-sm text-muted-foreground">
+                      <Star className="h-4 w-4" />
+                      <span>No ratings yet</span>
                     </div>
                   )}
 
