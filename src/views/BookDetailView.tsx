@@ -122,7 +122,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
         {heroImage && (
           <div className="absolute inset-0 h-64 sm:h-80 md:h-96 overflow-hidden">
             <div
-              className="absolute inset-0 bg-cover bg-center scale-105 filter blur-sm opacity-30 dark:opacity-15"
+              className="absolute inset-0 bg-cover bg-center scale-120 filter blur-sm  opacity-80 dark:opacity-40"
               style={{ backgroundImage: `url(${heroImage})` }}
             />
             <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/75 to-background" />

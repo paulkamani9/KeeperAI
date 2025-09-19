@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 
 import { BookDetailView } from "@/views/BookDetailView";
 import { createUnifiedSearchService } from "@/services/searchService";
-import type { Book } from "@/types/book";
 
 interface BookDetailPageProps {
   params: {
@@ -18,8 +17,9 @@ export async function generateMetadata({
   params,
 }: BookDetailPageProps): Promise<Metadata> {
   try {
+    const { id } = await params;
     const searchService = createUnifiedSearchService();
-    const book = await searchService.getBookDetails(params.id);
+    const book = await searchService.getBookDetails(id);
 
     if (!book) {
       return {
@@ -80,8 +80,9 @@ export async function generateMetadata({
  */
 export default async function BookDetailPage({ params }: BookDetailPageProps) {
   try {
+    const {id} = await params;
     const searchService = createUnifiedSearchService();
-    const book = await searchService.getBookDetails(params.id);
+    const book = await searchService.getBookDetails(id);
 
     if (!book) {
       notFound();
