@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { BookCover } from "@/components/shared/BookCover";
+import { BookDescription } from "@/components/shared/BookDescription";
 import {
   SummaryTypeSelector,
   type SummaryType,
@@ -129,7 +130,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
         )}
 
         {/* Navigation */}
-        <div className="relative z-10 p-4 sm:p-6 pt-[50px]">
+        <div className="relative z-10 p-4 sm:px-6 pt-16">
           <Button
             variant="ghost"
             size="sm"
@@ -315,9 +316,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
                 <CardTitle>About This Book</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                  {book.description}
-                </p>
+                <BookDescription description={book.description} />
               </CardContent>
             </Card>
           )}

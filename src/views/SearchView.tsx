@@ -10,7 +10,7 @@ import {
 } from "@/components/search/ResultsList";
 import MainContent from "@/components/layout/MainContent";
 import { useBookSearch } from "@/hooks/useBookSearch";
-import type { SearchResults as ApiSearchResults, Book } from "@/types/book";
+import type { SearchResults as ApiSearchResults } from "@/types/book";
 
 // Transform API SearchResults to component SearchResults
 function transformSearchResults(
