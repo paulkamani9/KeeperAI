@@ -9,12 +9,10 @@ import type {
   CreateSummaryInput,
 } from "../types/summary";
 import { createSummaryAnalyticsService } from "../lib/analytics/summaryTracking";
-// import { createSummaryService } from "../services/summary/summaryService";
 import { calculateWordCount, calculateReadingTime } from "../types/summary";
 import { api } from "../../convex/_generated/api";
-import { generateBookSummary } from "@/server/summary/generateSummary";
-import { check } from "zod";
-import { checkOpenAiConnectionStatus } from "@/server/summary/openAiStatusCheck";
+import { generateBookSummary } from "@/services/summary/generateSummary";
+import { checkOpenAiConnectionStatus } from "@/services/summary/openAiStatusCheck";
 
 /**
  * Custom hook for AI summary generation using React Query

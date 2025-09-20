@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
-import { useSummaryGeneration, useSummaryGenerationService } from "@/hooks/useSummaryGeneration";
+import { useSummaryGeneration } from "@/hooks/useSummaryGeneration";
 
 interface BookDetailViewProps {
   /** Book data to display */

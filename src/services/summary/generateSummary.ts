@@ -11,6 +11,22 @@ import { callOpenAI } from "./callOpenAi";
 import { defaultModel, promptVersion, validateInputs } from "./helpers";
 import { generateMockSummary } from "./mockSummary";
 
+/**
+ * Generate a book summary using OpenAI based on the requested summary type.
+ *
+ * Get default max tokens based on summary type
+ *
+ * Inputs:
+ *  - book: Book metadata (title, authors, description, etc.)
+ *  - summaryType: The desired summary style/length (e.g., TL;DR, chapter-wise)
+ *  - options: Optional generation overrides (model, maxTokens, additionalContext)
+ *
+ * Outputs:
+ *  - SummaryGenerationResult containing the generated content, timing, model info, and metadata
+ *
+ * Errors:
+ *  - On failure, logs detailed error context and falls back to a mock summary
+ */
 export async function generateBookSummary(
   book: Book,
   summaryType: SummaryType,
