@@ -168,7 +168,6 @@ export function useSummaryGeneration(
         // Calculate additional metadata
         const wordCount = calculateWordCount(generationResult.content);
         const readingTime = calculateReadingTime(wordCount);
-        console.log("Reading time:", readingTime);
 
         // Persist the generated summary to Convex
         const summaryId = await convex.mutation(api.summaries.storeSummary, {
@@ -474,7 +473,7 @@ export function useSummaryExists(
  * Hook for getting summary generation service status
  * Useful for showing service availability and rate limits
  */
-export function useSummaryGenerationService() {
+ export function useSummaryGenerationService() {
   return useQuery({
     queryKey: ["summaryServiceStatus"],
     queryFn: async () => {

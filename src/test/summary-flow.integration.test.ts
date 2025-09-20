@@ -1,6 +1,6 @@
 /**
  * Summary Flow Integration Test
- * 
+ *
  * Tests the actual integration points without relying on external APIs
  */
 
@@ -18,11 +18,10 @@ const testBook: Book = {
   publishedDate: "2024",
   pageCount: 200,
   categories: ["Test"],
-  language: "en"
+  language: "en",
 };
 
 describe("Summary Flow Validation (Integration)", () => {
-  
   describe("Service Integration", () => {
     it("should create summary service instance", () => {
       const service = createDefaultSummaryService();
@@ -33,13 +32,13 @@ describe("Summary Flow Validation (Integration)", () => {
 
     it("should validate book data correctly", async () => {
       const service = createDefaultSummaryService();
-      
+
       // Test with missing title
       const invalidBook = { ...testBook, title: "" };
       await expect(
         service.generateSummary(invalidBook, "concise")
       ).rejects.toThrow();
-      
+
       // Test with missing authors
       const noAuthorsBook = { ...testBook, authors: [] };
       await expect(
@@ -49,8 +48,13 @@ describe("Summary Flow Validation (Integration)", () => {
 
     it("should handle all summary types", async () => {
       const service = createDefaultSummaryService();
-      const summaryTypes = ["concise", "detailed", "analysis", "practical"] as const;
-      
+      const summaryTypes = [
+        "concise",
+        "detailed",
+        "analysis",
+        "practical",
+      ] as const;
+
       for (const type of summaryTypes) {
         const result = await service.generateSummary(testBook, type);
         expect(result).toBeDefined();
@@ -62,16 +66,16 @@ describe("Summary Flow Validation (Integration)", () => {
     it("should generate summary with required metadata", async () => {
       const service = createDefaultSummaryService();
       const result = await service.generateSummary(testBook, "concise");
-      
+
       expect(result).toHaveProperty("content");
       expect(result).toHaveProperty("generationTime");
       expect(result).toHaveProperty("aiModel");
       expect(result).toHaveProperty("promptVersion");
       expect(result).toHaveProperty("metadata");
-      
+
       expect(result.metadata).toHaveProperty("bookDataSource");
       expect(result.metadata).toHaveProperty("hadBookDescription");
-      
+
       expect(typeof result.content).toBe("string");
       expect(result.content.length).toBeGreaterThan(50);
       expect(result.generationTime).toBeGreaterThan(0);
@@ -81,14 +85,14 @@ describe("Summary Flow Validation (Integration)", () => {
   describe("Hook Integration", () => {
     it("should export useSummaryGeneration hook", async () => {
       const hookModule = await import("../hooks/useSummaryGeneration");
-      
+
       expect(hookModule.useSummaryGeneration).toBeDefined();
       expect(typeof hookModule.useSummaryGeneration).toBe("function");
     });
 
     it("should export helper hooks", async () => {
       const hookModule = await import("../hooks/useSummaryGeneration");
-      
+
       expect(hookModule.useSummaryExists).toBeDefined();
       expect(hookModule.useSummaryGenerationService).toBeDefined();
     });
@@ -120,12 +124,12 @@ describe("Summary Flow Validation (Integration)", () => {
     it("should have required Convex functions", async () => {
       try {
         const { api } = await import("../../convex/_generated/api");
-        
+
         const requiredFunctions = [
           "storeSummary",
-          "getSummaryById", 
+          "getSummaryById",
           "getExistingSummary",
-          "recordSummaryFailure"
+          "recordSummaryFailure",
         ];
 
         for (const funcName of requiredFunctions) {
@@ -141,11 +145,11 @@ describe("Summary Flow Validation (Integration)", () => {
 describe("Type Safety Validation", () => {
   it("should have proper TypeScript types", () => {
     // Import and check types exist
-    import("../types/book").then(bookTypes => {
+    import("../types/book").then((bookTypes) => {
       expect(bookTypes).toBeDefined();
     });
-    
-    import("../types/summary").then(summaryTypes => {
+
+    import("../types/summary").then((summaryTypes) => {
       expect(summaryTypes).toBeDefined();
     });
   });

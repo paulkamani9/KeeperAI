@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
-import { useSummaryGeneration } from "@/hooks/useSummaryGeneration";
+import { useSummaryGeneration, useSummaryGenerationService } from "@/hooks/useSummaryGeneration";
 
 interface BookDetailViewProps {
   /** Book data to display */
@@ -66,6 +66,9 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
     summaryType: selectedSummaryType,
     enabled: false, // Manual generation only
   });
+
+  const summaryService = useSummaryGenerationService();
+  console.log("Summary Generation Service:", summaryService.data);
 
   // Handlers for summary generation
   const handleGenerateSummary = () => {

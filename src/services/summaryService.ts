@@ -10,14 +10,12 @@ import type { Book } from "../types/book";
 import type {
   SummaryType,
   SummaryGenerationParams,
-  Summary,
+ 
 } from "../types/summary";
-import { SUMMARY_TYPE_DESCRIPTIONS } from "../types/summary";
+import { calculateWordCount, SUMMARY_TYPE_DESCRIPTIONS } from "../types/summary";
 import { featureFlags } from "../lib/environmentConfig";
 import {
-  calculateWordCount,
-  calculateReadingTime,
-  createSummaryCacheKey,
+  
 } from "../types/summary";
 
 /**
@@ -438,6 +436,7 @@ class MockSummaryService implements SummaryService {
     summaryType: SummaryType,
     options: SummaryGenerationOptions = {}
   ): Promise<SummaryGenerationResult> {
+    console.log("🚀 MockSummaryService.generateSummary called with:", { book, summaryType, options });
     // Simulate generation time
     const delay = Math.random() * 2000 + 1000; // 1-3 seconds
     await new Promise((resolve) => setTimeout(resolve, delay));
@@ -519,8 +518,10 @@ export function createSummaryService(
   apiKey?: string,
   useMock: boolean = false
 ): SummaryService {
+  console.log("🚀 createDefaultSummaryService called:");
+
   // Use mock service in development if no API key or if explicitly requested
-  if (useMock || (!apiKey && process.env.NODE_ENV === "development")) {
+  if (useMock || (!apiKey)) {
     return new MockSummaryService();
   }
 
@@ -539,6 +540,7 @@ export function createSummaryService(
  * Create summary service instance with environment-based configuration
  */
 export function createDefaultSummaryService(): SummaryService {
+  console.log("🚀 createDefaultSummaryService called:");
   return createSummaryService(
     process.env.OPENAI_API_KEY,
     !featureFlags.openaiApi // Use mock if OpenAI not configured
