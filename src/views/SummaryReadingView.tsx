@@ -72,7 +72,7 @@ export function SummaryReadingView({
 
         // Convert Convex result to our Summary type
         return {
-          id: result._id,
+          id: String(result._id),
           bookId: result.bookId as string,
           summaryType: result.summaryType as any,
           content: result.content as string,
