@@ -7,6 +7,8 @@ import ConvexClientProvider from "@/providers/ConvexClientProvider";
 import { ClerkProvider } from "@/providers/ClerkProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import { validateEnvironment } from "@/lib/environmentConfig";
+import { Toaster } from "sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -51,7 +53,9 @@ export default function RootLayout({
                 disableTransitionOnChange
               >
                 {children}
+                <Toaster />
                 <Analytics />
+                <SpeedInsights/>
               </ThemeProvider>
             </ReactQueryProvider>
           </ConvexClientProvider>

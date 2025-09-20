@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import type { Book } from "../../types/book";
+
 
 // Mock data for Google Books API
 export const mockGoogleBooksResponse = {

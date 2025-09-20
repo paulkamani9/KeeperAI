@@ -11,7 +11,7 @@
  */
 
 import { describe, bench, expect, beforeAll, afterAll } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TestWrapper } from "@/test/TestWrapper";
 import { SearchInput } from "@/components/search/SearchInput";

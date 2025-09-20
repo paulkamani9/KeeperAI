@@ -207,6 +207,7 @@ const keeperAIEnvironmentConfig: EnvironmentConfig = {
   optional: {
     NEXT_PUBLIC_GOOGLE_BOOKS_API_KEY:
       "Google Books API access for enhanced search results and book metadata",
+    OPENAI_API_KEY: "OpenAI API key for AI-powered book summary generation",
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
       "Clerk authentication for user accounts and favorites (future phases)",
     UPSTASH_REDIS_REST_URL:
@@ -223,9 +224,9 @@ const keeperAIEnvironmentConfig: EnvironmentConfig = {
     },
     "Production Environment": {
       condition: () => process.env.NODE_ENV === "production",
-      variables: ["NEXT_PUBLIC_GOOGLE_BOOKS_API_KEY"],
+      variables: ["NEXT_PUBLIC_GOOGLE_BOOKS_API_KEY", "OPENAI_API_KEY"],
       description:
-        "Google Books API key is recommended for production to avoid rate limiting",
+        "Google Books API key and OpenAI API key are recommended for production to avoid rate limiting",
     },
   },
 };
@@ -277,6 +278,13 @@ export const featureFlags = {
    */
   get clerkAuth(): boolean {
     return Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+  },
+
+  /**
+   * Whether OpenAI integration is available
+   */
+  get openaiApi(): boolean {
+    return Boolean(process.env.OPENAI_API_KEY);
   },
 
   /**

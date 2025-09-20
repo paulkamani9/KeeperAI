@@ -8,37 +8,9 @@ import {
   type SearchResults as ComponentSearchResults,
   type PaginationInfo,
 } from "@/components/search/ResultsList";
-import { type Book as ComponentBook } from "@/components/search/BookCard";
 import MainContent from "@/components/layout/MainContent";
 import { useBookSearch } from "@/hooks/useBookSearch";
-import type {
-  SearchResults as ApiSearchResults,
-  Book as ApiBook,
-} from "@/types/book";
-
-// Transform API Book to component Book
-function transformBook(apiBook: ApiBook): ComponentBook {
-  return {
-    id: apiBook.id,
-    title: apiBook.title,
-    authors: apiBook.authors, // Already an array in API types
-    description: apiBook.description,
-    coverImage: apiBook.thumbnail || apiBook.smallThumbnail,
-    publishedDate: apiBook.publishedDate,
-    pageCount: apiBook.pageCount,
-    rating: apiBook.averageRating,
-    ratingsCount: apiBook.ratingsCount,
-    categories: apiBook.categories,
-    isbn: {
-      isbn10: apiBook.isbn10,
-      isbn13: apiBook.isbn13,
-    },
-    links: {
-      preview: apiBook.previewLink,
-      info: apiBook.infoLink,
-    },
-  };
-}
+import type { SearchResults as ApiSearchResults } from "@/types/book";
 
 // Transform API SearchResults to component SearchResults
 function transformSearchResults(
@@ -60,7 +32,7 @@ function transformSearchResults(
   };
 
   return {
-    books: apiResults.books.map(transformBook),
+    books: apiResults.books, // No transformation needed - use the standard Book type directly
     pagination,
     query: apiResults.query,
   };
@@ -144,12 +116,6 @@ export const SearchView = () => {
     [router, searchParams]
   );
 
-  // Handle book click - could navigate to book detail page
-  const handleBookClick = useCallback((book: ComponentBook) => {
-    // TODO: Navigate to book detail page when implemented
-    console.log("Book clicked:", book.title);
-  }, []);
-
   // Handle favorite toggle - could integrate with favorites system
   const handleFavoriteToggle = useCallback(
     (bookId: string, isFavorite: boolean) => {
@@ -181,7 +147,6 @@ export const SearchView = () => {
         results={transformedResults}
         isLoading={isLoading || isSearching}
         error={errorMessage}
-        onBookClick={handleBookClick}
         onFavoriteToggle={handleFavoriteToggle}
         onPageChange={handlePageChange}
         showMetadata={true}

@@ -18,11 +18,10 @@ vi.mock("../openLibrary", () => ({
 }));
 
 // Import the mocked constructors
-import { GoogleBooksService, createGoogleBooksService } from "../googleBooks";
-import { OpenLibraryService, createOpenLibraryService } from "../openLibrary";
+import {  createGoogleBooksService } from "../googleBooks";
+import {  createOpenLibraryService } from "../openLibrary";
 
-const MockGoogleBooksService = vi.mocked(GoogleBooksService);
-const MockOpenLibraryService = vi.mocked(OpenLibraryService);
+
 const mockCreateGoogleBooksService = vi.mocked(createGoogleBooksService);
 const mockCreateOpenLibraryService = vi.mocked(createOpenLibraryService);
 
@@ -484,7 +483,7 @@ describe("UnifiedSearchService", () => {
       mockOpenLibraryService.isConfigured.mockReturnValue(false);
 
       expect(() => {
-        const testService = new UnifiedSearchService();
+        new UnifiedSearchService();
         // This should be caught during strategy selection
       }).not.toThrow(); // Construction doesn't throw, but search will
     });

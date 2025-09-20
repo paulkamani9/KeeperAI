@@ -2,7 +2,8 @@
 
 import React, { Suspense } from "react";
 import { SearchInput } from "@/components/search/SearchInput";
-import { BookCard, type Book } from "@/components/search/BookCard";
+import { BookCard } from "@/components/search/BookCard";
+import type { Book } from "@/types/book";
 import {
   ResultsList,
   type SearchResults,
@@ -23,16 +24,12 @@ const mockBook: Book = {
   authors: ["Robert C. Martin", "John Doe"],
   description:
     "A comprehensive guide to writing clean, maintainable code that stands the test of time. This book covers principles, patterns, and practices.",
-  coverImage: "https://via.placeholder.com/128x192/4F46E5/white?text=Book",
+  thumbnail: "https://via.placeholder.com/128x192/4F46E5/white?text=Book",
   publishedDate: "2023",
   pageCount: 432,
   categories: ["Programming", "Software Engineering"],
-  rating: 4.5,
-  ratingsCount: 1234,
-  links: {
-    preview: "https://example.com/preview",
-    info: "https://example.com/info",
-  },
+  source: "google-books" as const,
+  originalId: "test-book-id",
 };
 
 const mockBooks: Book[] = Array.from({ length: 6 }, (_, i) => ({

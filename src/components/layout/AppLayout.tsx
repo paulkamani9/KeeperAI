@@ -47,7 +47,7 @@ export default function AppLayout({ children, className }: AppLayoutProps) {
 
           {/* Main content */}
           <main
-            className="flex-1 overflow-y-auto p-6"
+            className="flex-1 overflow-y-auto pt-4 pb-6"
             role="main"
             id="main-content"
           >
