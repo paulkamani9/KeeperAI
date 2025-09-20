@@ -27,9 +27,21 @@ const BookInputValidator = v.object({
   title: v.string(),
   authors: v.array(v.string()),
   description: v.optional(v.string()),
-  categories: v.optional(v.array(v.string())),
   publishedDate: v.optional(v.string()),
-  pageCount: v.optional(v.number()),
+  publisher: v.optional(v.string()),
+  pageCount: v.optional(v.float64()),
+  categories: v.optional(v.array(v.string())),
+  language: v.optional(v.string()),
+  isbn10: v.optional(v.string()),
+  isbn13: v.optional(v.string()),
+  thumbnail: v.optional(v.string()),
+  smallThumbnail: v.optional(v.string()),
+  mediumThumbnail: v.optional(v.string()),
+  largeThumbnail: v.optional(v.string()),
+  averageRating: v.optional(v.float64()),
+  ratingsCount: v.optional(v.number()),
+  previewLink: v.optional(v.string()),
+  infoLink: v.optional(v.string()),
   source: v.union(v.literal("google-books"), v.literal("open-library")),
   originalId: v.string(),
 });
@@ -146,6 +158,64 @@ export const getSummary = query({
       readingTime: calculateReadingTime(summary.content),
       aiModel: "gpt-4o-mini", // Default for existing summaries
       promptVersion: "v1.0", // Default for existing summaries
+    };
+  },
+});
+
+/**
+ * Get summary by ID
+ */
+export const getSummaryById = query({
+  args: {
+    summaryId: v.id("summaries"),
+  },
+  returns: v.union(SummaryResponseValidator, v.null()),
+  handler: async (ctx, args) => {
+    // Query the summaries table by document ID
+    const summary = await ctx.db.get(args.summaryId);
+    
+    if (!summary || summary === null) {
+      return null;
+    }
+
+    // Check if this is actually a summary document (not another table)
+    if (!('content' in summary) || !('mode' in summary) || !('bookId' in summary)) {
+      return null;
+    }
+
+    // Map database mode to valid summaryType
+    const modeToSummaryType = {
+      brief: "concise" as const,
+      concise: "concise" as const,
+      detailed: "detailed" as const,
+      analysis: "analysis" as const,
+      practical: "practical" as const,
+    };
+
+    const summaryType = modeToSummaryType[summary.mode as keyof typeof modeToSummaryType] || "concise";
+
+    // Calculate word count and reading time from content
+    const wordCount = summary.content.split(/\s+/).length;
+    const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
+
+    // Return formatted response matching the expected structure
+    return {
+      id: summary._id,
+      bookId: summary.bookId,
+      summaryType,
+      content: summary.content,
+      status: "completed" as const,
+      createdAt: new Date(summary.generatedAt).toISOString(),
+      updatedAt: new Date(summary.generatedAt).toISOString(),
+      generationTime: 15, // Default estimation
+      wordCount,
+      readingTime,
+      aiModel: "gpt-4",
+      promptVersion: "v1.0",
+      metadata: {
+        bookDataSource: "google-books" as const,
+        hadBookDescription: true, // Default assumption
+      },
     };
   },
 });

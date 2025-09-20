@@ -179,11 +179,19 @@ export function SummaryGenerationProgress({
         <div className="space-y-3">
           {/* Progress Bar */}
           <div className="space-y-2">
-            <Progress
-              value={progress}
-              className="h-2"
+            <div
+              role="progressbar"
+              aria-valuenow={progress}
+              aria-valuemin={0}
+              aria-valuemax={100}
               aria-label="Summary generation progress"
-            />
+              className="relative w-full overflow-hidden rounded-full bg-secondary h-2"
+            >
+              <div
+                className="h-full bg-primary transition-all duration-300 ease-in-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>{progressMessage}</span>
               {timeRemaining && (

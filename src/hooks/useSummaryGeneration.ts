@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useConvex } from "convex/react";
 
 import type { Book } from "../types/book";
@@ -284,16 +284,45 @@ export function useSummaryGeneration(
     return timeMap[params.summaryType];
   }, [params.summaryType]);
 
-  // Simple progress estimation during generation
-  const progress = useMemo(() => {
-    if (!generateMutation.isPending) return undefined;
+  // Progress tracking state
+  const [generationStartTime, setGenerationStartTime] = useState<number | null>(null);
+  const [progress, setProgress] = useState<number | undefined>(undefined);
 
-    // This is a simple time-based progress estimation
-    // In a real implementation, you might use streaming or WebSockets for actual progress
-    const elapsed = Date.now() - (generateMutation.submittedAt || Date.now());
-    const estimated = (estimatedTime || 30) * 1000; // Convert to milliseconds
-    return Math.min(Math.floor((elapsed / estimated) * 100), 95); // Cap at 95% until completion
-  }, [generateMutation.isPending, generateMutation.submittedAt, estimatedTime]);
+  // Start progress tracking when generation begins
+  useEffect(() => {
+    if (generateMutation.isPending && !generationStartTime) {
+      const startTime = Date.now();
+      setGenerationStartTime(startTime);
+      setProgress(5); // Start with 5% to show immediate feedback
+    } else if (!generateMutation.isPending && generateMutation.isSuccess) {
+      // Set to 100% briefly before clearing when successful
+      setProgress(100);
+      const timeout = setTimeout(() => {
+        setGenerationStartTime(null);
+        setProgress(undefined);
+      }, 1000);
+      return () => clearTimeout(timeout);
+    } else if (!generateMutation.isPending) {
+      setGenerationStartTime(null);
+      setProgress(undefined);
+    }
+  }, [generateMutation.isPending, generateMutation.isSuccess, generationStartTime]);
+
+  // Update progress based on elapsed time
+  useEffect(() => {
+    if (!generateMutation.isPending || !generationStartTime) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - generationStartTime;
+      const estimated = (estimatedTime || 30) * 1000; // Convert to milliseconds
+      const newProgress = Math.min(Math.floor((elapsed / estimated) * 100), 95); // Cap at 95% until completion
+      setProgress(newProgress);
+    }, 500); // Update every 500ms
+
+    return () => clearInterval(interval);
+  }, [generateMutation.isPending, generationStartTime, estimatedTime]);
 
   // Generate summary function
   const generateSummary = useMemo(() => {

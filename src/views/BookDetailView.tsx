@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { BookCover } from "@/components/shared/BookCover";
 import { BookDescription } from "@/components/shared/BookDescription";
@@ -68,10 +69,12 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
 
   // Handlers for summary generation
   const handleGenerateSummary = () => {
+    toast.info("Starting AI summary generation...");
     generateSummary();
   };
 
   const handleRetryGeneration = () => {
+    toast.info("Retrying summary generation...");
     generateSummary();
   };
 
@@ -114,15 +117,23 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
   // Navigate to summary when generation is complete
   React.useEffect(() => {
     if (summary && !isGenerating && !error) {
+      // Show success notification before navigating
+      toast.success("Summary generated successfully!");
       // Navigate to summary page when generation is successful
       router.push(`/summaries/${summary.id}`);
     }
   }, [summary, isGenerating, error, router]);
 
-  // Handle add to favorites
+  // Show error notifications
+  React.useEffect(() => {
+    if (error && !isGenerating) {
+      toast.error(`Summary generation failed: ${error.message}`);
+    }
+  }, [error, isGenerating]);
+
+  // Handle add to favorites (placeholder for Phase 3)
   const handleAddToFavorites = () => {
-    // TODO: Implement in Phase 3
-    console.log("Add to favorites:", book.id);
+    toast.info("Add to favorites functionality coming in Phase 3!");
   };
 
   const ratingInfo = formatRating(book.averageRating, book.ratingsCount);
