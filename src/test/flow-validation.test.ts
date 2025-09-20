@@ -12,7 +12,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { Book } from "../types/book";
 import type { SummaryType } from "../types/summary";
-import { createDefaultSummaryService } from "../services/summaryService";
+import { createDefaultSummaryService } from "../services/summary/summaryService";
 import { featureFlags } from "../lib/environmentConfig";
 
 // Mock book data for testing
@@ -44,14 +44,14 @@ describe("Summary Generation Flow Validation", () => {
       expect(featureFlags.openaiApi).toBe(true);
     });
 
-    it("should create summary service instance", () => {
-      const service = createDefaultSummaryService();
+    it("should create summary service instance", async () => {
+      const service = await createDefaultSummaryService();
       expect(service).toBeDefined();
       expect(service.isConfigured()).toBe(true);
     });
 
-    it("should have available AI models", () => {
-      const service = createDefaultSummaryService();
+    it("should have available AI models", async () => {
+      const service = await createDefaultSummaryService();
       const models = service.getAvailableModels();
       expect(models).toContain("gpt-4o-mini");
       expect(models.length).toBeGreaterThan(0);
@@ -60,7 +60,7 @@ describe("Summary Generation Flow Validation", () => {
 
   describe("2. Summary Service Integration", () => {
     it("should validate required book data", async () => {
-      const service = createDefaultSummaryService();
+      const service = await createDefaultSummaryService();
 
       // Test with invalid book (no title)
       const invalidBook = { ...mockBook, title: "" };
@@ -73,7 +73,7 @@ describe("Summary Generation Flow Validation", () => {
     });
 
     it("should validate summary type", async () => {
-      const service = createDefaultSummaryService();
+      const service = await createDefaultSummaryService();
 
       if (featureFlags.openaiApi) {
         await expect(
@@ -83,7 +83,7 @@ describe("Summary Generation Flow Validation", () => {
     });
 
     it("should generate summary with proper structure", async () => {
-      const service = createDefaultSummaryService();
+      const service = await createDefaultSummaryService();
 
       if (featureFlags.openaiApi) {
         // This is a real API test - only run if configured
@@ -156,7 +156,7 @@ describe("Summary Generation Flow Validation", () => {
 
   describe("4. Error Handling", () => {
     it("should handle network errors gracefully", async () => {
-      const service = createDefaultSummaryService();
+      const service = await createDefaultSummaryService();
 
       // Test with timeout
       try {
@@ -168,7 +168,7 @@ describe("Summary Generation Flow Validation", () => {
     });
 
     it("should provide user-friendly error messages", async () => {
-      const service = createDefaultSummaryService();
+      const service = await createDefaultSummaryService();
 
       // Test various error conditions
       const errorCases = [
@@ -238,7 +238,7 @@ describe("Summary Generation Flow Validation", () => {
  */
 describe("Performance Validation", () => {
   it("should complete summary generation within reasonable time", async () => {
-    const service = createDefaultSummaryService();
+    const service = await createDefaultSummaryService();
 
     if (featureFlags.openaiApi) {
       const startTime = performance.now();
@@ -256,7 +256,7 @@ describe("Performance Validation", () => {
   });
 
   it("should handle concurrent requests", async () => {
-    const service = createDefaultSummaryService();
+    const service = await createDefaultSummaryService();
 
     if (featureFlags.openaiApi) {
       // Test multiple concurrent requests (be careful not to hit rate limits)

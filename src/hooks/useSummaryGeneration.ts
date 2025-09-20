@@ -9,7 +9,7 @@ import type {
   CreateSummaryInput,
 } from "../types/summary";
 import { createSummaryAnalyticsService } from "../lib/analytics/summaryTracking";
-import { createDefaultSummaryService } from "../services/summaryService";
+import { createSummaryService } from "../services/summary/summaryService";
 import { calculateWordCount, calculateReadingTime } from "../types/summary";
 import { api } from "../../convex/_generated/api";
 
@@ -155,7 +155,7 @@ export function useSummaryGeneration(
 
       try {
         // Use the existing summary service to generate AI content
-        const summaryService = createDefaultSummaryService();
+        const summaryService = await createSummaryService(false);
 
         // Generate the summary using AI service
         const generationResult = await summaryService.generateSummary(
@@ -222,7 +222,6 @@ export function useSummaryGeneration(
         return summary;
       } catch (error) {
         const generationTime = timer.end();
-        
 
         // Record failure in Convex for tracking
         try {
@@ -473,12 +472,12 @@ export function useSummaryExists(
  * Hook for getting summary generation service status
  * Useful for showing service availability and rate limits
  */
- export function useSummaryGenerationService() {
+export function useSummaryGenerationService() {
   return useQuery({
     queryKey: ["summaryServiceStatus"],
     queryFn: async () => {
       try {
-        const summaryService = createDefaultSummaryService();
+        const summaryService = await createSummaryService();
         return {
           isConfigured: summaryService.isConfigured(),
           rateLimit: summaryService.getRateLimit(),

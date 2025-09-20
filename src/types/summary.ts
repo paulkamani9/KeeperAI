@@ -1,6 +1,85 @@
 import { z } from "zod";
 import type { Book } from "./book";
 
+
+/**
+ * Summary generation result with detailed metadata
+ **/ 
+
+interface SummaryGenerationResult {
+  /** Generated summary content */
+  content: string;
+
+  /** Time taken to generate (milliseconds) */
+  generationTime: number;
+
+  /** AI model used */
+  aiModel: string;
+
+  /** Prompt version */
+  promptVersion: string;
+
+  /** Token usage information */
+  usage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+    estimatedCost?: number;
+  };
+
+  /** Additional metadata */
+  metadata: {
+    bookDataSource: "google-books" | "open-library";
+    hadBookDescription: boolean;
+    notes?: string;
+  };
+}
+
+/**
+ * Summary generation options
+ */
+interface SummaryGenerationOptions {
+  /** AI model to use (defaults to gpt-4o-mini) */
+  model?: string;
+
+  /** Maximum tokens to generate */
+  maxTokens?: number;
+
+  /** Temperature for creativity (0-1) */
+  temperature?: number;
+
+  /** Additional context or instructions */
+  additionalContext?: string;
+
+  /** Timeout in milliseconds (default: 30000) */
+  timeout?: number;
+}
+
+/**
+ * Summary service interface
+ */
+export interface SummaryService {
+  /** Generate an AI summary for a book */
+  generateSummary(
+    book: Book,
+    summaryType: SummaryType,
+    options?: SummaryGenerationOptions
+  ): Promise<SummaryGenerationResult>;
+
+  /** Check if the service is properly configured */
+  isConfigured(): boolean;
+
+  /** Get rate limiting information */
+  getRateLimit(): { hasKey: boolean; requestsLeft?: number };
+
+  /** Get available models */
+  getAvailableModels(): string[];
+
+  /** Test the OpenAI connection */
+  testConnection(): Promise<boolean>;
+}
+
+
 /**
  * Summary Types for KeeperAI
  *
@@ -337,6 +416,8 @@ export const isValidSummaryType = (type: string): type is SummaryType => {
 /**
  * Type exports for external use
  */
+
+export  {type SummaryGenerationResult, type SummaryGenerationOptions };
 export type InferredSummary = z.infer<typeof SummarySchema>;
 export type InferredCreateSummaryInput = z.infer<
   typeof CreateSummaryInputSchema

@@ -17,7 +17,7 @@ import { TestWrapper } from "@/test/TestWrapper";
 import { SearchInput } from "@/components/search/SearchInput";
 import { BookCard, type Book } from "@/components/search/BookCard";
 import { ResultsList } from "@/components/search/ResultsList";
-import { createUnifiedSearchService } from "@/services/searchService";
+import { createUnifiedSearchService } from "@/services/search/searchService";
 import { server } from "@/test/mocks/server";
 
 // Create search service instance for testing

@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BookCover } from "@/components/shared/BookCover";
 import { cn } from "@/lib/utils";
-import type { Book } from "@/types/book";
+import type {  Book } from "@/types/book";
 
 interface BookCardProps {
   /** Book data to display */

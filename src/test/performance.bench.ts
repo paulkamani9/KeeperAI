@@ -6,7 +6,7 @@
  */
 
 import { bench, describe, expect, beforeAll, afterAll } from "vitest";
-import { createUnifiedSearchService } from "@/services/searchService";
+import { createUnifiedSearchService } from "@/services/search/searchService";
 import { server } from "@/test/mocks/server";
 import type { Book } from "@/types/book";
 

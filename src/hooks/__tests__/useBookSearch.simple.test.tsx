@@ -4,7 +4,7 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 import React, { type ReactNode } from "react";
 
 import { useBookSearch } from "../useBookSearch";
-import { createUnifiedSearchService } from "../../services/searchService";
+import { createUnifiedSearchService } from "../../services/search/searchService";
 import type { SearchResults } from "../../types/book";
 
 // Mock the search service

@@ -38,10 +38,10 @@ describe("Summary Persistence Functions", () => {
   it("should properly integrate summary service with types", async () => {
     // Test that the summary service can be imported and configured
     const { createDefaultSummaryService } = await import(
-      "../../services/summaryService"
+      "../../services/summary/summaryService"
     );
 
-    const service = createDefaultSummaryService();
+    const service = await createDefaultSummaryService();
     expect(service).toBeDefined();
     expect(service.isConfigured).toBeDefined();
     expect(service.getRateLimit).toBeDefined();
