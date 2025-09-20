@@ -22,7 +22,11 @@ export async function generateMetadata({
   try {
     // Validate that summaryId looks like a valid Convex ID
     // Convex IDs are typically 32 character hex strings
-    if (!summaryId || summaryId.length !== 32 || !/^[a-f0-9]{32}$/.test(summaryId)) {
+    if (
+      !summaryId ||
+      summaryId.length !== 32 ||
+      !/^[a-f0-9]{32}$/.test(summaryId)
+    ) {
       console.log("Invalid summary ID format for metadata:", summaryId);
       // Don't throw error, just fall through to fallback metadata
       return {
@@ -48,11 +52,12 @@ export async function generateMetadata({
 
     // Create a server-side Convex client to fetch data for metadata
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-    
+
     // Fetch summary data
     const summary = await convex.query(api.summaries.getSummaryById, {
       summaryId: summaryId,
-    });    if (summary) {
+    });
+    if (summary) {
       // Extract meaningful content for description (first 160 characters)
       const description =
         summary.content.length > 160
@@ -114,7 +119,12 @@ export default async function SummaryPage({ params }: SummaryPageProps) {
   const { id: summaryId } = await params;
 
   // Validate summary ID format (Convex ID should be 32 char hex string)
-  if (!summaryId || summaryId.trim() === "" || summaryId.length !== 32 || !/^[a-f0-9]{32}$/.test(summaryId)) {
+  if (
+    !summaryId ||
+    summaryId.trim() === "" ||
+    summaryId.length !== 32 ||
+    !/^[a-f0-9]{32}$/.test(summaryId)
+  ) {
     notFound();
   }
 
