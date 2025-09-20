@@ -167,19 +167,23 @@ export const getSummary = query({
  */
 export const getSummaryById = query({
   args: {
-    summaryId: v.id("summaries"),
+    summaryId: v.string(), // Accept string from URL params, we'll convert internally
   },
   returns: v.union(SummaryResponseValidator, v.null()),
   handler: async (ctx, args) => {
     // Query the summaries table by document ID
-    const summary = await ctx.db.get(args.summaryId);
-    
+    const summary = await ctx.db.get(args.summaryId as any);
+
     if (!summary || summary === null) {
       return null;
     }
 
     // Check if this is actually a summary document (not another table)
-    if (!('content' in summary) || !('mode' in summary) || !('bookId' in summary)) {
+    if (
+      !("content" in summary) ||
+      !("mode" in summary) ||
+      !("bookId" in summary)
+    ) {
       return null;
     }
 
@@ -192,7 +196,9 @@ export const getSummaryById = query({
       practical: "practical" as const,
     };
 
-    const summaryType = modeToSummaryType[summary.mode as keyof typeof modeToSummaryType] || "concise";
+    const summaryType =
+      modeToSummaryType[summary.mode as keyof typeof modeToSummaryType] ||
+      "concise";
 
     // Calculate word count and reading time from content
     const wordCount = summary.content.split(/\s+/).length;

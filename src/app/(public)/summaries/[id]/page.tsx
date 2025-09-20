@@ -19,96 +19,66 @@ export async function generateMetadata({
 }: SummaryPageProps): Promise<Metadata> {
   const summaryId = params.id;
 
-  // Create Convex client for server-side data fetching
-  const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
-  if (!convexUrl) {
-    // Fallback metadata if Convex URL is not configured
-    return {
-      title: `Summary | KeeperAI`,
-      description: `Read an AI-generated book summary on KeeperAI`,
-      robots: { index: false, follow: false }, // Don't index if we can't fetch data
-    };
-  }
-
   try {
-    const convex = new ConvexHttpClient(convexUrl);
+    // Create a server-side Convex client to fetch data for metadata
+    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+    
+    // Fetch summary data
     const summary = await convex.query(api.summaries.getSummaryById, {
-      summaryId,
+      summaryId: summaryId,
     });
 
-    if (!summary) {
-      // Summary not found - return basic metadata
+    if (summary) {
+      // Extract meaningful content for description (first 160 characters)
+      const description = summary.content.length > 160 
+        ? summary.content.substring(0, 157) + "..."
+        : summary.content;
+
       return {
-        title: `Summary Not Found | KeeperAI`,
-        description: `The requested summary could not be found.`,
-        robots: { index: false, follow: false },
+        title: `${summary.summaryType.charAt(0).toUpperCase() + summary.summaryType.slice(1)} Summary | KeeperAI`,
+        description: description,
+        robots: {
+          index: true,
+          follow: true,
+        },
+        openGraph: {
+          title: `${summary.summaryType.charAt(0).toUpperCase() + summary.summaryType.slice(1)} Summary | KeeperAI`,
+          description: description,
+          type: "article",
+          url: `/summaries/${summaryId}`,
+        },
+        twitter: {
+          card: "summary",
+          title: `${summary.summaryType.charAt(0).toUpperCase() + summary.summaryType.slice(1)} Summary | KeeperAI`,
+          description: description,
+        },
       };
     }
-
-    // Extract meaningful content for description (first 160 chars)
-    const content = summary.content
-      .replace(/[#*\n]/g, " ") // Remove markdown formatting
-      .replace(/\s+/g, " ") // Normalize whitespace
-      .trim();
-    const description = content.length > 160 
-      ? content.substring(0, 157) + "..." 
-      : content;
-
-    // Generate summary type display name
-    const typeNames = {
-      concise: "Concise Summary",
-      detailed: "Detailed Analysis", 
-      analysis: "Critical Analysis",
-      practical: "Practical Insights"
-    };
-    const summaryTypeName = typeNames[summary.summaryType] || "Summary";
-
-    return {
-      title: `${summaryTypeName} | KeeperAI`,
-      description: description || `Read an AI-generated ${summaryTypeName.toLowerCase()} on KeeperAI`,
-      keywords: [
-        "AI summary",
-        "book summary", 
-        summary.summaryType,
-        "artificial intelligence",
-        "reading",
-      ].join(", "),
-      robots: {
-        index: true,
-        follow: true,
-      },
-      openGraph: {
-        title: `${summaryTypeName} | KeeperAI`,
-        description: description || `Read an AI-generated ${summaryTypeName.toLowerCase()} on KeeperAI`,
-        type: "article",
-        url: `/summaries/${summaryId}`,
-        publishedTime: summary.createdAt,
-        modifiedTime: summary.updatedAt,
-        authors: ["KeeperAI"],
-        section: "Summaries",
-        tags: ["AI", "Summary", summary.summaryType],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: `${summaryTypeName} | KeeperAI`,
-        description: description || `Read an AI-generated ${summaryTypeName.toLowerCase()} on KeeperAI`,
-        creator: "@KeeperAI",
-      },
-      other: {
-        "article:reading_time": summary.readingTime.toString(),
-        "article:word_count": summary.wordCount.toString(),
-      },
-    };
   } catch (error) {
-    console.error("Error fetching summary metadata:", error);
-    
-    // Fallback metadata on error
-    return {
+    console.error("Failed to fetch summary for metadata:", error);
+    // Fall back to basic metadata
+  }
+
+  // Fallback metadata if fetch fails
+  return {
+    title: `Summary | KeeperAI`,
+    description: `Read an AI-generated book summary on KeeperAI`,
+    robots: {
+      index: true,
+      follow: true,
+    },
+    openGraph: {
       title: `Summary | KeeperAI`,
       description: `Read an AI-generated book summary on KeeperAI`,
-      robots: { index: false, follow: false }, // Don't index on error
-    };
-  }
+      type: "article",
+      url: `/summaries/${summaryId}`,
+    },
+    twitter: {
+      card: "summary",
+      title: `Summary | KeeperAI`,
+      description: `Read an AI-generated book summary on KeeperAI`,
+    },
+  };
 }
 
 /**

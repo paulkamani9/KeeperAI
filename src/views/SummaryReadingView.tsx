@@ -50,8 +50,8 @@ export function SummaryReadingView({
     queryFn: async (): Promise<Summary | null> => {
       try {
         // Query the summary by ID from Convex
-        const result = await convex.query(api.summaries.getSummaryById, { 
-          summaryId 
+        const result = await convex.query(api.summaries.getSummaryById, {
+          summaryId: summaryId as any, // Cast to proper ID type
         });
 
         if (!result) return null;

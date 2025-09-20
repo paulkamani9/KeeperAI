@@ -69,12 +69,10 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
 
   // Handlers for summary generation
   const handleGenerateSummary = () => {
-    toast.info("Starting AI summary generation...");
     generateSummary();
   };
 
   const handleRetryGeneration = () => {
-    toast.info("Retrying summary generation...");
     generateSummary();
   };
 

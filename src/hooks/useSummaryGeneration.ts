@@ -11,6 +11,7 @@ import type {
 import { createSummaryCacheKey } from "../types/summary";
 import { createSummaryAnalyticsService } from "../lib/analytics/summaryTracking";
 import { api } from "../../convex/_generated/api";
+import { Id } from "../../convex/_generated/dataModel";
 
 /**
  * Custom hook for AI summary generation using React Query
@@ -145,7 +146,7 @@ export function useSummaryGeneration(
         const result = await convex.action(api.summaries.generateSummary, {
           book: input.book,
           summaryType: input.summaryType,
-          userId: input.userId as any, // Cast to handle Convex ID type
+          userId: input.userId as Id<"users">, 
         });
 
         const generationTime = timer.end();
@@ -172,7 +173,7 @@ export function useSummaryGeneration(
             },
           },
           cacheHit: false,
-          userId: input.userId as any,
+          userId: input.userId as Id<"users">,
         });
 
         return summary;
@@ -285,7 +286,9 @@ export function useSummaryGeneration(
   }, [params.summaryType]);
 
   // Progress tracking state
-  const [generationStartTime, setGenerationStartTime] = useState<number | null>(null);
+  const [generationStartTime, setGenerationStartTime] = useState<number | null>(
+    null
+  );
   const [progress, setProgress] = useState<number | undefined>(undefined);
 
   // Start progress tracking when generation begins
@@ -306,7 +309,11 @@ export function useSummaryGeneration(
       setGenerationStartTime(null);
       setProgress(undefined);
     }
-  }, [generateMutation.isPending, generateMutation.isSuccess, generationStartTime]);
+  }, [
+    generateMutation.isPending,
+    generateMutation.isSuccess,
+    generationStartTime,
+  ]);
 
   // Update progress based on elapsed time
   useEffect(() => {

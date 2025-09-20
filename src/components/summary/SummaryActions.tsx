@@ -65,9 +65,7 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
   const handleSaveToFavorites = () => {
     setIsSaved(!isSaved);
     toast.success(
-      isSaved
-        ? "Summary removed from favorites"
-        : "Summary saved to favorites"
+      isSaved ? "Summary removed from favorites" : "Summary saved to favorites"
     );
   };
 
