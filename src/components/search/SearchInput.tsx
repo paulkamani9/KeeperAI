@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, X, Loader2, Mic, Image } from "lucide-react";
+import { Search, X, Loader2, Mic, ImageIcon } from "lucide-react";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -261,7 +261,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
               title="Image search (coming soon)"
               aria-label="Image search (coming soon)"
             >
-              <Image
+              <ImageIcon
                 className={cn(isCompact ? "h-3 w-3" : "h-4 w-4")}
                 aria-hidden="true"
               />

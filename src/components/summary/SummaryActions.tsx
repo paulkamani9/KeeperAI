@@ -53,6 +53,7 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
       toast.success("Summary link copied to clipboard");
     } catch (error) {
       toast.error("Failed to copy link. Please try again.");
+      console.error("Error copying link:", error);
     }
   };
 

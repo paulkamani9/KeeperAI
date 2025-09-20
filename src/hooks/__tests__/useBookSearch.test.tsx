@@ -5,7 +5,7 @@ import React, { type ReactNode } from "react";
 
 import { useBookSearch } from "../useBookSearch";
 import { createUnifiedSearchService } from "../../services/searchService";
-import type { SearchResults, SearchParams } from "../../types/book";
+import type { SearchResults,} from "../../types/book";
 
 // Mock the search service
 vi.mock("../../services/searchService", () => ({

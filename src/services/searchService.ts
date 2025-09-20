@@ -94,7 +94,7 @@ export class UnifiedSearchService implements BookService {
           );
         } catch (fallbackError) {
           // Both strategies failed, throw the original error
-          throw error;
+          throw fallbackError;
         }
       }
 

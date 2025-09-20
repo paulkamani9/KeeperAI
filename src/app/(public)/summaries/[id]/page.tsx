@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { ConvexHttpClient } from "convex/browser";
 import { SummaryReadingView } from "@/views/SummaryReadingView";
 import { api } from "../../../../../convex/_generated/api";

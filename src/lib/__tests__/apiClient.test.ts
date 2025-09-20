@@ -45,7 +45,7 @@ describe("ApiClient", () => {
     });
 
     it("should create client with custom configuration", () => {
-      const customClient = new ApiClient({
+       new ApiClient({
         baseURL: "https://api.example.com",
         timeout: 5000,
         retryAttempts: 5,

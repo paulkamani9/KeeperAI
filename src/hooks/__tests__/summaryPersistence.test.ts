@@ -5,12 +5,12 @@
  */
 
 import { describe, it, expect } from "vitest";
+import { api } from "../../../convex/_generated/api";
+import { SUMMARY_TYPES, SUMMARY_TYPE_DESCRIPTIONS } from "../../types/summary";
 
 describe("Summary Persistence Functions", () => {
   it("should have the correct Convex function signatures", () => {
     // This test verifies that our Convex functions are correctly defined
-    // and can be imported from the API
-    const { api } = require("../../../convex/_generated/api");
 
     // Verify the functions exist in the API
     expect(api.summaries.storeSummary).toBeDefined();
@@ -56,11 +56,6 @@ describe("Summary Persistence Functions", () => {
   });
 
   it("should validate summary type constants", () => {
-    const {
-      SUMMARY_TYPES,
-      SUMMARY_TYPE_DESCRIPTIONS,
-    } = require("../../types/summary");
-
     // Verify all summary types have descriptions
     Object.values(SUMMARY_TYPES).forEach((type) => {
       const typeKey = type as keyof typeof SUMMARY_TYPE_DESCRIPTIONS;

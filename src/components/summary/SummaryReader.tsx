@@ -189,7 +189,7 @@ export function SummaryReader({
         {/* Reading completion indicator (hidden for now, placeholder for future) */}
         <div className="hidden mt-12 pt-8 border-t text-center">
           <p className="text-sm text-muted-foreground">
-            You've finished reading this summary
+            You&apos;ve finished reading this summary
           </p>
         </div>
       </CardContent>

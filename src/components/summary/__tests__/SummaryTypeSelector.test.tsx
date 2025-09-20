@@ -134,7 +134,7 @@ describe("SummaryTypeSelector", () => {
     });
 
     it("shows loading message in dropdown", async () => {
-      const user = userEvent.setup();
+      // const user = userEvent.setup();
       render(<SummaryTypeSelector {...defaultProps} loading={true} />);
 
       // Should not be able to open when loading

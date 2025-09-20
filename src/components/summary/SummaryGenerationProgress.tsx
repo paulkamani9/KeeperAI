@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 
 import { Button } from "../ui/button";
-import { Progress } from "../ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import type { SummaryType } from "../../types/summary";
 import { getSummaryTypeDescription } from "../../types/summary";
@@ -133,7 +132,7 @@ export function SummaryGenerationProgress({
   const timeRemaining = React.useMemo(() => {
     if (!isGenerating || !estimatedTime || !progress) return null;
 
-    const progressFraction = Math.max(progress / 100, 0.1); // Avoid division by zero
+    // const progressFraction = Math.max(progress / 100, 0.1); // Avoid division by zero
     const elapsed = (progress / 100) * estimatedTime;
     const remaining = Math.max(estimatedTime - elapsed, 0);
 
@@ -343,7 +342,7 @@ export function GenerationTimeEstimate({
   detailed = false,
   className = "",
 }: GenerationTimeEstimateProps) {
-  const summaryDescription = getSummaryTypeDescription(summaryType);
+  // const summaryDescription = getSummaryTypeDescription(summaryType);
 
   // Estimate generation time based on summary type
   const estimatedSeconds = {

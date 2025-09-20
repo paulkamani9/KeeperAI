@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { forwardRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Book, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 
 interface BookCoverProps {
   /** Book title for accessibility and fallback display */
@@ -81,7 +81,7 @@ export const BookCover = forwardRef<HTMLDivElement, BookCoverProps>(
       loading = false,
       onClick,
       clickable = false,
-      aspectRatio = 0.67, // Standard book aspect ratio (2:3)
+      // aspectRatio = 0.67, // Standard book aspect ratio (2:3)
       priority = false,
     },
     ref

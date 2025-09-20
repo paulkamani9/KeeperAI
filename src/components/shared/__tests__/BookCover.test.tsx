@@ -22,12 +22,13 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import { BookCover, BookCoverSkeleton } from "../BookCover";
+import Image from "next/image";
 
 // Mock Next.js Image component
 vi.mock("next/image", () => ({
   default: ({ src, alt, onError, onLoad, ...props }: any) => {
     return (
-      <img
+      <Image
         src={src}
         alt={alt}
         data-testid="next-image"
