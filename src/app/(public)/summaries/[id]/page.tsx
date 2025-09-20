@@ -5,9 +5,9 @@ import { SummaryReadingView } from "@/views/SummaryReadingView";
 import { api } from "../../../../../convex/_generated/api";
 
 interface SummaryPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 /**
@@ -17,22 +17,28 @@ interface SummaryPageProps {
 export async function generateMetadata({
   params,
 }: SummaryPageProps): Promise<Metadata> {
-  const summaryId = params.id;
+  const { id: summaryId } = await params;
 
   try {
+    // Validate that summaryId looks like a valid Convex ID
+    // Convex IDs are typically 32 character hex strings
+    if (!summaryId || summaryId.length !== 32 || !/^[a-f0-9]{32}$/.test(summaryId)) {
+      console.log("Invalid summary ID format for metadata:", summaryId);
+      throw new Error("Invalid summary ID format");
+    }
+
     // Create a server-side Convex client to fetch data for metadata
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
     
     // Fetch summary data
     const summary = await convex.query(api.summaries.getSummaryById, {
       summaryId: summaryId,
-    });
-
-    if (summary) {
+    });    if (summary) {
       // Extract meaningful content for description (first 160 characters)
-      const description = summary.content.length > 160 
-        ? summary.content.substring(0, 157) + "..."
-        : summary.content;
+      const description =
+        summary.content.length > 160
+          ? summary.content.substring(0, 157) + "..."
+          : summary.content;
 
       return {
         title: `${summary.summaryType.charAt(0).toUpperCase() + summary.summaryType.slice(1)} Summary | KeeperAI`,
@@ -85,11 +91,11 @@ export async function generateMetadata({
  * Summary reading page component
  * Provides immersive reading experience for AI-generated summaries
  */
-export default function SummaryPage({ params }: SummaryPageProps) {
-  const summaryId = params.id;
+export default async function SummaryPage({ params }: SummaryPageProps) {
+  const { id: summaryId } = await params;
 
-  // Validate summary ID format (basic validation)
-  if (!summaryId || summaryId.trim() === "") {
+  // Validate summary ID format (Convex ID should be 32 char hex string)
+  if (!summaryId || summaryId.trim() === "" || summaryId.length !== 32 || !/^[a-f0-9]{32}$/.test(summaryId)) {
     notFound();
   }
 

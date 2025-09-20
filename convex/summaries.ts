@@ -171,10 +171,22 @@ export const getSummaryById = query({
   },
   returns: v.union(SummaryResponseValidator, v.null()),
   handler: async (ctx, args) => {
-    // Query the summaries table by document ID
-    const summary = await ctx.db.get(args.summaryId as any);
+    // Validate the summary ID format first
+    if (!args.summaryId || args.summaryId.length !== 32 || !/^[a-f0-9]{32}$/.test(args.summaryId)) {
+      return null;
+    }
 
-    if (!summary || summary === null) {
+    let summary;
+    try {
+      // Query the summaries table by document ID
+      summary = await ctx.db.get(args.summaryId as any);
+
+      if (!summary || summary === null) {
+        return null;
+      }
+    } catch (error) {
+      // Handle invalid ID format errors
+      console.error("Error fetching summary by ID:", error);
       return null;
     }
 
