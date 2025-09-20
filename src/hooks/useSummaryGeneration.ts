@@ -8,10 +8,10 @@ import type {
   SummaryType,
   CreateSummaryInput,
 } from "../types/summary";
-import { createSummaryCacheKey } from "../types/summary";
 import { createSummaryAnalyticsService } from "../lib/analytics/summaryTracking";
+import { createDefaultSummaryService } from "../services/summaryService";
+import { calculateWordCount, calculateReadingTime } from "../types/summary";
 import { api } from "../../convex/_generated/api";
-import { Id } from "../../convex/_generated/dataModel";
 
 /**
  * Custom hook for AI summary generation using React Query
@@ -112,17 +112,28 @@ export function useSummaryGeneration(
     queryKey: ["existingSummary", params.book.id, params.summaryType],
     queryFn: async (): Promise<Summary | null> => {
       try {
-        const result = await convex.query(api.summaries.getSummary, {
+        const result = await convex.query(api.summaries.getExistingSummary, {
           bookId: params.book.id,
           summaryType: params.summaryType,
-          userId: params.userId,
+          userId: params.userId as any, // Cast to handle Convex ID type
         });
 
         if (!result) return null;
 
-        // Convert Convex dates to JS Date objects
+        // Convert to our Summary type with proper dates
         return {
-          ...result,
+          id: result._id,
+          bookId: result.bookId,
+          summaryType: result.summaryType,
+          content: result.content,
+          status: result.status,
+          generationTime: result.generationTime,
+          wordCount: result.wordCount,
+          readingTime: result.readingTime,
+          aiModel: result.aiModel,
+          promptVersion: result.promptVersion,
+          errorMessage: result.errorMessage,
+          metadata: result.metadata,
           createdAt: new Date(result.createdAt),
           updatedAt: new Date(result.updatedAt),
         };
@@ -143,19 +154,52 @@ export function useSummaryGeneration(
       timer.start();
 
       try {
-        const result = await convex.action(api.summaries.generateSummary, {
-          book: input.book,
-          summaryType: input.summaryType,
-          userId: input.userId as Id<"users">, 
-        });
+        // Use the existing summary service to generate AI content
+        const summaryService = createDefaultSummaryService();
+
+        // Generate the summary using AI service
+        const generationResult = await summaryService.generateSummary(
+          input.book,
+          input.summaryType
+        );
 
         const generationTime = timer.end();
 
-        // Convert Convex dates to JS Date objects
+        // Calculate additional metadata
+        const wordCount = calculateWordCount(generationResult.content);
+        const readingTime = calculateReadingTime(wordCount);
+        console.log("Reading time:", readingTime);
+
+        // Persist the generated summary to Convex
+        const summaryId = await convex.mutation(api.summaries.storeSummary, {
+          bookId: input.book.id,
+          summaryType: input.summaryType,
+          content: generationResult.content,
+          generationTime: generationResult.generationTime,
+          wordCount,
+          readingTime,
+          aiModel: generationResult.aiModel,
+          promptVersion: generationResult.promptVersion,
+          userId: input.userId as any, // Cast for Convex ID type
+          metadata: generationResult.metadata,
+        });
+
+        // Create the Summary object to return
         const summary: Summary = {
-          ...result,
-          createdAt: new Date(result.createdAt),
-          updatedAt: new Date(result.updatedAt),
+          id: summaryId,
+          bookId: input.book.id,
+          summaryType: input.summaryType,
+          content: generationResult.content,
+          status: "completed",
+          generationTime: generationResult.generationTime,
+          wordCount,
+          readingTime,
+          aiModel: generationResult.aiModel,
+          promptVersion: generationResult.promptVersion,
+          errorMessage: undefined,
+          metadata: generationResult.metadata,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         };
 
         // Track successful generation analytics (fire-and-forget)
@@ -173,12 +217,33 @@ export function useSummaryGeneration(
             },
           },
           cacheHit: false,
-          userId: input.userId as Id<"users">,
+          userId: input.userId as any,
         });
 
         return summary;
       } catch (error) {
         const generationTime = timer.end();
+        
+
+        // Record failure in Convex for tracking
+        try {
+          await convex.mutation(api.summaries.recordSummaryFailure, {
+            bookId: input.book.id,
+            summaryType: input.summaryType,
+            errorMessage:
+              error instanceof Error ? error.message : "Unknown error",
+            generationTime,
+            aiModel: "gpt-4o-mini", // Default model
+            promptVersion: "v1.0", // Default version
+            userId: input.userId as any,
+            metadata: {
+              bookDataSource: input.book.source,
+              hadBookDescription: Boolean(input.book.description?.trim()),
+            },
+          });
+        } catch (persistError) {
+          console.error("Failed to record summary failure:", persistError);
+        }
 
         // Track failed generation analytics (fire-and-forget)
         analyticsService.trackSummaryGeneration({
@@ -388,18 +453,18 @@ export function useSummaryExists(
     queryKey: ["summaryExists", bookId, summaryType, userId],
     queryFn: async (): Promise<boolean> => {
       try {
-        const summary = await convex.query(api.summaries.getSummary, {
+        const summary = await convex.query(api.summaries.getExistingSummary, {
           bookId,
           summaryType,
           userId: userId as any, // Cast to handle Convex ID type
         });
-        return Boolean(summary);
+        return Boolean(summary && summary.status === "completed");
       } catch (error) {
         console.error("Error checking summary existence:", error);
         return false;
       }
     },
-    enabled: true, // Now enabled since Convex functions are implemented
+    enabled: true,
     staleTime: 1000 * 60 * 5, // Consider fresh for 5 minutes
     gcTime: 1000 * 60 * 15, // Keep in cache for 15 minutes
   });
@@ -410,14 +475,16 @@ export function useSummaryExists(
  * Useful for showing service availability and rate limits
  */
 export function useSummaryGenerationService() {
-  const convex = useConvex();
-
   return useQuery({
     queryKey: ["summaryServiceStatus"],
     queryFn: async () => {
       try {
-        const status = await convex.query(api.summaries.getServiceStatus);
-        return status;
+        const summaryService = createDefaultSummaryService();
+        return {
+          isConfigured: summaryService.isConfigured(),
+          rateLimit: summaryService.getRateLimit(),
+          availableModels: summaryService.getAvailableModels(),
+        };
       } catch (error) {
         console.error("Error checking summary service status:", error);
         return {
@@ -427,7 +494,7 @@ export function useSummaryGenerationService() {
         };
       }
     },
-    enabled: true, // Now enabled since Convex functions are implemented
+    enabled: true,
     staleTime: 1000 * 60 * 2, // Consider fresh for 2 minutes
     gcTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
     refetchOnWindowFocus: false,

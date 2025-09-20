@@ -20,35 +20,6 @@ export async function generateMetadata({
   const { id: summaryId } = await params;
 
   try {
-    // Validate that summaryId looks like a valid Convex ID
-    // Convex IDs are typically 32 character hex strings
-    if (
-      !summaryId ||
-      summaryId.length !== 32 ||
-      !/^[a-f0-9]{32}$/.test(summaryId)
-    ) {
-      console.log("Invalid summary ID format for metadata:", summaryId);
-      // Don't throw error, just fall through to fallback metadata
-      return {
-        title: `Summary | KeeperAI`,
-        description: `Read an AI-generated book summary on KeeperAI`,
-        robots: {
-          index: false, // Don't index invalid URLs
-          follow: true,
-        },
-        openGraph: {
-          title: `Summary | KeeperAI`,
-          description: `Read an AI-generated book summary on KeeperAI`,
-          type: "article",
-          url: `/summaries/${summaryId}`,
-        },
-        twitter: {
-          card: "summary",
-          title: `Summary | KeeperAI`,
-          description: `Read an AI-generated book summary on KeeperAI`,
-        },
-      };
-    }
 
     // Create a server-side Convex client to fetch data for metadata
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
@@ -57,29 +28,34 @@ export async function generateMetadata({
     const summary = await convex.query(api.summaries.getSummaryById, {
       summaryId: summaryId,
     });
-    if (summary) {
+
+    if (summary && "content" in summary && "summaryType" in summary) {
       // Extract meaningful content for description (first 160 characters)
       const description =
         summary.content.length > 160
           ? summary.content.substring(0, 157) + "..."
           : summary.content;
 
+      const titleCase =
+        summary.summaryType.charAt(0).toUpperCase() +
+        summary.summaryType.slice(1);
+
       return {
-        title: `${summary.summaryType.charAt(0).toUpperCase() + summary.summaryType.slice(1)} Summary | KeeperAI`,
+        title: `${titleCase} Summary | KeeperAI`,
         description: description,
         robots: {
           index: true,
           follow: true,
         },
         openGraph: {
-          title: `${summary.summaryType.charAt(0).toUpperCase() + summary.summaryType.slice(1)} Summary | KeeperAI`,
+          title: `${titleCase} Summary | KeeperAI`,
           description: description,
           type: "article",
           url: `/summaries/${summaryId}`,
         },
         twitter: {
           card: "summary",
-          title: `${summary.summaryType.charAt(0).toUpperCase() + summary.summaryType.slice(1)} Summary | KeeperAI`,
+          title: `${titleCase} Summary | KeeperAI`,
           description: description,
         },
       };
@@ -119,14 +95,14 @@ export default async function SummaryPage({ params }: SummaryPageProps) {
   const { id: summaryId } = await params;
 
   // Validate summary ID format (Convex ID should be 32 char hex string)
-  if (
-    !summaryId ||
-    summaryId.trim() === "" ||
-    summaryId.length !== 32 ||
-    !/^[a-f0-9]{32}$/.test(summaryId)
-  ) {
-    notFound();
-  }
+  // if (
+  //   !summaryId ||
+  //   summaryId.trim() === "" ||
+  //   summaryId.length !== 32 ||
+  //   !/^[a-f0-9]{32}$/.test(summaryId)
+  // ) {
+  //   notFound();
+  // }
 
   return <SummaryReadingView summaryId={summaryId} />;
 }

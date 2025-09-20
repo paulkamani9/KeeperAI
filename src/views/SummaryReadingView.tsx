@@ -51,16 +51,41 @@ export function SummaryReadingView({
       try {
         // Query the summary by ID from Convex
         const result = await convex.query(api.summaries.getSummaryById, {
-          summaryId: summaryId as any, // Cast to proper ID type
+          summaryId: summaryId, // Pass as string, the function will validate
         });
 
-        if (!result) return null;
+        if (
+          !result ||
+          !("bookId" in result) ||
+          !("summaryType" in result) ||
+          !("content" in result) ||
+          !("status" in result) ||
+          !("wordCount" in result) ||
+          !("readingTime" in result) ||
+          !("aiModel" in result) ||
+          !("promptVersion" in result) ||
+          !("createdAt" in result) ||
+          !("updatedAt" in result)
+        ) {
+          return null;
+        }
 
-        // Convert string dates back to Date objects for consistency
+        // Convert Convex result to our Summary type
         return {
-          ...result,
-          createdAt: new Date(result.createdAt),
-          updatedAt: new Date(result.updatedAt),
+          id: result._id,
+          bookId: result.bookId as string,
+          summaryType: result.summaryType as any,
+          content: result.content as string,
+          status: result.status as any,
+          generationTime: result.generationTime as number | undefined,
+          wordCount: result.wordCount as number,
+          readingTime: result.readingTime as number,
+          aiModel: result.aiModel as string,
+          promptVersion: result.promptVersion as string,
+          errorMessage: result.errorMessage as string | undefined,
+          metadata: result.metadata as any,
+          createdAt: new Date(result.createdAt as number),
+          updatedAt: new Date(result.updatedAt as number),
         };
       } catch (error) {
         console.error("Failed to fetch summary:", error);

@@ -22,21 +22,48 @@ export default defineSchema({
     .index("byUserAndBook", ["userId", "bookId"]),
 
   summaries: defineTable({
-    userId: v.id("users"),
-    bookId: v.string(), // External book identifier
-    content: v.string(), // AI-generated summary
-    mode: v.union(
-      v.literal("brief"),
+    userId: v.optional(v.id("users")),
+    bookId: v.string(), // External book identifier from Google Books or Open Library
+    summaryType: v.union(
       v.literal("concise"),
       v.literal("detailed"),
       v.literal("analysis"),
       v.literal("practical")
     ),
-    generatedAt: v.number(),
+    content: v.string(), // AI-generated summary content
+    status: v.union(
+      v.literal("pending"),
+      v.literal("generating"),
+      v.literal("completed"),
+      v.literal("failed")
+    ),
+    generationTime: v.optional(v.number()), // Time taken to generate in milliseconds
+    wordCount: v.number(),
+    readingTime: v.number(), // Estimated reading time in minutes
+    aiModel: v.string(), // AI model used for generation
+    promptVersion: v.string(), // Version of prompt used
+    errorMessage: v.optional(v.string()), // Error message if failed
+    metadata: v.optional(
+      v.object({
+        bookDataSource: v.union(
+          v.literal("google-books"),
+          v.literal("open-library")
+        ),
+        hadBookDescription: v.boolean(),
+        promptTokens: v.optional(v.number()),
+        completionTokens: v.optional(v.number()),
+        estimatedCost: v.optional(v.number()),
+        notes: v.optional(v.string()),
+      })
+    ),
+    createdAt: v.number(),
+    updatedAt: v.number(),
   })
     .index("byUserId", ["userId"])
     .index("byUserAndBook", ["userId", "bookId"])
-    .index("byBookAndMode", ["bookId", "mode"]),
+    .index("byBookAndType", ["bookId", "summaryType"])
+    .index("byStatus", ["status"])
+    .index("byCreatedAt", ["createdAt"]),
 
   // New: User activity tracking for preferences
   userActivities: defineTable({
