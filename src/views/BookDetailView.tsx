@@ -67,8 +67,6 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
     enabled: false, // Manual generation only
   });
 
-  const summaryService = useSummaryGenerationService();
-  console.log("Summary Generation Service:", summaryService.data);
 
   // Handlers for summary generation
   const handleGenerateSummary = () => {

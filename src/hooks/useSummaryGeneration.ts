@@ -9,9 +9,12 @@ import type {
   CreateSummaryInput,
 } from "../types/summary";
 import { createSummaryAnalyticsService } from "../lib/analytics/summaryTracking";
-import { createSummaryService } from "../services/summary/summaryService";
+// import { createSummaryService } from "../services/summary/summaryService";
 import { calculateWordCount, calculateReadingTime } from "../types/summary";
 import { api } from "../../convex/_generated/api";
+import { generateBookSummary } from "@/server/summary/generateSummary";
+import { check } from "zod";
+import { checkOpenAiConnectionStatus } from "@/server/summary/openAiStatusCheck";
 
 /**
  * Custom hook for AI summary generation using React Query
@@ -154,11 +157,8 @@ export function useSummaryGeneration(
       timer.start();
 
       try {
-        // Use the existing summary service to generate AI content
-        const summaryService = await createSummaryService(false);
-
         // Generate the summary using AI service
-        const generationResult = await summaryService.generateSummary(
+        const generationResult = await generateBookSummary(
           input.book,
           input.summaryType
         );
@@ -477,11 +477,10 @@ export function useSummaryGenerationService() {
     queryKey: ["summaryServiceStatus"],
     queryFn: async () => {
       try {
-        const summaryService = await createSummaryService();
+        const isConnected = await checkOpenAiConnectionStatus();
+
         return {
-          isConfigured: summaryService.isConfigured(),
-          rateLimit: summaryService.getRateLimit(),
-          availableModels: summaryService.getAvailableModels(),
+          isConfigured: isConnected,
         };
       } catch (error) {
         console.error("Error checking summary service status:", error);

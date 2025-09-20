@@ -376,7 +376,9 @@ export async function createSummaryService(useMock?: boolean): Promise<SummarySe
     return new MockSummaryService();
   }
 
-  return new OpenAISummaryService(openAiInstance);
+  const summaryService = new OpenAISummaryService(openAiInstance);
+
+  return summaryService;
 }
 
 
