@@ -24,7 +24,26 @@ export async function generateMetadata({
     // Convex IDs are typically 32 character hex strings
     if (!summaryId || summaryId.length !== 32 || !/^[a-f0-9]{32}$/.test(summaryId)) {
       console.log("Invalid summary ID format for metadata:", summaryId);
-      throw new Error("Invalid summary ID format");
+      // Don't throw error, just fall through to fallback metadata
+      return {
+        title: `Summary | KeeperAI`,
+        description: `Read an AI-generated book summary on KeeperAI`,
+        robots: {
+          index: false, // Don't index invalid URLs
+          follow: true,
+        },
+        openGraph: {
+          title: `Summary | KeeperAI`,
+          description: `Read an AI-generated book summary on KeeperAI`,
+          type: "article",
+          url: `/summaries/${summaryId}`,
+        },
+        twitter: {
+          card: "summary",
+          title: `Summary | KeeperAI`,
+          description: `Read an AI-generated book summary on KeeperAI`,
+        },
+      };
     }
 
     // Create a server-side Convex client to fetch data for metadata
