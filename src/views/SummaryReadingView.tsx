@@ -37,6 +37,7 @@ export function SummaryReadingView({
 }: SummaryReadingViewProps) {
   const router = useRouter();
   const convex = useConvex();
+  const [readingProgress, setReadingProgress] = React.useState(0);
 
   // Fetch summary data from Convex
   const {
@@ -174,14 +175,13 @@ export function SummaryReadingView({
   return (
     <div className={cn("min-h-screen bg-background", className)}>
       {/* Fixed Summary Header - positioned beneath global navbar */}
-      <SummaryHeader
-        summary={summary}
-        onBackToBook={handleBackToBook}
-        className="fixed top-[60px] left-0 right-0 z-40 bg-background/80 backdrop-blur-md border-b"
-      />
-
-      {/* Main Reading Content - account for both navbar heights */}
-      <main className="container mx-auto px-4 pt-[136px] pb-8">
+          <SummaryHeader
+            summary={summary}
+            readingProgress={readingProgress}
+            onBackToBook={handleBackToBook}
+            className="fixed top-[60px] left-0 right-0 z-40 bg-background/80 backdrop-blur-md border-b"
+          />      {/* Main Reading Content - account for both navbar heights */}
+      <main className="container mx-auto px-4 sm:pt-[136px] pt-[180px] pb-8">
         <div className="max-w-4xl mx-auto space-y-8">
           {/* Summary Content */}
           <SummaryReader
@@ -189,6 +189,7 @@ export function SummaryReadingView({
             summaryType={summary.summaryType}
             wordCount={summary.wordCount}
             readingTime={summary.readingTime}
+            onProgressChange={setReadingProgress}
           />
         </div>
       </main>

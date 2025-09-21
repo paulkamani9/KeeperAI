@@ -1,24 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 import { SummaryActions } from "./SummaryActions";
 import { SummaryMetadata } from "./SummaryMetadata";
-import {
-  ChevronLeft,
-  BookOpen,
-  Clock,
-  Calendar,
-  MoreHorizontal,
-  Info,
-} from "lucide-react";
+import { ChevronLeft, BookOpen, Clock, Calendar, Info } from "lucide-react";
 import type { Summary } from "../../types/summary";
 
 interface SummaryHeaderProps {
   /** Summary data */
   summary: Summary;
+  /** Current reading progress (0-100) */
+  readingProgress?: number;
   /** Callback when back to book is clicked */
   onBackToBook: () => void;
   /** Custom className for styling */
@@ -39,9 +40,34 @@ interface SummaryHeaderProps {
  */
 export function SummaryHeader({
   summary,
+  readingProgress = 0,
   onBackToBook,
   className,
 }: SummaryHeaderProps) {
+  const [sheetOpen, setSheetOpen] = useState(false);
+
+  // Handle back button on mobile to close sheet
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (sheetOpen) {
+        event.preventDefault();
+        setSheetOpen(false);
+        // Push the current state back to prevent navigation
+        window.history.pushState(null, "", window.location.href);
+      }
+    };
+
+    if (sheetOpen) {
+      // Add a history entry when sheet opens
+      window.history.pushState(null, "", window.location.href);
+      window.addEventListener("popstate", handlePopState);
+    }
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [sheetOpen]);
+
   // Format creation date for display
   const formatCreationDate = (date: Date) => {
     return new Intl.DateTimeFormat("en-US", {
@@ -116,42 +142,45 @@ export function SummaryHeader({
 
           {/* Right Section - Actions */}
           <div className="flex items-center space-x-2">
-            {/* Reading Progress (placeholder for future implementation) */}
+            {/* Reading Progress */}
             <div className="hidden md:flex items-center space-x-3 mr-4">
-              <div className="text-xs text-muted-foreground">Progress: 0%</div>
+              <div className="text-xs text-muted-foreground">
+                Progress: {readingProgress}%
+              </div>
               <div className="w-16 h-1 bg-muted rounded-full">
                 <div
-                  className="h-full bg-primary rounded-full transition-all duration-300"
-                  style={{ width: "0%" }}
+                  className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-300"
+                  style={{ width: `${readingProgress}%` }}
                 />
               </div>
             </div>
 
             {/* Summary Info Sheet */}
-            <Sheet>
+            <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
                   size="sm"
                   className="shrink-0 hover:bg-accent h-8 w-8 p-0"
                   aria-label="Summary information"
+                  onClick={() => setSheetOpen(true)}
                 >
                   <Info className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent 
-                side="right" 
-                className="w-full sm:max-w-lg overflow-y-auto"
+              <SheetContent
+                side="right"
+                className="w-[90vw] sm:w-[85vw] md:max-w-lg lg:max-w-xl overflow-y-auto p-0 pb-2"
               >
-                <SheetHeader className="pb-6">
-                  <SheetTitle className="flex items-center space-x-2">
+                <SheetHeader className="px-6 py-4 border-b">
+                  <SheetTitle className="flex items-center space-x-2 text-base">
                     <Info className="h-5 w-5" />
                     <span>Summary Information</span>
                   </SheetTitle>
                 </SheetHeader>
-                
+
                 {/* SummaryMetadata inside the sheet */}
-                <div className="space-y-6">
+                <div className="px-6 py-4">
                   <SummaryMetadata summary={summary} />
                 </div>
               </SheetContent>
@@ -159,16 +188,6 @@ export function SummaryHeader({
 
             {/* Action Buttons */}
             <SummaryActions summary={summary} />
-
-            {/* More Options (mobile) */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="shrink-0 sm:hidden"
-              aria-label="More options"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
           </div>
         </div>
 
@@ -189,11 +208,13 @@ export function SummaryHeader({
 
             {/* Mobile Progress */}
             <div className="flex items-center space-x-2">
-              <span className="text-xs text-muted-foreground">0%</span>
+              <span className="text-xs text-muted-foreground">
+                {readingProgress}%
+              </span>
               <div className="w-12 h-1 bg-muted rounded-full">
                 <div
-                  className="h-full bg-primary rounded-full transition-all duration-300"
-                  style={{ width: "0%" }}
+                  className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-300"
+                  style={{ width: `${readingProgress}%` }}
                 />
               </div>
             </div>
