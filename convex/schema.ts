@@ -50,10 +50,15 @@ export default defineSchema({
           v.literal("open-library")
         ),
         hadBookDescription: v.boolean(),
+        notes: v.optional(v.string()),
+      })
+    ),
+    tokenUsage: v.optional(
+      v.object({
         promptTokens: v.optional(v.number()),
         completionTokens: v.optional(v.number()),
+        totalTokens: v.optional(v.number()),
         estimatedCost: v.optional(v.number()),
-        notes: v.optional(v.string()),
       })
     ),
     createdAt: v.number(),

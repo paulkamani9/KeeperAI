@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useConvex } from "convex/react";
 
-import { createUnifiedSearchService } from "../services/searchService";
+import { createUnifiedSearchService } from "../services/search/searchService";
 import { createSearchAnalyticsService } from "../lib/analytics/searchTracking";
 import type { SearchParams, SearchResults } from "../types/book";
 

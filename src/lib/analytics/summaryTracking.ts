@@ -10,7 +10,7 @@ import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
 import type { Book } from "../../types/book";
 import type { SummaryType, Summary } from "../../types/summary";
-import type { SummaryGenerationResult } from "../../services/summaryService";
+import type { SummaryGenerationResult } from "@/types/summary";
 
 /**
  * Parameters for tracking summary generation

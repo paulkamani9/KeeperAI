@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 import ConvexClientProvider from "@/providers/ConvexClientProvider";
 import { ClerkProvider } from "@/providers/ClerkProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
-import { validateEnvironment } from "@/lib/environmentConfig";
 import { Toaster } from "sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -28,18 +27,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Validate environment configuration on app start
-  try {
-    validateEnvironment();
-  } catch (error) {
-    // In development, show detailed error in console
-    if (process.env.NODE_ENV === "development") {
-      console.error(error);
-    }
-    // In production, the error will be handled by the ConvexClientProvider
-    // which already has proper error handling for missing CONVEX_URL
-  }
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>

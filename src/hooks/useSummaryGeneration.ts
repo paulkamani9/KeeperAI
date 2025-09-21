@@ -9,9 +9,10 @@ import type {
   CreateSummaryInput,
 } from "../types/summary";
 import { createSummaryAnalyticsService } from "../lib/analytics/summaryTracking";
-import { createDefaultSummaryService } from "../services/summaryService";
 import { calculateWordCount, calculateReadingTime } from "../types/summary";
 import { api } from "../../convex/_generated/api";
+import { generateBookSummary } from "@/services/summary/generateSummary";
+import { checkOpenAiConnectionStatus } from "@/services/summary/openAiStatusCheck";
 
 /**
  * Custom hook for AI summary generation using React Query
@@ -154,11 +155,8 @@ export function useSummaryGeneration(
       timer.start();
 
       try {
-        // Use the existing summary service to generate AI content
-        const summaryService = createDefaultSummaryService();
-
         // Generate the summary using AI service
-        const generationResult = await summaryService.generateSummary(
+        const generationResult = await generateBookSummary(
           input.book,
           input.summaryType
         );
@@ -181,6 +179,7 @@ export function useSummaryGeneration(
           promptVersion: generationResult.promptVersion,
           userId: input.userId as any, // Cast for Convex ID type
           metadata: generationResult.metadata,
+          tokenUsage: generationResult.usage
         });
 
         // Create the Summary object to return
@@ -214,6 +213,7 @@ export function useSummaryGeneration(
               bookDataSource: input.book.source,
               hadBookDescription: Boolean(input.book.description?.trim()),
             },
+            usage: generationResult.usage,
           },
           cacheHit: false,
           userId: input.userId as any,
@@ -222,7 +222,6 @@ export function useSummaryGeneration(
         return summary;
       } catch (error) {
         const generationTime = timer.end();
-        
 
         // Record failure in Convex for tracking
         try {
@@ -473,16 +472,15 @@ export function useSummaryExists(
  * Hook for getting summary generation service status
  * Useful for showing service availability and rate limits
  */
- export function useSummaryGenerationService() {
+export function useSummaryGenerationService() {
   return useQuery({
     queryKey: ["summaryServiceStatus"],
     queryFn: async () => {
       try {
-        const summaryService = createDefaultSummaryService();
+        const isConnected = await checkOpenAiConnectionStatus();
+
         return {
-          isConfigured: summaryService.isConfigured(),
-          rateLimit: summaryService.getRateLimit(),
-          availableModels: summaryService.getAvailableModels(),
+          isConfigured: isConnected,
         };
       } catch (error) {
         console.error("Error checking summary service status:", error);
