@@ -98,7 +98,7 @@ export function SummaryHeader({
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Left Section - Navigation */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 md:ml-10">
             {/* Back Button */}
             <Button
               variant="ghost"
@@ -108,7 +108,7 @@ export function SummaryHeader({
               aria-label="Back to book details"
             >
               <ChevronLeft className="h-4 w-4" />
-              <span className="hidden sm:inline-block ml-2">Back to Book</span>
+              <span className="hidden md:inline-block ml-2">Back to Book</span>
             </Button>
 
             {/* Vertical Divider */}
@@ -122,7 +122,7 @@ export function SummaryHeader({
               </div>
 
               {/* Summary Details */}
-              <div className="min-w-0 hidden sm:block">
+              <div className="min-w-0 hidden xl:block">
                 <div className="flex items-center space-x-2">
                   <h1 className="text-sm font-medium text-foreground truncate">
                     {getSummaryTypeLabel(summary.summaryType)}
@@ -192,7 +192,7 @@ export function SummaryHeader({
         </div>
 
         {/* Mobile Summary Info */}
-        <div className="sm:hidden pb-3">
+        <div className="md:hidden pb-3">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-sm font-medium text-foreground">

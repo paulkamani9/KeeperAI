@@ -68,31 +68,42 @@ export function useReadingProgress({
     // Determine current header offset based on screen size
     // Check for sm breakpoint (640px)
     const isDesktop = window.innerWidth >= 640;
-    const currentHeaderOffset = isDesktop ? headerOffset.desktop : headerOffset.mobile;
+    const currentHeaderOffset = isDesktop
+      ? headerOffset.desktop
+      : headerOffset.mobile;
 
     // Calculate how much of the content has been scrolled through
-    // Account for header padding in the container
     const contentHeight = container.scrollHeight;
+    const viewportHeight = window.innerHeight;
     const containerTop = rect.top;
-    
-    // Adjust calculation to account for header offset
-    // When containerTop equals -currentHeaderOffset, we're at the true "start" of reading
-    const adjustedScrollTop = Math.max(0, -(containerTop + currentHeaderOffset));
-    
-    // The effective reading height is the content minus the header offset
-    const effectiveReadingHeight = Math.max(1, contentHeight - currentHeaderOffset);
-    
-    // Calculate progress: 0% when content just starts to be visible under header
-    // 100% when the bottom of content reaches the bottom of viewport
-    const scrollProgress = Math.max(
-      0,
-      Math.min(100, (adjustedScrollTop / effectiveReadingHeight) * 100)
+    const containerBottom = rect.bottom;
+
+    // The total scrollable distance is the content height minus the viewport height plus header offset
+    // This accounts for the fact that we can only scroll until the bottom of the content reaches the bottom of viewport
+    const totalScrollableDistance =
+      contentHeight - viewportHeight + currentHeaderOffset;
+
+    // How far we've scrolled from the beginning
+    const scrolledDistance = Math.max(0, -(containerTop - currentHeaderOffset));
+
+    // Calculate progress as a percentage of the scrollable distance
+    // When we've scrolled all the way to the end, this will be 100%
+    const scrollProgress = Math.min(
+      100,
+      Math.max(0, (scrolledDistance / totalScrollableDistance) * 100)
     );
 
-    setProgress(scrollProgress);
+    // Alternative calculation to ensure 100% when content bottom reaches viewport bottom
+    // If container bottom is at or above viewport bottom, we're at 100%
+    if (containerBottom <= viewportHeight) {
+      setProgress(100);
+    } else {
+      setProgress(scrollProgress);
+    }
 
     // Determine if user is actively reading (content is visible below header)
-    const isContentVisible = rect.bottom > currentHeaderOffset && rect.top < windowHeight;
+    const isContentVisible =
+      rect.bottom > currentHeaderOffset && rect.top < windowHeight;
     setIsReading(isContentVisible);
   }, [containerRef, headerOffset]);
 
