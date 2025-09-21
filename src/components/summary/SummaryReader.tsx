@@ -9,7 +9,6 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { cn } from "../../lib/utils";
 import { Card, CardContent } from "../ui/card";
-import { Progress } from "../ui/progress";
 import { useReadingProgress } from "../../hooks/useReadingProgress";
 import type { SummaryType } from "../../types/summary";
 
@@ -41,7 +40,7 @@ interface SummaryReaderProps {
  * - Smart typography with proper quotes, dashes, and ellipses
  * - Syntax-highlighted code blocks with rehype-highlight
  * - Linkable headings with automatic anchors
- * - Scroll-based reading progress tracking
+ * - Scroll-based reading progress tracking (reports to parent via callback)
  * - Optimized typography with 65ch max-width for readability
  * - Premium line height and spacing (1.7 line-height)
  * - Accessible font scaling and contrast
@@ -68,11 +67,16 @@ export function SummaryReader({
 }: SummaryReaderProps) {
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Set up reading progress tracking
-  const { progress, isReading, currentSection } = useReadingProgress({
+  // Set up reading progress tracking (reports to parent only)
+  // Account for fixed header heights: mobile 180px, desktop (sm+) 136px
+  const { progress } = useReadingProgress({
     containerRef: contentRef as React.RefObject<HTMLElement>,
     threshold: 0.3,
     rootMargin: "-10% 0px -80% 0px",
+    headerOffset: {
+      mobile: 180, // pt-[180px] on mobile
+      desktop: 136, // sm:pt-[136px] on desktop
+    },
   });
 
   // Notify parent of progress changes
@@ -186,7 +190,10 @@ export function SummaryReader({
       </ol>
     ),
     li: ({ children, ...props }: any) => (
-      <li className="text-foreground text-base sm:text-lg leading-[1.7]" {...props}>
+      <li
+        className="text-foreground text-base sm:text-lg leading-[1.7]"
+        {...props}
+      >
         {children}
       </li>
     ),
@@ -261,8 +268,8 @@ export function SummaryReader({
       <a
         href={href}
         className="text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
-        target={href?.startsWith('http') ? '_blank' : undefined}
-        rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+        target={href?.startsWith("http") ? "_blank" : undefined}
+        rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
         {...props}
       >
         {children}
@@ -273,30 +280,6 @@ export function SummaryReader({
   return (
     <Card className={cn("print:shadow-none print:border-none", className)}>
       <CardContent className="pt-8 pb-12">
-        {/* Reading Progress Indicator */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">
-              Reading Progress
-            </span>
-            <span className="text-sm font-medium text-foreground">
-              {progress}%
-            </span>
-          </div>
-          <Progress 
-            value={progress} 
-            variant="reading"
-            smooth={true}
-            className="h-2" 
-            aria-label={`Reading progress: ${progress}% complete`}
-          />
-          {isReading && (
-            <div className="mt-2 text-xs text-muted-foreground">
-              Currently reading{currentSection ? `: ${currentSection}` : ''}
-            </div>
-          )}
-        </div>
-
         {/* Reading Container with Premium Typography */}
         <article
           ref={contentRef}
@@ -308,7 +291,7 @@ export function SummaryReader({
 
             // Typography optimization for reading
             "prose prose-lg dark:prose-invert", // Base prose styles
-            
+
             // Override prose styles for our custom components
             "prose-headings:scroll-mt-24",
             "prose-p:max-w-[65ch] prose-p:mx-auto",
@@ -339,23 +322,31 @@ export function SummaryReader({
             components={markdownComponents}
             remarkPlugins={[
               remarkGfm,
-              [remarkSmartypants, { 
-                quotes: true,
-                ellipses: true, 
-                backticks: true,
-                dashes: true 
-              }],
+              [
+                remarkSmartypants,
+                {
+                  quotes: true,
+                  ellipses: true,
+                  backticks: true,
+                  dashes: true,
+                },
+              ],
             ]}
             rehypePlugins={[
               rehypeHighlight,
               rehypeSlug,
-              [rehypeAutolinkHeadings, {
-                behavior: 'append',
-                properties: {
-                  className: ['ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary'],
-                  ariaLabel: 'Link to heading',
+              [
+                rehypeAutolinkHeadings,
+                {
+                  behavior: "append",
+                  properties: {
+                    className: [
+                      "ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary",
+                    ],
+                    ariaLabel: "Link to heading",
+                  },
                 },
-              }],
+              ],
             ]}
           >
             {content}

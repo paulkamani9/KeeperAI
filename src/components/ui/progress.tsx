@@ -12,9 +12,12 @@ interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
-  ({ className, value = 0, smooth = false, variant = "default", ...props }, ref) => {
+  (
+    { className, value = 0, smooth = false, variant = "default", ...props },
+    ref
+  ) => {
     const clampedValue = Math.min(Math.max(value, 0), 100);
-    
+
     const variantStyles = {
       default: "bg-primary",
       reading: "bg-gradient-to-r from-blue-500 to-indigo-500",
@@ -43,15 +46,15 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
             // Add subtle animation for reading progress
             variant === "reading" && "animate-pulse"
           )}
-          style={{ 
+          style={{
             width: `${clampedValue}%`,
             // Add subtle glow effect for reading variant
             ...(variant === "reading" && {
-              boxShadow: "0 0 10px rgba(59, 130, 246, 0.4)"
-            })
+              boxShadow: "0 0 10px rgba(59, 130, 246, 0.4)",
+            }),
           }}
         />
-        
+
         {/* Optional percentage label overlay */}
         {clampedValue > 0 && (
           <div className="absolute inset-0 flex items-center justify-center">

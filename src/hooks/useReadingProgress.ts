@@ -10,6 +10,11 @@ interface ReadingProgressOptions {
   threshold?: number;
   /** Root margin for intersection observer */
   rootMargin?: string;
+  /** Fixed header height offset to account for in calculations */
+  headerOffset?: {
+    mobile: number;
+    desktop: number;
+  };
 }
 
 interface ReadingProgressResult {
@@ -31,15 +36,21 @@ interface ReadingProgressResult {
  * - Uses intersection observer for accurate section tracking
  * - Detects when user is actively reading vs scrolling quickly
  * - Provides callbacks for registering content sections
+ * - Accounts for fixed header offsets (responsive mobile/desktop)
  * - Handles cleanup and performance optimization
  *
  * @param options Configuration for the reading progress tracker
+ * @param options.containerRef Reference to the reading container element
+ * @param options.threshold Intersection observer threshold (default: 0.3)
+ * @param options.rootMargin Intersection observer root margin
+ * @param options.headerOffset Fixed header heights for mobile/desktop (default: mobile: 180, desktop: 136)
  * @returns Reading progress data and utilities
  */
 export function useReadingProgress({
   containerRef,
   threshold = 0.3,
   rootMargin = "-10% 0px -80% 0px",
+  headerOffset = { mobile: 180, desktop: 136 },
 }: ReadingProgressOptions): ReadingProgressResult {
   const [progress, setProgress] = useState(0);
   const [isReading, setIsReading] = useState(false);
@@ -54,19 +65,36 @@ export function useReadingProgress({
     const rect = container.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 
-    // Calculate how much of the content has been scrolled through
-    const contentHeight = container.scrollHeight;
-    const windowTop = -rect.top;
+    // Determine current header offset based on screen size
+    // Check for sm breakpoint (640px)
+    const isDesktop = window.innerWidth >= 640;
+    const currentHeaderOffset = isDesktop ? headerOffset.desktop : headerOffset.mobile;
 
-    // Progress based on how much content has passed through the viewport
-    const scrollProgress = Math.max(0, Math.min(100, (windowTop / (contentHeight - windowHeight)) * 100));
+    // Calculate how much of the content has been scrolled through
+    // Account for header padding in the container
+    const contentHeight = container.scrollHeight;
+    const containerTop = rect.top;
+    
+    // Adjust calculation to account for header offset
+    // When containerTop equals -currentHeaderOffset, we're at the true "start" of reading
+    const adjustedScrollTop = Math.max(0, -(containerTop + currentHeaderOffset));
+    
+    // The effective reading height is the content minus the header offset
+    const effectiveReadingHeight = Math.max(1, contentHeight - currentHeaderOffset);
+    
+    // Calculate progress: 0% when content just starts to be visible under header
+    // 100% when the bottom of content reaches the bottom of viewport
+    const scrollProgress = Math.max(
+      0,
+      Math.min(100, (adjustedScrollTop / effectiveReadingHeight) * 100)
+    );
 
     setProgress(scrollProgress);
 
-    // Determine if user is actively reading (content is visible and not scrolling too fast)
-    const isContentVisible = rect.bottom > 0 && rect.top < windowHeight;
+    // Determine if user is actively reading (content is visible below header)
+    const isContentVisible = rect.bottom > currentHeaderOffset && rect.top < windowHeight;
     setIsReading(isContentVisible);
-  }, [containerRef]);
+  }, [containerRef, headerOffset]);
 
   // Set up scroll listener
   useEffect(() => {
@@ -88,17 +116,20 @@ export function useReadingProgress({
   }, [updateScrollProgress]);
 
   // Register section for intersection tracking
-  const registerSection = useCallback((element: HTMLElement | null, id: string) => {
-    setSections(prev => {
-      const newSections = new Map(prev);
-      if (element) {
-        newSections.set(id, element);
-      } else {
-        newSections.delete(id);
-      }
-      return newSections;
-    });
-  }, []);
+  const registerSection = useCallback(
+    (element: HTMLElement | null, id: string) => {
+      setSections((prev) => {
+        const newSections = new Map(prev);
+        if (element) {
+          newSections.set(id, element);
+        } else {
+          newSections.delete(id);
+        }
+        return newSections;
+      });
+    },
+    []
+  );
 
   // Track which section is currently in view using intersection observer
   // This is used internally for section tracking
@@ -129,7 +160,7 @@ export function useReadingProgress({
     });
 
     return () => {
-      observers.forEach(observer => observer.disconnect());
+      observers.forEach((observer) => observer.disconnect());
     };
   }, [sections, threshold, rootMargin]);
 
@@ -143,7 +174,7 @@ export function useReadingProgress({
 
 /**
  * useReadingProgressElement - Simplified hook for individual elements
- * 
+ *
  * Use this for individual sections/paragraphs that need to report their reading status
  */
 export function useReadingProgressElement(id: string) {
