@@ -3,13 +3,16 @@
 import React from "react";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { SummaryActions } from "./SummaryActions";
+import { SummaryMetadata } from "./SummaryMetadata";
 import {
   ChevronLeft,
   BookOpen,
   Clock,
   Calendar,
   MoreHorizontal,
+  Info,
 } from "lucide-react";
 import type { Summary } from "../../types/summary";
 
@@ -123,6 +126,36 @@ export function SummaryHeader({
                 />
               </div>
             </div>
+
+            {/* Summary Info Sheet */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="shrink-0 hover:bg-accent h-8 w-8 p-0"
+                  aria-label="Summary information"
+                >
+                  <Info className="h-4 w-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent 
+                side="right" 
+                className="w-full sm:max-w-lg overflow-y-auto"
+              >
+                <SheetHeader className="pb-6">
+                  <SheetTitle className="flex items-center space-x-2">
+                    <Info className="h-5 w-5" />
+                    <span>Summary Information</span>
+                  </SheetTitle>
+                </SheetHeader>
+                
+                {/* SummaryMetadata inside the sheet */}
+                <div className="space-y-6">
+                  <SummaryMetadata summary={summary} />
+                </div>
+              </SheetContent>
+            </Sheet>
 
             {/* Action Buttons */}
             <SummaryActions summary={summary} />

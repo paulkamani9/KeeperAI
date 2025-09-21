@@ -8,7 +8,6 @@ import { api } from "../../convex/_generated/api";
 import { cn } from "../lib/utils";
 import { SummaryHeader } from "../components/summary/SummaryHeader";
 import { SummaryReader } from "../components/summary/SummaryReader";
-import { SummaryMetadata } from "../components/summary/SummaryMetadata";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Loader2, AlertCircle, BookOpen } from "lucide-react";
@@ -174,19 +173,16 @@ export function SummaryReadingView({
 
   return (
     <div className={cn("min-h-screen bg-background", className)}>
-      {/* Sticky Navigation Header */}
+      {/* Fixed Summary Header - positioned beneath global navbar */}
       <SummaryHeader
         summary={summary}
         onBackToBook={handleBackToBook}
-        className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b"
+        className="fixed top-[60px] left-0 right-0 z-40 bg-background/80 backdrop-blur-md border-b"
       />
 
-      {/* Main Reading Content */}
-      <main className="container mx-auto px-4 py-8">
+      {/* Main Reading Content - account for both navbar heights */}
+      <main className="container mx-auto px-4 pt-[136px] pb-8">
         <div className="max-w-4xl mx-auto space-y-8">
-          {/* Summary Metadata */}
-          <SummaryMetadata summary={summary} />
-
           {/* Summary Content */}
           <SummaryReader
             content={summary.content}
