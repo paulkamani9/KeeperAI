@@ -93,15 +93,6 @@ export async function generateMetadata({
 export default async function SummaryPage({ params }: SummaryPageProps) {
   const { id: summaryId } = await params;
 
-  // Validate summary ID format (Convex ID should be 32 char hex string)
-  // if (
-  //   !summaryId ||
-  //   summaryId.trim() === "" ||
-  //   summaryId.length !== 32 ||
-  //   !/^[a-f0-9]{32}$/.test(summaryId)
-  // ) {
-  //   notFound();
-  // }
 
   return <SummaryReadingView summaryId={summaryId} />;
 }
