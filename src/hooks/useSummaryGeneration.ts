@@ -179,6 +179,7 @@ export function useSummaryGeneration(
           promptVersion: generationResult.promptVersion,
           userId: input.userId as any, // Cast for Convex ID type
           metadata: generationResult.metadata,
+          tokenUsage: generationResult.usage
         });
 
         // Create the Summary object to return
@@ -212,6 +213,7 @@ export function useSummaryGeneration(
               bookDataSource: input.book.source,
               hadBookDescription: Boolean(input.book.description?.trim()),
             },
+            usage: generationResult.usage,
           },
           cacheHit: false,
           userId: input.userId as any,

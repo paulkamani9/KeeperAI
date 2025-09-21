@@ -11,6 +11,8 @@ import {
   Heart,
   Sparkles,
   ChevronLeft,
+  BookIcon,
+  BookOpenIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -27,7 +29,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
-import { useSummaryGeneration } from "@/hooks/useSummaryGeneration";
+import {
+  useSummaryExists,
+  useSummaryGeneration,
+} from "@/hooks/useSummaryGeneration";
 
 interface BookDetailViewProps {
   /** Book data to display */
@@ -51,6 +56,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
   const router = useRouter();
   const [selectedSummaryType, setSelectedSummaryType] =
     useState<SummaryType>("concise");
+  const [hasGeneratedSummary, setHasGeneratedSummary] = useState(false); // used when summary is generated the first time
 
   // Initialize summary generation hook
   const {
@@ -64,17 +70,25 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
   } = useSummaryGeneration({
     book,
     summaryType: selectedSummaryType,
-    enabled: false, // Manual generation only
+    enabled: true,
   });
 
+  // Handlers for viewing existing summary
+  const handleViewSummary = () => {
+    if (summary) {
+      router.push(`/summaries/${summary.id}`);
+    }
+  };
 
   // Handlers for summary generation
   const handleGenerateSummary = () => {
     generateSummary();
+    setHasGeneratedSummary(true);
   };
 
   const handleRetryGeneration = () => {
     generateSummary();
+    setHasGeneratedSummary(true);
   };
 
   // Extract primary image for hero background
@@ -114,12 +128,18 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
   };
 
   // Navigate to summary when generation is complete
+  /*** If user prefers to be redirected automatically,
+   * then uncomment the router.push line below.
+   */
   React.useEffect(() => {
-    if (summary && !isGenerating && !error) {
+    if (summary && !isGenerating && !error && hasGeneratedSummary) {
       // Show success notification before navigating
-      toast.success("Summary generated successfully!");
+      toast.success("Summary ready, Click View summary button to view", {
+        duration: 3000,
+      });
+
       // Navigate to summary page when generation is successful
-      router.push(`/summaries/${summary.id}`);
+      // router.push(`/summaries/${summary.id}`);
     }
   }, [summary, isGenerating, error, router]);
 
@@ -279,6 +299,18 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
                         disabled={isGenerating || !canGenerate}
                       />
 
+                      {!isGenerating && !error && summary && (
+                        <Button
+                          onClick={handleViewSummary}
+                          disabled={!canGenerate}
+                          className="w-full"
+                          size="lg"
+                        >
+                          <BookOpenIcon className="h-4 w-4 mr-2" />
+                          View Summary
+                        </Button>
+                      )}
+
                       {/* Show progress during generation */}
                       {isGenerating || error ? (
                         <SummaryGenerationProgress
@@ -294,7 +326,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
                         <Button
                           onClick={handleGenerateSummary}
                           disabled={!canGenerate}
-                          className="w-full"
+                          className={cn("w-full", summary && "hidden")}
                           size="lg"
                         >
                           <Sparkles className="h-4 w-4 mr-2" />

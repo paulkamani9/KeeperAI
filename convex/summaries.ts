@@ -44,10 +44,15 @@ export const storeSummary = mutation({
           v.literal("open-library")
         ),
         hadBookDescription: v.boolean(),
+        notes: v.optional(v.string()),
+      })
+    ),
+    tokenUsage: v.optional(
+      v.object({
         promptTokens: v.optional(v.number()),
         completionTokens: v.optional(v.number()),
+        totalTokens: v.optional(v.number()),
         estimatedCost: v.optional(v.number()),
-        notes: v.optional(v.string()),
       })
     ),
   },
@@ -74,6 +79,7 @@ export const storeSummary = mutation({
         aiModel: args.aiModel,
         promptVersion: args.promptVersion,
         metadata: args.metadata,
+        tokenUsage: args.tokenUsage,
         updatedAt: now,
         errorMessage: undefined, // Clear any previous errors
       });
@@ -94,6 +100,7 @@ export const storeSummary = mutation({
       promptVersion: args.promptVersion,
       errorMessage: undefined,
       metadata: args.metadata,
+      tokenUsage: args.tokenUsage,
       createdAt: now,
       updatedAt: now,
     });
