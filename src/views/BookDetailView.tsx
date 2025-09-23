@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Star,
   Calendar,
@@ -29,10 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
-import {
-  useSummaryExists,
-  useSummaryGeneration,
-} from "@/hooks/useSummaryGeneration";
+import { useSummaryGeneration } from "@/hooks/useSummaryGeneration";
 
 interface BookDetailViewProps {
   /** Book data to display */
@@ -79,6 +76,28 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
       router.push(`/summaries/${summary.id}`);
     }
   };
+
+  // Handler for navigating back to search
+  // this handles going back to the last search page with context intact
+  // we store the last search URL in localStorage when user performs a search
+  // even if user navigates away from book view and comes back later
+  // they can still go back to their last search results
+  const handleBackToSearch = () => {
+    const lastSearchUrl = localStorage.getItem("lastSearchUrl");
+    if (lastSearchUrl) {
+      router.push(lastSearchUrl);
+    } else {
+      router.push("/search");
+    }
+  };
+
+  // set the current summary type in local storage
+  useEffect(() => {
+    const selectedSummaryType = localStorage.getItem("currentSummaryType");
+    if (selectedSummaryType) {
+      setSelectedSummaryType(selectedSummaryType as SummaryType);
+    }
+  }, [selectedSummaryType]);
 
   // Handlers for summary generation
   const handleGenerateSummary = () => {
@@ -178,7 +197,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => router.back()}
+            onClick={handleBackToSearch}
             className="mb-4 hover:bg-background/80 backdrop-blur-sm"
           >
             <ChevronLeft className="h-4 w-4 mr-2" />

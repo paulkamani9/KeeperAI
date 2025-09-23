@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SearchInput } from "@/components/search/SearchInput";
 import {
@@ -62,6 +62,14 @@ export const SearchView = () => {
   const query = searchParams.get("q") || "";
   const page = parseInt(searchParams.get("page") || "0", 10);
   const maxResults = parseInt(searchParams.get("limit") || "20", 10);
+
+  // hook for storing current page search params
+  // so that user can always navigate back to this page from book detail view, even after viewing a book summary
+  // without losing their search context
+  useEffect(()=> {
+    localStorage.setItem("lastSearchUrl", window.location.href)
+  }, [router])
+
 
   // Search hook with URL-derived parameters
   const {

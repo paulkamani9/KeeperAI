@@ -3,7 +3,7 @@ import { SummaryType } from "@/types/summary";
 
 export const defaultModel = "gpt-4o-mini";
 export const promptVersion = "v1.0";
-export const defaultTimeout = 30000; // 30 seconds
+export const defaultTimeout = 60000; // 60 seconds
 
 
 
