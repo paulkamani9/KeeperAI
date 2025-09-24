@@ -200,7 +200,13 @@ export const getSummaryById = query({
       const cachedSummary = await getCachedSummaryById(args.summaryId);
       if (cachedSummary) {
         console.log(
-          `Cache HIT: Retrieved summary ${args.summaryId} from Redis`
+          `Cache HIT: Retrieved summary ${args.summaryId} from Redis`,
+          {
+            cachedSummary: {
+              id: cachedSummary.id,
+              bookId: cachedSummary.bookId,
+            },
+          }
         );
         return {
           _id: cachedSummary.id,

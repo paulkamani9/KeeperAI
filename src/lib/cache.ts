@@ -239,6 +239,9 @@ export class SummaryCache {
     try {
       const key = cacheKeys.summaryById(summaryId);
       const cached = await this.cacheAdapter.get(key);
+      console.log(
+        `Cache lookup for ID ${summaryId}, key: ${key}, found: ${cached ? "YES" : "NO"}`
+      );
 
       if (!cached) {
         return null;
@@ -260,7 +263,12 @@ export class SummaryCache {
         return null;
       }
 
-      return parsed as Summary;
+      // Convert ISO string dates back to Date objects
+      return {
+        ...parsed,
+        createdAt: new Date(parsed.createdAt),
+        updatedAt: new Date(parsed.updatedAt),
+      } as Summary;
     } catch (error) {
       console.error(
         `Error retrieving cached summary by ID ${summaryId}:`,
@@ -281,6 +289,9 @@ export class SummaryCache {
     try {
       const key = cacheKeys.bookSummary(bookId, summaryType);
       const cached = await this.cacheAdapter.get(key);
+      console.log(
+        `Cache lookup for book ${bookId}:${summaryType}, key: ${key}, found: ${cached ? "YES" : "NO"}`
+      );
 
       if (!cached) {
         return null;
@@ -304,7 +315,12 @@ export class SummaryCache {
         return null;
       }
 
-      return parsed as Summary;
+      // Convert ISO string dates back to Date objects
+      return {
+        ...parsed,
+        createdAt: new Date(parsed.createdAt),
+        updatedAt: new Date(parsed.updatedAt),
+      } as Summary;
     } catch (error) {
       console.error(
         `Error retrieving cached summary for book ${bookId}, type ${summaryType}:`,
@@ -336,6 +352,15 @@ export class SummaryCache {
         errorMessage: summary.errorMessage,
         metadata: summary.metadata,
       });
+
+      const idKey = cacheKeys.summaryById(summary.id);
+      const bookKey = cacheKeys.bookSummary(
+        summary.bookId,
+        summary.summaryType
+      );
+      console.log(
+        `Setting cache for summary ${summary.id}, keys: ${idKey}, ${bookKey}`
+      );
 
       // Cache with both keys for different access patterns
       await Promise.all([
