@@ -1,3 +1,5 @@
+"use server";
+import { Redis } from "@upstash/redis";
 /**
  * Cache abstraction for KeeperAI
  *
@@ -49,38 +51,23 @@ class InMemoryCache implements CacheAdapter {
 }
 
 class UpstashCache implements CacheAdapter {
-  private baseUrl: string;
-  private token: string;
-  private defaultTTL = 900; // 15 minutes
+  private redis: Redis;
+  private defaultTTL = 900;
 
-  constructor(url: string, token: string) {
-    this.baseUrl = url;
-    this.token = token;
+  constructor(url?: string, token?: string) {
+    if (url && token) {
+      // Use explicit credentials when provided (e.g., in Convex env)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.redis = new Redis({ url, token } as any);
+    } else {
+      // Fallback to environment-based construction when available
+      this.redis = Redis.fromEnv();
+    }
   }
 
   async get(key: string): Promise<string | null> {
-    try {
-      const response = await fetch(
-        `${this.baseUrl}/get/${encodeURIComponent(key)}`,
-        {
-          headers: { Authorization: `Bearer ${this.token}` },
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(
-          `Cache GET error: HTTP ${response.status} ${response.statusText} for key "${key}". Response body: ${errorText}`
-        );
-        return null;
-      }
-
-      const data = await response.json();
-      return data.result;
-    } catch (error) {
-      console.error("Cache GET error:", error);
-      return null;
-    }
+    const result = await this.redis.get<string>(key);
+    return result ?? null;
   }
 
   async set(
@@ -88,32 +75,11 @@ class UpstashCache implements CacheAdapter {
     value: string,
     ttlSeconds = this.defaultTTL
   ): Promise<void> {
-    try {
-      await fetch(
-        `${this.baseUrl}/setex/${encodeURIComponent(key)}/${ttlSeconds}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-            "Content-Type": "text/plain",
-          },
-          body: value,
-        }
-      );
-    } catch (error) {
-      console.error("Cache SET error:", error);
-    }
+    await this.redis.set(key, value, { ex: ttlSeconds });
   }
 
   async delete(key: string): Promise<void> {
-    try {
-      await fetch(`${this.baseUrl}/del/${encodeURIComponent(key)}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${this.token}` },
-      });
-    } catch (error) {
-      console.error("Cache DELETE error:", error);
-    }
+    await this.redis.del(key);
   }
 }
 
@@ -142,17 +108,21 @@ export function createCacheAdapter(
 // Create default cache instance (server-side will use env vars)
 const getDefaultCache = (): CacheAdapter => {
   // Only access process.env on server side
-  if (typeof window === "undefined") {
-    try {
-      return createCacheAdapter(
-        process.env.UPSTASH_REDIS_REST_URL,
-        process.env.UPSTASH_REDIS_REST_TOKEN
+  // if (typeof window === "undefined") {
+    const url = process.env.UPSTASH_REDIS_REST_URL;
+    const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+    if (url && token) {
+      console.log("[Cache] Using Upstash Redis adapter");
+      return createCacheAdapter(url, token);
+    } else {
+      console.warn(
+        "[Cache] UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN missing – falling back to non-persistent InMemory cache."
       );
-    } catch {
-      // Fallback if process is not available
+      return new InMemoryCache();
     }
-  }
+  // }
 
+  // In the browser – never touch Redis
   return new InMemoryCache();
 };
 
