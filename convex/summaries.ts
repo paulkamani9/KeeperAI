@@ -1,45 +1,25 @@
 /**
- * Convex Summaries Functions
+ * Convex Summaries Functions - Database Only
  *
- * Handles persistence and retrieval of AI-generated book summaries with Redis caching.
+ * Handles persistence and retrieval of AI-generated book summaries.
  * Does NOT handle AI generation - that's handled by the client-side summaryService.
- *
- * Redis Integration Strategy:
- * - Check Redis first for performance (24h TTL)
- * - Fall back to Convex on cache miss
- * - Hydrate Redis after Convex queries
- * - Use two cache keys per summary:
- *   1. summary:id:{summaryId} - for direct ID lookups
- *   2. summary:book:{bookId}:{summaryType} - for book+type lookups
- * - Cache failures with short TTL to prevent API hammering
+ * Does NOT handle Redis caching - that's handled by actions in summariesActions.ts.
  *
  * This module is responsible for:
  * - Storing completed summaries in the database
- * - Retrieving summaries by ID (with Redis caching)
- * - Querying existing summaries to avoid duplicates (with Redis caching)
+ * - Retrieving summaries by ID (database only)
+ * - Querying existing summaries to avoid duplicates (database only)
  * - Managing summary metadata and status
- * - Redis cache hydration and invalidation
  */
 
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import {
-  getCachedSummaryById,
-  getCachedSummaryByBook,
-  setCachedSummary,
-  invalidateCachedSummary,
-  cacheFailure,
-  getRecentFailure,
-  clearFailure,
-} from "../src/lib/cache";
 
 /**
  * Store a completed AI-generated summary in the database with Redis caching
  *
  * Flow:
  * 1. Store/update in Convex database (source of truth)
- * 2. Clear any failure cache for this book+type
- * 3. Hydrate Redis cache with both keys for fast future access
  *
  * This should be called after the AI service successfully generates a summary.
  * The summary content and metadata should already be complete.
@@ -131,48 +111,7 @@ export const storeSummary = mutation({
       summaryId = String(newSummaryId);
     }
 
-    // Step 2: Clear any failure cache for this book+type combo
-    try {
-      await clearFailure(args.bookId, args.summaryType);
-      console.log(
-        `Cleared failure cache for successful summary ${args.bookId}:${args.summaryType}`
-      );
-    } catch (cacheError) {
-      console.error(
-        `Failed to clear failure cache for ${args.bookId}:${args.summaryType}:`,
-        cacheError
-      );
-      // Don't fail the request if cache clearing fails
-    }
-
-    // Step 3: Hydrate Redis cache with both keys for fast future access
-    try {
-      const summaryForCache = {
-        id: summaryId,
-        bookId: args.bookId,
-        summaryType: args.summaryType,
-        content: args.content,
-        status: "completed" as const,
-        createdAt: new Date(now),
-        updatedAt: new Date(now),
-        generationTime: args.generationTime,
-        wordCount: args.wordCount,
-        readingTime: args.readingTime,
-        aiModel: args.aiModel,
-        promptVersion: args.promptVersion,
-        errorMessage: undefined,
-        metadata: args.metadata,
-      };
-
-      await setCachedSummary(summaryForCache);
-      console.log(`Hydrated Redis cache for stored summary ${summaryId}`);
-    } catch (cacheError) {
-      console.error(
-        `Failed to hydrate cache for stored summary ${summaryId}:`,
-        cacheError
-      );
-      // Don't fail the request if caching fails
-    }
+    // Database storage complete
 
     return summaryId as any; // Cast back to Convex ID type
   },
@@ -182,10 +121,8 @@ export const storeSummary = mutation({
  * Get a summary by its Convex ID with Redis caching
  *
  * Flow:
- * 1. Check Redis cache first (summary:id:{summaryId})
- * 2. If cache miss, query Convex database
- * 3. If found in Convex, hydrate Redis cache with both keys
- * 4. Return result
+ * 1. Query Convex database directly
+ * 2. Return result
  *
  * Used by the summary reading page to display persisted summaries.
  */
@@ -196,44 +133,11 @@ export const getSummaryById = query({
   returns: v.any(), // Simplified return type to avoid complex type matching
   handler: async (ctx, args) => {
     try {
-      // Step 1: Check Redis cache first
-      const cachedSummary = await getCachedSummaryById(args.summaryId);
-      if (cachedSummary) {
-        console.log(
-          `Cache HIT: Retrieved summary ${args.summaryId} from Redis`,
-          {
-            cachedSummary: {
-              id: cachedSummary.id,
-              bookId: cachedSummary.bookId,
-            },
-          }
-        );
-        return {
-          _id: cachedSummary.id,
-          _creationTime: new Date(cachedSummary.createdAt).getTime(),
-          bookId: cachedSummary.bookId,
-          summaryType: cachedSummary.summaryType,
-          content: cachedSummary.content,
-          status: cachedSummary.status,
-          generationTime: cachedSummary.generationTime,
-          wordCount: cachedSummary.wordCount,
-          readingTime: cachedSummary.readingTime,
-          aiModel: cachedSummary.aiModel,
-          promptVersion: cachedSummary.promptVersion,
-          errorMessage: cachedSummary.errorMessage,
-          metadata: cachedSummary.metadata,
-          createdAt: new Date(cachedSummary.createdAt).getTime(),
-          updatedAt: new Date(cachedSummary.updatedAt).getTime(),
-        };
-      }
-
-      console.log(`Cache MISS: Querying Convex for summary ${args.summaryId}`);
-
-      // Step 2: Query Convex database on cache miss
+      // Query Convex database directly
       const result = await ctx.db.get(args.summaryId as any);
 
       if (!result) {
-        console.log(`Summary ${args.summaryId} not found in Convex`);
+        console.log(`Summary ${args.summaryId} not found in database`);
         return null;
       }
 
@@ -247,39 +151,8 @@ export const getSummaryById = query({
         return null;
       }
 
-      // Now TypeScript knows this is a summaries document
-      const summary = result as any; // Cast to bypass strict typing for now
-
-      // Step 3: Hydrate Redis cache for future requests
-      try {
-        const summaryForCache = {
-          id: String(summary._id),
-          bookId: summary.bookId,
-          summaryType: summary.summaryType,
-          content: summary.content,
-          status: summary.status,
-          createdAt: new Date(summary.createdAt || summary._creationTime),
-          updatedAt: new Date(summary.updatedAt || summary._creationTime),
-          generationTime: summary.generationTime,
-          wordCount: summary.wordCount,
-          readingTime: summary.readingTime,
-          aiModel: summary.aiModel,
-          promptVersion: summary.promptVersion,
-          errorMessage: summary.errorMessage,
-          metadata: summary.metadata,
-        };
-
-        await setCachedSummary(summaryForCache);
-        console.log(`Hydrated Redis cache for summary ${args.summaryId}`);
-      } catch (cacheError) {
-        console.error(
-          `Failed to hydrate cache for summary ${args.summaryId}:`,
-          cacheError
-        );
-        // Don't fail the request if caching fails
-      }
-
-      return summary;
+      // Return the summary document
+      return result;
     } catch (error) {
       // Invalid ID format or database error
       console.error("Error fetching summary by ID:", error);
@@ -292,10 +165,8 @@ export const getSummaryById = query({
  * Check if a summary already exists for a book and summary type with Redis caching
  *
  * Flow:
- * 1. Check Redis cache first (summary:book:{bookId}:{summaryType})
- * 2. If cache miss, query Convex database
- * 3. If found in Convex, hydrate Redis cache with both keys
- * 4. Return result
+ * 1. Query Convex database directly
+ * 2. Return result
  *
  * Used to avoid duplicate generation and show existing summaries.
  */
@@ -313,46 +184,7 @@ export const getExistingSummary = query({
   returns: v.any(), // Simplified return type
   handler: async (ctx, args) => {
     try {
-      // Step 1: Check Redis cache first
-      const cachedSummary = await getCachedSummaryByBook(
-        args.bookId,
-        args.summaryType
-      );
-      if (cachedSummary) {
-        console.log(
-          `Cache HIT: Retrieved existing summary for ${args.bookId}:${args.summaryType} from Redis`
-        );
-
-        // For now, cached summaries are considered public access
-        // User permission logic should be handled during the original query
-        const hasAccess = true;
-
-        if (hasAccess) {
-          return {
-            _id: cachedSummary.id,
-            _creationTime: new Date(cachedSummary.createdAt).getTime(),
-            bookId: cachedSummary.bookId,
-            summaryType: cachedSummary.summaryType,
-            content: cachedSummary.content,
-            status: cachedSummary.status,
-            generationTime: cachedSummary.generationTime,
-            wordCount: cachedSummary.wordCount,
-            readingTime: cachedSummary.readingTime,
-            aiModel: cachedSummary.aiModel,
-            promptVersion: cachedSummary.promptVersion,
-            errorMessage: cachedSummary.errorMessage,
-            metadata: cachedSummary.metadata,
-            createdAt: new Date(cachedSummary.createdAt).getTime(),
-            updatedAt: new Date(cachedSummary.updatedAt).getTime(),
-          };
-        }
-      }
-
-      console.log(
-        `Cache MISS: Querying Convex for existing summary ${args.bookId}:${args.summaryType}`
-      );
-
-      // Step 2: Query Convex database on cache miss
+      // Query Convex database directly
       const existingSummary = await ctx.db
         .query("summaries")
         .withIndex("byBookAndType", (q) =>
@@ -371,43 +203,6 @@ export const getExistingSummary = query({
         })
         .first();
 
-      // Step 3: Hydrate Redis cache if summary found
-      if (existingSummary) {
-        try {
-          const summaryForCache = {
-            id: String(existingSummary._id),
-            bookId: existingSummary.bookId,
-            summaryType: existingSummary.summaryType,
-            content: existingSummary.content,
-            status: existingSummary.status,
-            createdAt: new Date(
-              existingSummary.createdAt || existingSummary._creationTime
-            ),
-            updatedAt: new Date(
-              existingSummary.updatedAt || existingSummary._creationTime
-            ),
-            generationTime: existingSummary.generationTime,
-            wordCount: existingSummary.wordCount,
-            readingTime: existingSummary.readingTime,
-            aiModel: existingSummary.aiModel,
-            promptVersion: existingSummary.promptVersion,
-            errorMessage: existingSummary.errorMessage,
-            metadata: existingSummary.metadata,
-          };
-
-          await setCachedSummary(summaryForCache);
-          console.log(
-            `Hydrated Redis cache for existing summary ${args.bookId}:${args.summaryType}`
-          );
-        } catch (cacheError) {
-          console.error(
-            `Failed to hydrate cache for existing summary ${args.bookId}:${args.summaryType}:`,
-            cacheError
-          );
-          // Don't fail the request if caching fails
-        }
-      }
-
       return existingSummary;
     } catch (error) {
       console.error("Error fetching existing summary:", error);
@@ -421,8 +216,6 @@ export const getExistingSummary = query({
  *
  * Flow:
  * 1. Store failure in Convex database for persistent tracking
- * 2. Cache failure in Redis with short TTL to prevent API hammering
- * 3. Invalidate any existing successful cache for this book+type
  *
  * Used for error tracking and preventing repeated failures.
  */
@@ -500,43 +293,17 @@ export const recordSummaryFailure = mutation({
       summaryId = String(newSummaryId);
     }
 
-    // Step 2: Cache failure in Redis with short TTL to prevent API hammering
-    try {
-      await cacheFailure(args.bookId, args.summaryType, args.errorMessage);
-      console.log(
-        `Cached failure for ${args.bookId}:${args.summaryType} to prevent hammering`
-      );
-    } catch (cacheError) {
-      console.error(
-        `Failed to cache failure for ${args.bookId}:${args.summaryType}:`,
-        cacheError
-      );
-      // Don't fail the request if caching fails
-    }
-
-    // Step 3: Invalidate any existing successful cache for this book+type
-    try {
-      await invalidateCachedSummary(summaryId, args.bookId, args.summaryType);
-      console.log(
-        `Invalidated cache for failed summary ${args.bookId}:${args.summaryType}`
-      );
-    } catch (cacheError) {
-      console.error(
-        `Failed to invalidate cache for failed summary ${args.bookId}:${args.summaryType}:`,
-        cacheError
-      );
-      // Don't fail the request if cache invalidation fails
-    }
+    // Database storage complete
 
     return summaryId as any; // Cast back to Convex ID type
   },
 });
 
 /**
- * Check for recent summary generation failures to prevent API hammering
+ * Check for recent summary generation failures in the database
  *
- * This function checks Redis cache for recent failures and returns the error
- * message if one exists within the TTL window (10 minutes).
+ * This function queries the database for recent failures to help prevent
+ * repeated failed attempts. For Redis-based failure caching, use the action instead.
  */
 export const checkRecentFailure = query({
   args: {
@@ -551,16 +318,23 @@ export const checkRecentFailure = query({
   returns: v.union(v.string(), v.null()),
   handler: async (ctx, args) => {
     try {
-      const recentFailure = await getRecentFailure(
-        args.bookId,
-        args.summaryType
-      );
-      if (recentFailure) {
-        console.log(
-          `Recent failure found for ${args.bookId}:${args.summaryType}: ${recentFailure}`
-        );
-      }
-      return recentFailure;
+      // Check database for recent failed attempts (last 10 minutes)
+      const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
+
+      const recentFailure = await ctx.db
+        .query("summaries")
+        .withIndex("byBookAndType", (q) =>
+          q.eq("bookId", args.bookId).eq("summaryType", args.summaryType)
+        )
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("status"), "failed"),
+            q.gte(q.field("updatedAt"), tenMinutesAgo)
+          )
+        )
+        .first();
+
+      return recentFailure?.errorMessage || null;
     } catch (error) {
       console.error("Error checking recent failure:", error);
       return null;

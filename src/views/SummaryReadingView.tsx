@@ -49,10 +49,13 @@ export function SummaryReadingView({
     queryKey: ["summary", summaryId],
     queryFn: async (): Promise<Summary | null> => {
       try {
-        // Query the summary by ID from Convex
-        const result = await convex.query(api.summaries.getSummaryById, {
-          summaryId: summaryId, // Pass as string, the function will validate
-        });
+        // Query the summary by ID from Convex using action for Redis caching
+        const result = await convex.action(
+          api.summariesActions.getSummaryByIdAction,
+          {
+            summaryId: summaryId, // Pass as string, the function will validate
+          }
+        );
 
         if (
           !result ||
