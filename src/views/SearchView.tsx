@@ -66,10 +66,9 @@ export const SearchView = () => {
   // hook for storing current page search params
   // so that user can always navigate back to this page from book detail view, even after viewing a book summary
   // without losing their search context
-  useEffect(()=> {
-    localStorage.setItem("lastSearchUrl", window.location.href)
-  }, [router])
-
+  useEffect(() => {
+    localStorage.setItem("lastSearchUrl", window.location.href);
+  }, [query]);
 
   // Search hook with URL-derived parameters
   const {

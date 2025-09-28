@@ -93,8 +93,18 @@ export class UnifiedSearchService implements BookService {
             this.config.timeout!
           );
         } catch (fallbackError) {
-          // Both strategies failed, throw the original error
-          throw fallbackError;
+          // Both strategies failed, throw the original error with context
+          const primaryMessage =
+            error instanceof Error ? error.message : "Unknown primary error";
+          const fallbackMessage =
+            fallbackError instanceof Error
+              ? fallbackError.message
+              : "Unknown fallback error";
+          const combinedError = new Error(
+            `Primary search failed: ${primaryMessage}. Fallback also failed: ${fallbackMessage}`
+          );
+          combinedError.cause = { primary: error, fallback: fallbackError };
+          throw combinedError;
         }
       }
 

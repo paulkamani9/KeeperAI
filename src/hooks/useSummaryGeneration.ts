@@ -13,6 +13,7 @@ import { calculateWordCount, calculateReadingTime } from "../types/summary";
 import { api } from "../../convex/_generated/api";
 import { generateBookSummary } from "@/services/summary/generateSummary";
 import { checkOpenAiConnectionStatus } from "@/services/summary/openAiStatusCheck";
+import { Id } from "../../convex/_generated/dataModel";
 
 /**
  * Custom hook for AI summary generation using React Query
@@ -113,14 +114,11 @@ export function useSummaryGeneration(
     queryKey: ["existingSummary", params.book.id, params.summaryType],
     queryFn: async (): Promise<Summary | null> => {
       try {
-        const result = await convex.action(
-          api.summariesActions.getExistingSummaryAction,
-          {
-            bookId: params.book.id,
-            summaryType: params.summaryType,
-            userId: params.userId as any, // Cast to handle Convex ID type
-          }
-        );
+        const result = await convex.query(api.summaries.getExistingSummary, {
+          bookId: params.book.id,
+          summaryType: params.summaryType,
+          userId: params.userId as Id<"users"> | undefined, // Cast to handle Convex ID type
+        });
 
         if (!result) return null;
 
@@ -171,8 +169,8 @@ export function useSummaryGeneration(
         const readingTime = calculateReadingTime(wordCount);
 
         // Persist the generated summary to Convex
-        const summaryId = await convex.action(
-          api.summariesActions.storeSummaryAction,
+        const summaryId = await convex.mutation(
+          api.summaries.storeSummary,
           {
             bookId: input.book.id,
             summaryType: input.summaryType,
@@ -182,7 +180,7 @@ export function useSummaryGeneration(
             readingTime,
             aiModel: generationResult.aiModel,
             promptVersion: generationResult.promptVersion,
-            userId: input.userId as any, // Cast for Convex ID type
+            userId: input.userId as Id<"users"> | undefined, // Cast for Convex ID type
             metadata: generationResult.metadata,
             tokenUsage: generationResult.usage,
           }
@@ -231,7 +229,7 @@ export function useSummaryGeneration(
 
         // Record failure in Convex for tracking
         try {
-          await convex.action(api.summariesActions.recordSummaryFailureAction, {
+          await convex.mutation(api.summaries.recordSummaryFailure, {
             bookId: input.book.id,
             summaryType: input.summaryType,
             errorMessage:
@@ -239,7 +237,7 @@ export function useSummaryGeneration(
             generationTime,
             aiModel: "gpt-4o-mini", // Default model
             promptVersion: "v1.0", // Default version
-            userId: input.userId as any,
+            userId: input.userId as Id<"users"> | undefined,
             metadata: {
               bookDataSource: input.book.source,
               hadBookDescription: Boolean(input.book.description?.trim()),
@@ -457,12 +455,12 @@ export function useSummaryExists(
     queryKey: ["summaryExists", bookId, summaryType, userId],
     queryFn: async (): Promise<boolean> => {
       try {
-        const summary = await convex.action(
-          api.summariesActions.getExistingSummaryAction,
+        const summary = await convex.query(
+          api.summaries.getExistingSummary,
           {
             bookId,
             summaryType,
-            userId: userId as any, // Cast to handle Convex ID type
+            userId: userId as Id<"users"> | undefined, // Cast to handle Convex ID type
           }
         );
         return Boolean(summary && summary.status === "completed");

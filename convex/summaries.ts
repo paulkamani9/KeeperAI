@@ -4,6 +4,7 @@
  * Handles persistence and retrieval of AI-generated book summaries.
  * Does NOT handle AI generation - that's handled by the client-side summaryService.
  * Does NOT handle Redis caching - that's handled by actions in summariesActions.ts.
+ * Redis caching is unpluged for now, queries and mutations happen here directly.
  *
  * This module is responsible for:
  * - Storing completed summaries in the database

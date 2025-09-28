@@ -22,10 +22,9 @@ import {
   clearFailure,
 } from "../src/lib/cache";
 import type { Summary } from "../src/types/summary";
-import type { Id } from "./_generated/dataModel";
 
 // Feature flag to enable/disable Redis caching
-const ENABLE_SUMMARY_REDIS = process.env.ENABLE_SUMMARY_REDIS === "1";
+const ENABLE_SUMMARY_REDIS = process.env.ENABLE_SUMMARY_REDIS
 
 /**
  * Helper function to convert Convex document to Summary type for caching

@@ -11,7 +11,6 @@ import {
   Heart,
   Sparkles,
   ChevronLeft,
-  BookIcon,
   BookOpenIcon,
 } from "lucide-react";
 import Link from "next/link";

@@ -321,32 +321,37 @@ export const GoogleBooksResponseSchema = z.object({
   items: z.array(GoogleBooksVolumeSchema).optional(),
 });
 
-/** Open Library Search Response schema */
-export const OpenLibrarySearchResponseSchema = z.object({
-  start: z.number(),
-  num_found: z.number(),
-  numFound: z.number(),
-  docs: z.array(
-    z.object({
-      key: z.string(),
-      type: z.string(),
-      title: z.string(),
-      subtitle: z.string().optional(),
-      cover_i: z.number().optional(),
-      isbn: z.array(z.string()).optional(),
-      author_key: z.array(z.string()).optional(),
-      author_name: z.array(z.string()).optional(),
-      publisher: z.array(z.string()).optional(),
-      language: z.array(z.string()).optional(),
-      subject: z.array(z.string()).optional(),
-      publish_date: z.array(z.string()).optional(),
-      publish_year: z.array(z.number()).optional(),
-      first_publish_year: z.number().optional(),
-      number_of_pages_median: z.number().optional(),
-      edition_count: z.number().optional(),
-    })
-  ),
-});
+/** Open Library Search Response schema - Flexible to handle API variations */
+export const OpenLibrarySearchResponseSchema = z
+  .object({
+    start: z.number().optional().default(0),
+    num_found: z.number(),
+    numFound: z.number(),
+    docs: z.array(
+      z
+        .object({
+          key: z.string(),
+          type: z.string(),
+          title: z.string(),
+          subtitle: z.string().optional(),
+          cover_i: z.number().optional(),
+          isbn: z.array(z.string()).optional(),
+          author_key: z.array(z.string()).optional(),
+          author_name: z.array(z.string()).optional(),
+          publisher: z.array(z.string()).optional(),
+          language: z.array(z.string()).optional(),
+          subject: z.array(z.string()).optional(),
+          publish_date: z.array(z.string()).optional(),
+          publish_year: z.array(z.number()).optional(),
+          first_publish_year: z.number().optional(),
+          number_of_pages_median: z.number().optional(),
+          edition_count: z.number().optional(),
+          // Allow additional fields to pass through without breaking validation
+        })
+        .passthrough()
+    ),
+  })
+  .passthrough(); // Allow additional fields at response level too
 
 /**
  * API Error types
