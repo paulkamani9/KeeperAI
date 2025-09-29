@@ -45,24 +45,7 @@ export async function generateMockSummary(
   };
 }
 
-function isConfigured(): boolean {
-  return true; // Mock service is always "configured"
-}
 
-function getRateLimit() {
-  return {
-    hasKey: true,
-    requestsLeft: 1000, // Mock unlimited requests
-  };
-}
-
-function getAvailableModels(): string[] {
-  return ["mock-gpt-4", "mock-gpt-3.5"];
-}
-
-async function testConnection(): Promise<boolean> {
-  return true; // Mock service always "connects"
-}
 
 function generateMockContent(book: Book, summaryType: SummaryType): string {
   const typeInfo = SUMMARY_TYPE_DESCRIPTIONS[summaryType];

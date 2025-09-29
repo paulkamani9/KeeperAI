@@ -219,7 +219,6 @@ export const handlers = [
   // Google Books API handler
   http.get("https://www.googleapis.com/books/v1/volumes", ({ request }) => {
     const url = new URL(request.url);
-    const query = url.searchParams.get("q");
     const startIndex = url.searchParams.get("startIndex") || "0";
     const maxResults = url.searchParams.get("maxResults") || "10";
 
@@ -243,7 +242,6 @@ export const handlers = [
   // Open Library API handler
   http.get("https://openlibrary.org/search.json", ({ request }) => {
     const url = new URL(request.url);
-    const query = url.searchParams.get("q");
     const offset = url.searchParams.get("offset") || "0";
     const limit = url.searchParams.get("limit") || "10";
 

@@ -159,7 +159,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
       // Navigate to summary page when generation is successful
       // router.push(`/summaries/${summary.id}`);
     }
-  }, [summary, isGenerating, error, router]);
+  }, [summary, isGenerating, error, router, hasGeneratedSummary]);
 
   // Show error notifications
   React.useEffect(() => {
