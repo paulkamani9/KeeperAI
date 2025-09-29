@@ -24,7 +24,7 @@ import {
 import type { Summary } from "../src/types/summary";
 
 // Feature flag to enable/disable Redis caching
-const ENABLE_SUMMARY_REDIS = process.env.ENABLE_SUMMARY_REDIS
+const ENABLE_SUMMARY_REDIS = process.env.ENABLE_SUMMARY_REDIS;
 
 /**
  * Helper function to convert Convex document to Summary type for caching
@@ -33,6 +33,8 @@ function toSummaryFromDb(doc: any): Summary {
   return {
     id: String(doc._id),
     bookId: doc.bookId,
+    bookTitle: doc.bookTitle || "", // Default for backward compatibility
+    bookAuthors: doc.bookAuthors || [], // Default for backward compatibility
     summaryType: doc.summaryType,
     content: doc.content,
     status: doc.status,
@@ -221,6 +223,8 @@ export const getExistingSummaryAction = action({
 export const storeSummaryAction = action({
   args: {
     bookId: v.string(),
+    bookTitle: v.string(),
+    bookAuthors: v.array(v.string()),
     summaryType: v.union(
       v.literal("concise"),
       v.literal("detailed"),
@@ -317,6 +321,8 @@ export const storeSummaryAction = action({
 export const recordSummaryFailureAction = action({
   args: {
     bookId: v.string(),
+    bookTitle: v.string(),
+    bookAuthors: v.array(v.string()),
     summaryType: v.union(
       v.literal("concise"),
       v.literal("detailed"),

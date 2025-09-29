@@ -8,25 +8,28 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { SummaryMetadata } from "../SummaryMetadata";
+import type { Summary } from "../../../types/summary";
 
-const mockSummary = {
-  id: "test-id",
+const mockSummary: Summary = {
+  id: "summary-123",
   bookId: "book-123",
+  bookTitle: "Test Book Title",
+  bookAuthors: ["Test Author", "Second Author"],
   summaryType: "analysis" as const,
   content: "Test content",
   status: "completed" as const,
-  createdAt: new Date("2023-06-15T14:30:00Z"),
-  updatedAt: new Date("2023-06-15T14:30:00Z"),
-  generationTime: 25000, // 25 seconds
-  wordCount: 1250,
-  readingTime: 5,
+  createdAt: new Date("2023-06-15T10:30:00Z"),
+  updatedAt: new Date("2023-06-15T10:30:00Z"),
+  generationTime: 15000,
+  wordCount: 150,
+  readingTime: 2,
   aiModel: "gpt-4",
   promptVersion: "1.0",
   metadata: {
     bookDataSource: "google-books" as const,
     hadBookDescription: true,
-    promptTokens: 500,
-    completionTokens: 800,
+    promptTokens: 1000,
+    completionTokens: 500,
     estimatedCost: 0.05,
   },
 };

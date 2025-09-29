@@ -8,6 +8,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { SummaryActions } from "../SummaryActions";
+import type { Summary } from "../../../types/summary";
 
 // Mock clipboard API
 Object.assign(navigator, {
@@ -29,6 +30,8 @@ Object.defineProperty(window, "open", {
 const mockSummary = {
   id: "test-summary-id",
   bookId: "book-123",
+  bookTitle: "Test Book Title",
+  bookAuthors: ["Test Author"],
   summaryType: "concise" as const,
   content: "Test content",
   status: "completed" as const,

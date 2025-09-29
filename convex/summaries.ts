@@ -28,6 +28,8 @@ import { mutation, query } from "./_generated/server";
 export const storeSummary = mutation({
   args: {
     bookId: v.string(),
+    bookTitle: v.string(),
+    bookAuthors: v.array(v.string()),
     summaryType: v.union(
       v.literal("concise"),
       v.literal("detailed"),
@@ -77,6 +79,8 @@ export const storeSummary = mutation({
     if (existingSummary) {
       // Update existing summary instead of creating duplicate
       await ctx.db.patch(existingSummary._id, {
+        bookTitle: args.bookTitle,
+        bookAuthors: args.bookAuthors,
         content: args.content,
         status: "completed" as const,
         generationTime: args.generationTime,
@@ -95,6 +99,8 @@ export const storeSummary = mutation({
       const newSummaryId = await ctx.db.insert("summaries", {
         userId: args.userId,
         bookId: args.bookId,
+        bookTitle: args.bookTitle,
+        bookAuthors: args.bookAuthors,
         summaryType: args.summaryType,
         content: args.content,
         status: "completed" as const,
@@ -223,6 +229,8 @@ export const getExistingSummary = query({
 export const recordSummaryFailure = mutation({
   args: {
     bookId: v.string(),
+    bookTitle: v.string(),
+    bookAuthors: v.array(v.string()),
     summaryType: v.union(
       v.literal("concise"),
       v.literal("detailed"),
@@ -264,6 +272,8 @@ export const recordSummaryFailure = mutation({
     if (existingSummary) {
       // Update existing record with failure info
       await ctx.db.patch(existingSummary._id, {
+        bookTitle: args.bookTitle,
+        bookAuthors: args.bookAuthors,
         status: "failed" as const,
         errorMessage: args.errorMessage,
         generationTime: args.generationTime,
@@ -278,6 +288,8 @@ export const recordSummaryFailure = mutation({
       const newSummaryId = await ctx.db.insert("summaries", {
         userId: args.userId,
         bookId: args.bookId,
+        bookTitle: args.bookTitle,
+        bookAuthors: args.bookAuthors,
         summaryType: args.summaryType,
         content: "", // Empty content for failed summaries
         status: "failed" as const,

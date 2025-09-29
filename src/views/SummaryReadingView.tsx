@@ -77,6 +77,8 @@ export function SummaryReadingView({
         return {
           id: String(result._id),
           bookId: result.bookId as string,
+          bookTitle: (result.bookTitle as string) || "", // Default for backward compatibility
+          bookAuthors: (result.bookAuthors as string[]) || [], // Default for backward compatibility
           summaryType: result.summaryType as any,
           content: result.content as string,
           status: result.status as any,

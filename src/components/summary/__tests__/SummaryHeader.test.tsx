@@ -8,11 +8,14 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { SummaryHeader } from "../SummaryHeader";
+import type { Summary } from "../../../types/summary";
 
 // Mock summary data
-const mockSummary = {
-  id: "test-id",
+const mockSummary: Summary = {
+  id: "summary-123",
   bookId: "book-123",
+  bookTitle: "Test Book Title",
+  bookAuthors: ["Test Author"],
   summaryType: "concise" as const,
   content: "Test content",
   status: "completed" as const,

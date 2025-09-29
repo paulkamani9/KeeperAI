@@ -1,10 +1,9 @@
 import { z } from "zod";
 import type { Book } from "./book";
 
-
 /**
  * Summary generation result with detailed metadata
- **/ 
+ **/
 
 interface SummaryGenerationResult {
   /** Generated summary content */
@@ -79,7 +78,6 @@ export interface SummaryService {
   testConnection(): Promise<boolean>;
 }
 
-
 /**
  * Summary Types for KeeperAI
  *
@@ -147,6 +145,12 @@ export interface Summary {
   /** ID of the book this summary is for */
   bookId: string;
 
+  /** Title of the book */
+  bookTitle: string;
+
+  /** Authors of the book */
+  bookAuthors: string[];
+
   /** Type of summary */
   summaryType: SummaryType;
 
@@ -208,6 +212,8 @@ export interface Summary {
 export const SummarySchema = z.object({
   id: z.string().min(1, "Summary ID is required"),
   bookId: z.string().min(1, "Book ID is required"),
+  bookTitle: z.string().min(1, "Book title is required"),
+  bookAuthors: z.array(z.string()).min(1, "At least one author is required"),
   summaryType: z.enum(["concise", "detailed", "analysis", "practical"]),
   content: z.string().min(1, "Summary content is required"),
   status: z.enum(["pending", "generating", "completed", "failed"]),
@@ -417,7 +423,7 @@ export const isValidSummaryType = (type: string): type is SummaryType => {
  * Type exports for external use
  */
 
-export  {type SummaryGenerationResult, type SummaryGenerationOptions };
+export { type SummaryGenerationResult, type SummaryGenerationOptions };
 export type InferredSummary = z.infer<typeof SummarySchema>;
 export type InferredCreateSummaryInput = z.infer<
   typeof CreateSummaryInputSchema

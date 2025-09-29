@@ -126,6 +126,8 @@ export function useSummaryGeneration(
         return {
           id: result._id,
           bookId: result.bookId,
+          bookTitle: result.bookTitle || params.book.title, // Fallback for backward compatibility
+          bookAuthors: result.bookAuthors || params.book.authors, // Fallback for backward compatibility
           summaryType: result.summaryType,
           content: result.content,
           status: result.status,
@@ -169,27 +171,28 @@ export function useSummaryGeneration(
         const readingTime = calculateReadingTime(wordCount);
 
         // Persist the generated summary to Convex
-        const summaryId = await convex.mutation(
-          api.summaries.storeSummary,
-          {
-            bookId: input.book.id,
-            summaryType: input.summaryType,
-            content: generationResult.content,
-            generationTime: generationResult.generationTime,
-            wordCount,
-            readingTime,
-            aiModel: generationResult.aiModel,
-            promptVersion: generationResult.promptVersion,
-            userId: input.userId as Id<"users"> | undefined, // Cast for Convex ID type
-            metadata: generationResult.metadata,
-            tokenUsage: generationResult.usage,
-          }
-        );
+        const summaryId = await convex.mutation(api.summaries.storeSummary, {
+          bookId: input.book.id,
+          bookTitle: input.book.title,
+          bookAuthors: input.book.authors,
+          summaryType: input.summaryType,
+          content: generationResult.content,
+          generationTime: generationResult.generationTime,
+          wordCount,
+          readingTime,
+          aiModel: generationResult.aiModel,
+          promptVersion: generationResult.promptVersion,
+          userId: input.userId as Id<"users"> | undefined, // Cast for Convex ID type
+          metadata: generationResult.metadata,
+          tokenUsage: generationResult.usage,
+        });
 
         // Create the Summary object to return
         const summary: Summary = {
           id: summaryId,
           bookId: input.book.id,
+          bookTitle: input.book.title,
+          bookAuthors: input.book.authors,
           summaryType: input.summaryType,
           content: generationResult.content,
           status: "completed",
@@ -231,6 +234,8 @@ export function useSummaryGeneration(
         try {
           await convex.mutation(api.summaries.recordSummaryFailure, {
             bookId: input.book.id,
+            bookTitle: input.book.title,
+            bookAuthors: input.book.authors,
             summaryType: input.summaryType,
             errorMessage:
               error instanceof Error ? error.message : "Unknown error",
@@ -455,14 +460,11 @@ export function useSummaryExists(
     queryKey: ["summaryExists", bookId, summaryType, userId],
     queryFn: async (): Promise<boolean> => {
       try {
-        const summary = await convex.query(
-          api.summaries.getExistingSummary,
-          {
-            bookId,
-            summaryType,
-            userId: userId as Id<"users"> | undefined, // Cast to handle Convex ID type
-          }
-        );
+        const summary = await convex.query(api.summaries.getExistingSummary, {
+          bookId,
+          summaryType,
+          userId: userId as Id<"users"> | undefined, // Cast to handle Convex ID type
+        });
         return Boolean(summary && summary.status === "completed");
       } catch (error) {
         console.error("Error checking summary existence:", error);

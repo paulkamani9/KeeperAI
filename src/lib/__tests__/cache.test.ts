@@ -214,6 +214,8 @@ describe("Cache", () => {
       const mockSummary = {
         id: "summary123",
         bookId: "book456",
+        bookTitle: "Test Book Title",
+        bookAuthors: ["Test Author"],
         summaryType: "concise" as const,
         content: "This is a test summary content",
         status: "completed" as const,
@@ -432,6 +434,8 @@ describe("Cache", () => {
         const mockSummary = {
           id: "workflow-test",
           bookId: "book-workflow",
+          bookTitle: "Workflow Test Book",
+          bookAuthors: ["Workflow Author"],
           summaryType: "detailed" as const,
           content: "Workflow test content",
           status: "completed" as const,
@@ -477,6 +481,8 @@ describe("Cache", () => {
         const mockSummary = {
           id: "cleanup-summary",
           bookId: bookId,
+          bookTitle: "Cleanup Test Book",
+          bookAuthors: ["Cleanup Author"],
           summaryType: "practical" as const,
           content: "Cleanup test",
           status: "completed" as const,
@@ -540,6 +546,8 @@ describe("Cache", () => {
       const mockSummary = {
         id: "module-test",
         bookId: "module-book",
+        bookTitle: "Module Test Book",
+        bookAuthors: ["Module Author"],
         summaryType: "concise" as const,
         content: "Module test content",
         status: "completed" as const,

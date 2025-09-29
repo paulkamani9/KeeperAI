@@ -47,6 +47,8 @@ async function testCacheFunctionality() {
       api.summariesActions.storeSummaryAction,
       {
         bookId: testBookId,
+        bookTitle: "Test Cache Book",
+        bookAuthors: ["Cache Test Author"],
         summaryType: summaryType as any,
         content:
           "This is a test summary for demonstrating cache functionality. It shows how Redis caching works with our actions layer.",

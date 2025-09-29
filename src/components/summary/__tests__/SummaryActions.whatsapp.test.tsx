@@ -39,6 +39,8 @@ Object.defineProperty(window, "print", {
 const mockSummary: Summary = {
   id: "test-123",
   bookId: "book-456",
+  bookTitle: "Test WhatsApp Book",
+  bookAuthors: ["WhatsApp Test Author"],
   summaryType: "concise",
   content: "This is a test summary content for WhatsApp sharing functionality.",
   status: "completed",
