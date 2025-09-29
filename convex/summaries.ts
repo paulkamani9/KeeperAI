@@ -1,22 +1,26 @@
 /**
- * Convex Summaries Functions
+ * Convex Summaries Functions - Database Only
  *
  * Handles persistence and retrieval of AI-generated book summaries.
  * Does NOT handle AI generation - that's handled by the client-side summaryService.
+ * Does NOT handle Redis caching - that's handled by actions in summariesActions.ts.
+ * Redis caching is unpluged for now, queries and mutations happen here directly.
  *
  * This module is responsible for:
  * - Storing completed summaries in the database
- * - Retrieving summaries by ID
- * - Querying existing summaries to avoid duplicates
+ * - Retrieving summaries by ID (database only)
+ * - Querying existing summaries to avoid duplicates (database only)
  * - Managing summary metadata and status
  */
 
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
-
 /**
- * Store a completed AI-generated summary in the database
+ * Store a completed AI-generated summary in the database with Redis caching
+ *
+ * Flow:
+ * 1. Store/update in Convex database (source of truth)
  *
  * This should be called after the AI service successfully generates a summary.
  * The summary content and metadata should already be complete.
@@ -24,6 +28,8 @@ import { mutation, query } from "./_generated/server";
 export const storeSummary = mutation({
   args: {
     bookId: v.string(),
+    bookTitle: v.string(),
+    bookAuthors: v.array(v.string()),
     summaryType: v.union(
       v.literal("concise"),
       v.literal("detailed"),
@@ -59,7 +65,9 @@ export const storeSummary = mutation({
   returns: v.id("summaries"),
   handler: async (ctx, args) => {
     const now = Date.now();
+    let summaryId: string;
 
+    // Step 1: Store in Convex database (source of truth)
     // Check if a summary already exists for this book and type
     const existingSummary = await ctx.db
       .query("summaries")
@@ -71,6 +79,8 @@ export const storeSummary = mutation({
     if (existingSummary) {
       // Update existing summary instead of creating duplicate
       await ctx.db.patch(existingSummary._id, {
+        bookTitle: args.bookTitle,
+        bookAuthors: args.bookAuthors,
         content: args.content,
         status: "completed" as const,
         generationTime: args.generationTime,
@@ -83,34 +93,43 @@ export const storeSummary = mutation({
         updatedAt: now,
         errorMessage: undefined, // Clear any previous errors
       });
-      return existingSummary._id;
+      summaryId = String(existingSummary._id);
+    } else {
+      // Create new summary
+      const newSummaryId = await ctx.db.insert("summaries", {
+        userId: args.userId,
+        bookId: args.bookId,
+        bookTitle: args.bookTitle,
+        bookAuthors: args.bookAuthors,
+        summaryType: args.summaryType,
+        content: args.content,
+        status: "completed" as const,
+        generationTime: args.generationTime,
+        wordCount: args.wordCount,
+        readingTime: args.readingTime,
+        aiModel: args.aiModel,
+        promptVersion: args.promptVersion,
+        errorMessage: undefined,
+        metadata: args.metadata,
+        tokenUsage: args.tokenUsage,
+        createdAt: now,
+        updatedAt: now,
+      });
+      summaryId = String(newSummaryId);
     }
 
-    // Create new summary
-    const summaryId = await ctx.db.insert("summaries", {
-      userId: args.userId,
-      bookId: args.bookId,
-      summaryType: args.summaryType,
-      content: args.content,
-      status: "completed" as const,
-      generationTime: args.generationTime,
-      wordCount: args.wordCount,
-      readingTime: args.readingTime,
-      aiModel: args.aiModel,
-      promptVersion: args.promptVersion,
-      errorMessage: undefined,
-      metadata: args.metadata,
-      tokenUsage: args.tokenUsage,
-      createdAt: now,
-      updatedAt: now,
-    });
+    // Database storage complete
 
-    return summaryId;
+    return summaryId as any; // Cast back to Convex ID type
   },
 });
 
 /**
- * Get a summary by its Convex ID
+ * Get a summary by its Convex ID with Redis caching
+ *
+ * Flow:
+ * 1. Query Convex database directly
+ * 2. Return result
  *
  * Used by the summary reading page to display persisted summaries.
  */
@@ -120,13 +139,29 @@ export const getSummaryById = query({
   },
   returns: v.any(), // Simplified return type to avoid complex type matching
   handler: async (ctx, args) => {
-
     try {
-      // Cast to proper Convex ID type and fetch
-      const summary = await ctx.db.get(args.summaryId as any);
-      return summary;
+      // Query Convex database directly
+      const result = await ctx.db.get(args.summaryId as any);
+
+      if (!result) {
+        console.log(`Summary ${args.summaryId} not found in database`);
+        return null;
+      }
+
+      // Type guard to ensure we have a summaries document
+      if (
+        !("bookId" in result) ||
+        !("summaryType" in result) ||
+        !("content" in result)
+      ) {
+        console.error(`Invalid document type for ID ${args.summaryId}`);
+        return null;
+      }
+
+      // Return the summary document
+      return result;
     } catch (error) {
-      // Invalid ID format or summary doesn't exist
+      // Invalid ID format or database error
       console.error("Error fetching summary by ID:", error);
       return null;
     }
@@ -134,7 +169,11 @@ export const getSummaryById = query({
 });
 
 /**
- * Check if a summary already exists for a book and summary type
+ * Check if a summary already exists for a book and summary type with Redis caching
+ *
+ * Flow:
+ * 1. Query Convex database directly
+ * 2. Return result
  *
  * Used to avoid duplicate generation and show existing summaries.
  */
@@ -151,37 +190,47 @@ export const getExistingSummary = query({
   },
   returns: v.any(), // Simplified return type
   handler: async (ctx, args) => {
-    // Look for existing summary with this book ID and summary type
-    const existingSummary = await ctx.db
-      .query("summaries")
-      .withIndex("byBookAndType", (q) =>
-        q.eq("bookId", args.bookId).eq("summaryType", args.summaryType)
-      )
-      .filter((q) => {
-        // If userId provided, only match summaries for this user or public summaries
-        if (args.userId) {
-          return q.or(
-            q.eq(q.field("userId"), args.userId),
-            q.eq(q.field("userId"), undefined)
-          );
-        }
-        // If no userId, only return public summaries
-        return q.eq(q.field("userId"), undefined);
-      })
-      .first();
+    try {
+      // Query Convex database directly
+      const existingSummary = await ctx.db
+        .query("summaries")
+        .withIndex("byBookAndType", (q) =>
+          q.eq("bookId", args.bookId).eq("summaryType", args.summaryType)
+        )
+        .filter((q) => {
+          // If userId provided, only match summaries for this user or public summaries
+          if (args.userId) {
+            return q.or(
+              q.eq(q.field("userId"), args.userId),
+              q.eq(q.field("userId"), undefined)
+            );
+          }
+          // If no userId, only return public summaries
+          return q.eq(q.field("userId"), undefined);
+        })
+        .first();
 
-    return existingSummary;
+      return existingSummary;
+    } catch (error) {
+      console.error("Error fetching existing summary:", error);
+      return null;
+    }
   },
 });
 
 /**
- * Record a failed summary generation attempt
+ * Record a failed summary generation attempt with failure caching
+ *
+ * Flow:
+ * 1. Store failure in Convex database for persistent tracking
  *
  * Used for error tracking and preventing repeated failures.
  */
 export const recordSummaryFailure = mutation({
   args: {
     bookId: v.string(),
+    bookTitle: v.string(),
+    bookAuthors: v.array(v.string()),
     summaryType: v.union(
       v.literal("concise"),
       v.literal("detailed"),
@@ -210,8 +259,9 @@ export const recordSummaryFailure = mutation({
   returns: v.id("summaries"),
   handler: async (ctx, args) => {
     const now = Date.now();
+    let summaryId: string;
 
-    // Check if a summary record already exists
+    // Step 1: Store failure in Convex database for persistent tracking
     const existingSummary = await ctx.db
       .query("summaries")
       .withIndex("byBookAndType", (q) =>
@@ -222,6 +272,8 @@ export const recordSummaryFailure = mutation({
     if (existingSummary) {
       // Update existing record with failure info
       await ctx.db.patch(existingSummary._id, {
+        bookTitle: args.bookTitle,
+        bookAuthors: args.bookAuthors,
         status: "failed" as const,
         errorMessage: args.errorMessage,
         generationTime: args.generationTime,
@@ -230,28 +282,76 @@ export const recordSummaryFailure = mutation({
         metadata: args.metadata,
         updatedAt: now,
       });
-      return existingSummary._id;
+      summaryId = String(existingSummary._id);
+    } else {
+      // Create new failed summary record
+      const newSummaryId = await ctx.db.insert("summaries", {
+        userId: args.userId,
+        bookId: args.bookId,
+        bookTitle: args.bookTitle,
+        bookAuthors: args.bookAuthors,
+        summaryType: args.summaryType,
+        content: "", // Empty content for failed summaries
+        status: "failed" as const,
+        generationTime: args.generationTime,
+        wordCount: 0,
+        readingTime: 0,
+        aiModel: args.aiModel,
+        promptVersion: args.promptVersion,
+        errorMessage: args.errorMessage,
+        metadata: args.metadata,
+        createdAt: now,
+        updatedAt: now,
+      });
+      summaryId = String(newSummaryId);
     }
 
-    // Create new failed summary record
-    const summaryId = await ctx.db.insert("summaries", {
-      userId: args.userId,
-      bookId: args.bookId,
-      summaryType: args.summaryType,
-      content: "", // Empty content for failed summaries
-      status: "failed" as const,
-      generationTime: args.generationTime,
-      wordCount: 0,
-      readingTime: 0,
-      aiModel: args.aiModel,
-      promptVersion: args.promptVersion,
-      errorMessage: args.errorMessage,
-      metadata: args.metadata,
-      createdAt: now,
-      updatedAt: now,
-    });
+    // Database storage complete
 
-    return summaryId;
+    return summaryId as any; // Cast back to Convex ID type
+  },
+});
+
+/**
+ * Check for recent summary generation failures in the database
+ *
+ * This function queries the database for recent failures to help prevent
+ * repeated failed attempts. For Redis-based failure caching, use the action instead.
+ */
+export const checkRecentFailure = query({
+  args: {
+    bookId: v.string(),
+    summaryType: v.union(
+      v.literal("concise"),
+      v.literal("detailed"),
+      v.literal("analysis"),
+      v.literal("practical")
+    ),
+  },
+  returns: v.union(v.string(), v.null()),
+  handler: async (ctx, args) => {
+    try {
+      // Check database for recent failed attempts (last 10 minutes)
+      const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
+
+      const recentFailure = await ctx.db
+        .query("summaries")
+        .withIndex("byBookAndType", (q) =>
+          q.eq("bookId", args.bookId).eq("summaryType", args.summaryType)
+        )
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("status"), "failed"),
+            q.gte(q.field("updatedAt"), tenMinutesAgo)
+          )
+        )
+        .first();
+
+      return recentFailure?.errorMessage || null;
+    } catch (error) {
+      console.error("Error checking recent failure:", error);
+      return null;
+    }
   },
 });
 

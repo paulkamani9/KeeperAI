@@ -54,7 +54,7 @@ export default function Navbar({ className }: NavbarProps) {
       className={cn(
         "flex h-[60px] w-full items-center justify-between",
         "px-4 md:px-6 lg:px-8",
-        "backdrop-blur-xl bg-background/80",
+        "backdrop-blur-xl bg-background/20",
         "border-b border-border/20",
         className
       )}

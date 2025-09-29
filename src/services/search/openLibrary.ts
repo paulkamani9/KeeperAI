@@ -11,6 +11,14 @@ import {
   API_ERROR_CODES,
 } from "@/types/api";
 
+// Interface for handling raw OpenLibrary responses with flexible field formats
+interface RawOpenLibraryResponse {
+  start?: number;
+  num_found?: number;
+  numFound?: number;
+  docs: any[];
+}
+
 /**
  * Open Library API Service
  *
@@ -71,25 +79,17 @@ export class OpenLibraryService {
         q: query,
         offset: params.startIndex || 0,
         limit: Math.min(params.maxResults || DEFAULT_CONFIG.limit, 100), // Open Library max is 100
-        fields: DEFAULT_CONFIG.fields,
-        sort: DEFAULT_CONFIG.sort,
+        // fields: DEFAULT_CONFIG.fields,
+        // sort: DEFAULT_CONFIG.sort,
         ...(params.language && { language: params.language }),
       });
 
       // Make API request
-      const response = await apiClient.get<OpenLibrarySearchResponse>(url);
+      const rawResponse = await apiClient.get<RawOpenLibraryResponse>(url);
 
-      // Validate response format
-      const validatedResponse =
-        OpenLibrarySearchResponseSchema.safeParse(response);
-      if (!validatedResponse.success) {
-        throw new Error(
-          `Invalid Open Library API response: ${validatedResponse.error.message}`
-        );
-      }
-
-      // Transform to normalized format
-      return this.transformToSearchResults(validatedResponse.data, params);
+      // Normalize and validate response with fallback strategy
+      const searchResults = this.processApiResponse(rawResponse, params);
+      return searchResults;
     } catch (error: any) {
       throw this.handleApiError(error, params.query);
     }
@@ -217,55 +217,250 @@ export class OpenLibraryService {
   }
 
   /**
+   * Process and normalize OpenLibrary API response with robust error handling
+   *
+   * @param rawResponse Raw response from OpenLibrary API
+   * @param originalParams Original search parameters
+   * @returns Normalized search results
+   */
+  private processApiResponse(
+    rawResponse: RawOpenLibraryResponse,
+    originalParams: SearchParams
+  ): SearchResults {
+    try {
+      // Step 1: Normalize the response format (snake_case -> camelCase)
+      const normalizedResponse = this.normalizeOpenLibraryResponse(rawResponse);
+
+      // Step 2: Try Zod validation on normalized response
+      const validatedResponse =
+        OpenLibrarySearchResponseSchema.safeParse(normalizedResponse);
+
+      if (validatedResponse.success) {
+        // Happy path: validation successful
+        return this.transformToSearchResults(
+          validatedResponse.data,
+          originalParams
+        );
+      } else {
+        // Step 3: Validation failed, log warning but continue with fallback
+        console.warn(
+          "OpenLibrary response validation failed, using fallback parsing:",
+          validatedResponse.error.message
+        );
+
+        // Use fallback strategy with raw response
+        return this.transformRawResponseToSearchResults(
+          rawResponse,
+          originalParams
+        );
+      }
+    } catch (error) {
+      console.error("Failed to process OpenLibrary response:", error);
+
+      // Last resort: try to extract any usable data
+      return this.createEmptySearchResults(originalParams, String(error));
+    }
+  }
+
+  /**
+   * Normalize OpenLibrary response by converting snake_case to camelCase
+   * and handling field inconsistencies
+   *
+   * @param rawResponse Raw response from API
+   * @returns Normalized response matching expected schema
+   */
+  private normalizeOpenLibraryResponse(
+    rawResponse: RawOpenLibraryResponse
+  ): OpenLibrarySearchResponse {
+    // Handle the dual field format issue (num_found vs numFound)
+    const numFound = rawResponse.numFound ?? rawResponse.num_found ?? 0;
+
+    return {
+      start: rawResponse.start ?? 0,
+      num_found: numFound,
+      numFound: numFound,
+      docs: rawResponse.docs || [],
+    };
+  }
+
+  /**
+   * Fallback transformation when Zod validation fails
+   * Attempts to extract usable data from raw response
+   *
+   * @param rawResponse Raw response that failed validation
+   * @param originalParams Original search parameters
+   * @returns SearchResults with available data
+   */
+  private transformRawResponseToSearchResults(
+    rawResponse: RawOpenLibraryResponse,
+    originalParams: SearchParams
+  ): SearchResults {
+    const docs = rawResponse.docs || [];
+    const totalItems =
+      rawResponse.numFound ?? rawResponse.num_found ?? docs.length;
+
+    // Transform documents with more lenient approach
+    const books: Book[] = [];
+
+    for (const doc of docs) {
+      try {
+        const book = this.transformDocToBook(doc);
+        // Only validate individual books, not the whole response
+        if (BookSchema.safeParse(book).success) {
+          books.push(book);
+        } else {
+          console.warn(
+            "Skipping invalid book from OpenLibrary:",
+            doc.title || doc.key
+          );
+        }
+      } catch (error) {
+        console.warn("Failed to transform OpenLibrary doc:", error);
+        // Continue processing other docs
+      }
+    }
+
+    const itemsPerPage = originalParams.maxResults || DEFAULT_CONFIG.limit;
+    const startIndex = originalParams.startIndex || 0;
+
+    return {
+      books,
+      totalItems,
+      startIndex,
+      itemsPerPage,
+      hasMore: startIndex + books.length < totalItems,
+      query: originalParams.query,
+      source: "open-library",
+    };
+  }
+
+  /**
+   * Create empty search results when all parsing attempts fail
+   *
+   * @param originalParams Original search parameters
+   * @param errorContext Error context for logging
+   * @returns Empty search results
+   */
+  private createEmptySearchResults(
+    originalParams: SearchParams,
+    errorContext?: string
+  ): SearchResults {
+    console.warn(
+      "Returning empty OpenLibrary results due to parsing failure:",
+      errorContext
+    );
+
+    return {
+      books: [],
+      totalItems: 0,
+      startIndex: originalParams.startIndex || 0,
+      itemsPerPage: originalParams.maxResults || DEFAULT_CONFIG.limit,
+      hasMore: false,
+      query: originalParams.query,
+      source: "open-library",
+    };
+  }
+
+  /**
    * Transform a single Open Library doc to normalized Book format
+   * Now with robust error handling for malformed data
    *
    * @param doc Open Library search result document
    * @returns Normalized Book object
    */
   private transformDocToBook(doc: any): Book {
-    // Extract ISBNs
+    // Ensure we have minimum required fields
+    if (!doc || !doc.key || !doc.title) {
+      throw new Error(
+        "Missing required fields (key or title) in OpenLibrary document"
+      );
+    }
+
+    // Extract ISBNs with safe array handling (can be strings or numbers)
     let isbn10: string | undefined;
     let isbn13: string | undefined;
 
-    if (doc.isbn) {
+    if (Array.isArray(doc.isbn)) {
       for (const isbn of doc.isbn) {
-        if (isbn.length === 10) {
-          isbn10 = isbn;
-        } else if (isbn.length === 13) {
-          isbn13 = isbn;
+        // Convert to string and clean - handles both string and number formats
+        const cleanIsbn = String(isbn).replace(/[^0-9X]/g, "");
+        if (cleanIsbn.length === 10) {
+          isbn10 = cleanIsbn;
+        } else if (cleanIsbn.length === 13) {
+          isbn13 = cleanIsbn;
         }
       }
     }
 
-    // Generate cover image URLs from cover_i
+    // Generate cover image URLs from cover_i with validation
     let thumbnail: string | undefined;
     let smallThumbnail: string | undefined;
     let mediumThumbnail: string | undefined;
     let largeThumbnail: string | undefined;
 
-    if (doc.cover_i) {
-      smallThumbnail = `${this.coversUrl}/id/${doc.cover_i}-S.jpg`;
-      thumbnail = `${this.coversUrl}/id/${doc.cover_i}-M.jpg`;
-      mediumThumbnail = `${this.coversUrl}/id/${doc.cover_i}-L.jpg`;
-      largeThumbnail = `${this.coversUrl}/id/${doc.cover_i}-L.jpg`;
+    const coverId = doc.cover_i || doc.cover_id;
+    if (coverId && typeof coverId === "number" && coverId > 0) {
+      smallThumbnail = `${this.coversUrl}/id/${coverId}-S.jpg`;
+      thumbnail = `${this.coversUrl}/id/${coverId}-M.jpg`;
+      mediumThumbnail = `${this.coversUrl}/id/${coverId}-L.jpg`;
+      largeThumbnail = `${this.coversUrl}/id/${coverId}-L.jpg`;
     }
 
-    // Extract publication year
-    const publishYear = doc.first_publish_year;
+    // Extract publication year with fallbacks
+    const publishYear =
+      doc.first_publish_year ||
+      (Array.isArray(doc.publish_year)
+        ? doc.publish_year[0]
+        : doc.publish_year);
     const publishedDate = publishYear ? `${publishYear}-01-01` : undefined;
 
+    // Safe key processing
+    const cleanKey = String(doc.key).replace("/works/", "");
+
+    // Safe array processing for authors
+    const authors = Array.isArray(doc.author_name)
+      ? doc.author_name.filter(
+          (author: any) => author && typeof author === "string"
+        )
+      : [];
+
+    // Safe publisher extraction
+    let publisher: string | undefined;
+    if (Array.isArray(doc.publisher) && doc.publisher.length > 0) {
+      publisher = String(doc.publisher[0]);
+    } else if (doc.publisher && typeof doc.publisher === "string") {
+      publisher = doc.publisher;
+    }
+
+    // Safe language extraction
+    let language: string | undefined;
+    if (Array.isArray(doc.language) && doc.language.length > 0) {
+      language = String(doc.language[0]);
+    } else if (doc.language && typeof doc.language === "string") {
+      language = doc.language;
+    }
+
+    // Safe categories extraction
+    let categories: string[] | undefined;
+    if (Array.isArray(doc.subject) && doc.subject.length > 0) {
+      categories = doc.subject
+        .filter((subj: any) => subj && typeof subj === "string")
+        .slice(0, 5); // Limit to 5 categories
+    }
+
     return {
-      id: `open-library-${doc.key.replace("/works/", "")}`,
-      title: doc.title || "Unknown Title",
-      authors: doc.author_name || [],
+      id: `open-library-${cleanKey}`,
+      title: String(doc.title) || "Unknown Title",
+      authors,
       description: undefined, // Not available in search results
       publishedDate,
-      publisher: Array.isArray(doc.publisher)
-        ? doc.publisher[0]
-        : doc.publisher,
-      pageCount: doc.number_of_pages_median,
-      categories: doc.subject ? doc.subject.slice(0, 5) : undefined, // Limit categories
-      language: Array.isArray(doc.language) ? doc.language[0] : doc.language,
+      publisher,
+      pageCount:
+        typeof doc.number_of_pages_median === "number"
+          ? doc.number_of_pages_median
+          : undefined,
+      categories,
+      language,
       isbn10,
       isbn13,
       thumbnail,
@@ -277,7 +472,7 @@ export class OpenLibraryService {
       previewLink: `${this.baseUrl}${doc.key}`,
       infoLink: `${this.baseUrl}${doc.key}`,
       source: "open-library",
-      originalId: doc.key.replace("/works/", ""),
+      originalId: cleanKey,
     };
   }
 
@@ -439,10 +634,13 @@ export class OpenLibraryService {
       return new Error("Open Library API request timed out. Please try again.");
     }
 
-    // Handle parsing errors
-    if (error.message?.includes("Invalid Open Library API response")) {
+    // Handle parsing errors (now more specific since we have fallback parsing)
+    if (
+      error.message?.includes("Invalid Open Library API response") ||
+      error.message?.includes("Failed to process OpenLibrary response")
+    ) {
       return new Error(
-        "Received invalid response from Open Library API. Please try again."
+        "Unable to parse Open Library API response. The service may be experiencing issues."
       );
     }
 

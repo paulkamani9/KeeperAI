@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { ChevronDown, Clock, Brain, Target, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ interface SummaryTypeOption {
   /** Icon component */
   icon: typeof Clock;
   /** Example of what this type provides */
-  example: string;
+  example?: string;
 }
 
 /**
@@ -44,7 +44,7 @@ const SUMMARY_TYPES: SummaryTypeOption[] = [
     description: "Quick overview and key points",
     readingTime: "2-3 min read",
     icon: Clock,
-    example: "Main themes, key takeaways, and essential insights",
+    // example: "Main themes, key takeaways, and essential insights",
   },
   {
     value: "detailed",
@@ -52,7 +52,7 @@ const SUMMARY_TYPES: SummaryTypeOption[] = [
     description: "Chapter-by-chapter breakdown",
     readingTime: "8-10 min read",
     icon: Brain,
-    example: "Comprehensive analysis of each chapter and section",
+    // example: "Comprehensive analysis of each chapter and section",
   },
   {
     value: "analysis",
@@ -60,7 +60,7 @@ const SUMMARY_TYPES: SummaryTypeOption[] = [
     description: "Critical analysis of themes and style",
     readingTime: "5-7 min read",
     icon: Target,
-    example: "Writing style, literary techniques, and deeper meaning",
+    // example: "Writing style, literary techniques, and deeper meaning",
   },
   {
     value: "practical",
@@ -68,7 +68,7 @@ const SUMMARY_TYPES: SummaryTypeOption[] = [
     description: "Actionable takeaways for your life",
     readingTime: "4-6 min read",
     icon: Lightbulb,
-    example: "Apply lessons, tips, and strategies to daily life",
+    // example: "Apply lessons, tips, and strategies to daily life",
   },
 ];
 
@@ -99,7 +99,7 @@ interface SummaryTypeSelectorProps {
  * - Compact variant for smaller layouts
  */
 export function SummaryTypeSelector({
-  value = "concise",
+  value,
   onValueChange,
   disabled = false,
   loading = false,
@@ -179,6 +179,7 @@ export function SummaryTypeSelector({
                 newValue === "practical")
             ) {
               onValueChange(newValue as SummaryType);
+              localStorage.setItem("currentSummaryType", newValue);
             }
           }}
           className="p-2 space-y-1"

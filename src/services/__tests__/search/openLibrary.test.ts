@@ -526,7 +526,7 @@ describe("OpenLibraryService", () => {
       mockApiClient.get.mockRejectedValue(parseError);
 
       await expect(service.searchBooks({ query: "test" })).rejects.toThrow(
-        "Received invalid response from Open Library API"
+        "Unable to parse Open Library API response"
       );
     });
   });

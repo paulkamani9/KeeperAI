@@ -24,6 +24,8 @@ export default defineSchema({
   summaries: defineTable({
     userId: v.optional(v.id("users")),
     bookId: v.string(), // External book identifier from Google Books or Open Library
+    bookTitle: v.string(), // Title of the book
+    bookAuthors: v.array(v.string()), // Authors of the book
     summaryType: v.union(
       v.literal("concise"),
       v.literal("detailed"),

@@ -184,68 +184,30 @@ export function SummaryMetadata({ summary, className }: SummaryMetadataProps) {
         </div>
       </div>
 
-      {/* Book Context (Placeholder for future book data integration) */}
+      {/* Book Context */}
       <div className="border-t pt-4">
         <div className="flex items-start space-x-3">
           <BookOpen className="h-4 w-4 text-muted-foreground mt-0.5" />
           <div>
             <p className="text-sm font-medium text-foreground">Book Context</p>
-            <p className="text-sm text-muted-foreground">
-              Book ID: {summary.bookId}
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Book details integration will be completed in Phase 3
-            </p>
+            {summary.bookTitle && (
+              <p className="text-sm text-muted-foreground font-medium mt-1">
+                {summary.bookTitle}
+              </p>
+            )}
+            {summary.bookAuthors && summary.bookAuthors.length > 0 && (
+              <p className="text-sm text-muted-foreground">
+                by {summary.bookAuthors.join(", ")}
+              </p>
+            )}
+            {!summary.bookTitle && !summary.bookAuthors && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Book details not available for this summary
+              </p>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Additional Metadata (if available) */}
-      {summary.metadata && (
-        <div className="border-t pt-4">
-          <h3 className="text-sm font-medium text-foreground mb-3">
-            Technical Details
-          </h3>
-          <div className="grid grid-cols-1 gap-3 text-xs">
-            <div>
-              <span className="font-medium text-muted-foreground">
-                Data Source:
-              </span>
-              <span className="ml-2 capitalize">
-                {summary.metadata.bookDataSource.replace("-", " ")}
-              </span>
-            </div>
-            <div>
-              <span className="font-medium text-muted-foreground">
-                Had Description:
-              </span>
-              <span className="ml-2">
-                {summary.metadata.hadBookDescription ? "Yes" : "No"}
-              </span>
-            </div>
-            {summary.metadata.promptTokens && (
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  Prompt Tokens:
-                </span>
-                <span className="ml-2">
-                  {summary.metadata.promptTokens.toLocaleString()}
-                </span>
-              </div>
-            )}
-            {summary.metadata.completionTokens && (
-              <div>
-                <span className="font-medium text-muted-foreground">
-                  Completion Tokens:
-                </span>
-                <span className="ml-2">
-                  {summary.metadata.completionTokens.toLocaleString()}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

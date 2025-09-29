@@ -5,6 +5,12 @@ import {
   cacheTTL,
   SummaryCache,
   createSummaryCache,
+  getCachedSummaryById,
+  getCachedSummaryByBook,
+  setCachedSummary,
+  cacheFailure,
+  getRecentFailure,
+  clearFailure,
 } from "../cache";
 
 describe("Cache", () => {
@@ -65,7 +71,13 @@ describe("Cache", () => {
       const bookId = "book123";
       const summaryType = "concise";
       const key = cacheKeys.bookSummary(bookId, summaryType);
-      expect(key).toBe("summary:book123:concise");
+      expect(key).toBe("summary:book:book123:concise");
+    });
+
+    it("should generate summary ID keys", () => {
+      const summaryId = "summary123";
+      const key = cacheKeys.summaryById(summaryId);
+      expect(key).toBe("summary:id:summary123");
     });
 
     it("should generate generation lock keys", () => {
@@ -73,6 +85,13 @@ describe("Cache", () => {
       const summaryType = "detailed";
       const key = cacheKeys.summaryGeneration(bookId, summaryType);
       expect(key).toBe("gen:summary:book123:detailed");
+    });
+
+    it("should generate failure cache keys", () => {
+      const bookId = "book123";
+      const summaryType = "analysis";
+      const key = cacheKeys.summaryFailure(bookId, summaryType);
+      expect(key).toBe("fail:summary:book123:analysis");
     });
 
     it("should generate encoded search keys", () => {
@@ -88,6 +107,7 @@ describe("Cache", () => {
       expect(cacheTTL.search).toBe(900); // 15 minutes
       expect(cacheTTL.summary).toBe(86400); // 24 hours
       expect(cacheTTL.generation).toBe(300); // 5 minutes
+      expect(cacheTTL.failure).toBe(600); // 10 minutes
       expect(cacheTTL.default).toBe(900); // 15 minutes
     });
   });
@@ -190,6 +210,150 @@ describe("Cache", () => {
       });
     });
 
+    describe("Redis integration methods", () => {
+      const mockSummary = {
+        id: "summary123",
+        bookId: "book456",
+        bookTitle: "Test Book Title",
+        bookAuthors: ["Test Author"],
+        summaryType: "concise" as const,
+        content: "This is a test summary content",
+        status: "completed" as const,
+        createdAt: new Date("2023-01-01T00:00:00Z"),
+        updatedAt: new Date("2023-01-01T01:00:00Z"),
+        generationTime: 1500,
+        wordCount: 100,
+        readingTime: 5,
+        aiModel: "gpt-4o-mini",
+        promptVersion: "v1.0",
+        errorMessage: undefined,
+        metadata: {
+          bookDataSource: "google-books" as const,
+          hadBookDescription: true,
+        },
+      };
+
+      it("should store and retrieve summaries by ID", async () => {
+        await summaryCache.setCachedSummary(mockSummary);
+        const retrieved = await summaryCache.getCachedSummaryById("summary123");
+
+        expect(retrieved).not.toBeNull();
+        expect(retrieved?.id).toBe(mockSummary.id);
+        expect(retrieved?.bookId).toBe(mockSummary.bookId);
+        expect(retrieved?.content).toBe(mockSummary.content);
+      });
+
+      it("should store and retrieve summaries by book+type", async () => {
+        await summaryCache.setCachedSummary(mockSummary);
+        const retrieved = await summaryCache.getCachedSummaryByBook(
+          "book456",
+          "concise"
+        );
+
+        expect(retrieved).not.toBeNull();
+        expect(retrieved?.id).toBe(mockSummary.id);
+        expect(retrieved?.bookId).toBe(mockSummary.bookId);
+        expect(retrieved?.content).toBe(mockSummary.content);
+      });
+
+      it("should invalidate both cache keys", async () => {
+        await summaryCache.setCachedSummary(mockSummary);
+
+        // Verify both keys exist
+        expect(
+          await summaryCache.getCachedSummaryById("summary123")
+        ).not.toBeNull();
+        expect(
+          await summaryCache.getCachedSummaryByBook("book456", "concise")
+        ).not.toBeNull();
+
+        // Invalidate
+        await summaryCache.invalidateCachedSummary(
+          "summary123",
+          "book456",
+          "concise"
+        );
+
+        // Verify both keys are gone
+        expect(
+          await summaryCache.getCachedSummaryById("summary123")
+        ).toBeNull();
+        expect(
+          await summaryCache.getCachedSummaryByBook("book456", "concise")
+        ).toBeNull();
+      });
+
+      it("should handle invalid JSON gracefully", async () => {
+        // Manually set invalid JSON in cache
+        const key = cacheKeys.summaryById("invalid123");
+        await summaryCache["cacheAdapter"].set(key, "invalid json", 300);
+
+        const result = await summaryCache.getCachedSummaryById("invalid123");
+        expect(result).toBeNull();
+      });
+
+      it("should handle malformed summary objects gracefully", async () => {
+        // Manually set malformed object in cache
+        const key = cacheKeys.summaryById("malformed123");
+        const malformed = JSON.stringify({ incomplete: "object" });
+        await summaryCache["cacheAdapter"].set(key, malformed, 300);
+
+        const result = await summaryCache.getCachedSummaryById("malformed123");
+        expect(result).toBeNull();
+      });
+    });
+
+    describe("failure caching", () => {
+      it("should cache and retrieve failures", async () => {
+        const bookId = "book789";
+        const summaryType = "detailed";
+        const errorMessage = "OpenAI API rate limit exceeded";
+
+        await summaryCache.cacheFailure(bookId, summaryType, errorMessage);
+        const retrieved = await summaryCache.getRecentFailure(
+          bookId,
+          summaryType
+        );
+
+        expect(retrieved).toBe(errorMessage);
+      });
+
+      it("should clear failure cache", async () => {
+        const bookId = "book789";
+        const summaryType = "analysis";
+        const errorMessage = "Network timeout";
+
+        await summaryCache.cacheFailure(bookId, summaryType, errorMessage);
+        await summaryCache.clearFailure(bookId, summaryType);
+
+        const retrieved = await summaryCache.getRecentFailure(
+          bookId,
+          summaryType
+        );
+        expect(retrieved).toBeNull();
+      });
+
+      it("should return null for non-existent failures", async () => {
+        const result = await summaryCache.getRecentFailure(
+          "nonexistent",
+          "practical"
+        );
+        expect(result).toBeNull();
+      });
+
+      it("should handle malformed failure cache gracefully", async () => {
+        // Manually set malformed failure data
+        const key = cacheKeys.summaryFailure("malformed", "concise");
+        await summaryCache["cacheAdapter"].set(key, "invalid json", 300);
+
+        const result = await summaryCache.getRecentFailure(
+          "malformed",
+          "concise"
+        );
+        expect(result).toBeNull();
+      });
+    });
+
     describe("cache stats", () => {
       it("should return cache statistics", async () => {
         const stats = await summaryCache.getCacheStats();
@@ -197,8 +361,10 @@ describe("Cache", () => {
         expect(stats).toHaveProperty("adapter");
         expect(stats).toHaveProperty("summaryTTL");
         expect(stats).toHaveProperty("generationTTL");
+        expect(stats).toHaveProperty("failureTTL");
         expect(stats.summaryTTL).toBe(cacheTTL.summary);
         expect(stats.generationTTL).toBe(cacheTTL.generation);
+        expect(stats.failureTTL).toBe(cacheTTL.failure);
       });
     });
 
@@ -263,6 +429,165 @@ describe("Cache", () => {
           "Book 2 summary"
         );
       });
+
+      it("should handle Redis-based cache-miss-then-hydrate workflow", async () => {
+        const mockSummary = {
+          id: "workflow-test",
+          bookId: "book-workflow",
+          bookTitle: "Workflow Test Book",
+          bookAuthors: ["Workflow Author"],
+          summaryType: "detailed" as const,
+          content: "Workflow test content",
+          status: "completed" as const,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          generationTime: 2000,
+          wordCount: 150,
+          readingTime: 8,
+          aiModel: "gpt-4o",
+          promptVersion: "v1.1",
+          metadata: {
+            bookDataSource: "open-library" as const,
+            hadBookDescription: false,
+          },
+        };
+
+        // Step 1: Verify cache miss
+        expect(
+          await summaryCache.getCachedSummaryById("workflow-test")
+        ).toBeNull();
+        expect(
+          await summaryCache.getCachedSummaryByBook("book-workflow", "detailed")
+        ).toBeNull();
+
+        // Step 2: Simulate "database query returns summary"
+        await summaryCache.setCachedSummary(mockSummary);
+
+        // Step 3: Verify cache hit for both access patterns
+        const byId = await summaryCache.getCachedSummaryById("workflow-test");
+        const byBook = await summaryCache.getCachedSummaryByBook(
+          "book-workflow",
+          "detailed"
+        );
+
+        expect(byId).not.toBeNull();
+        expect(byBook).not.toBeNull();
+        expect(byId?.content).toBe(mockSummary.content);
+        expect(byBook?.content).toBe(mockSummary.content);
+      });
+
+      it("should clear all caches (summaries, failures, generation) for a book", async () => {
+        const bookId = "cleanup-test";
+        const mockSummary = {
+          id: "cleanup-summary",
+          bookId: bookId,
+          bookTitle: "Cleanup Test Book",
+          bookAuthors: ["Cleanup Author"],
+          summaryType: "practical" as const,
+          content: "Cleanup test",
+          status: "completed" as const,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          generationTime: 1000,
+          wordCount: 50,
+          readingTime: 3,
+          aiModel: "gpt-4o-mini",
+          promptVersion: "v1.0",
+          metadata: {
+            bookDataSource: "google-books" as const,
+            hadBookDescription: true,
+          },
+        };
+
+        // Set up various caches
+        await summaryCache.setCachedSummary(mockSummary);
+        await summaryCache.markGenerationInProgress(bookId, "concise");
+        await summaryCache.cacheFailure(bookId, "analysis", "Test error");
+
+        // Verify they exist
+        expect(
+          await summaryCache.getCachedSummaryByBook(bookId, "practical")
+        ).not.toBeNull();
+        expect(
+          await summaryCache.isGenerationInProgress(bookId, "concise")
+        ).toBe(true);
+        expect(await summaryCache.getRecentFailure(bookId, "analysis")).toBe(
+          "Test error"
+        );
+
+        // Clear all
+        await summaryCache.deleteAllSummariesForBook(bookId);
+
+        // Verify all are cleared
+        expect(await summaryCache.getSummary(bookId, "practical")).toBeNull();
+        expect(
+          await summaryCache.isGenerationInProgress(bookId, "concise")
+        ).toBe(false);
+        expect(
+          await summaryCache.getRecentFailure(bookId, "analysis")
+        ).toBeNull();
+      });
+    });
+  });
+
+  // Test module-level helper functions
+  describe("Module-level helper functions", () => {
+    it("should export getCachedSummaryById function", async () => {
+      const result = await getCachedSummaryById("test-id");
+      expect(result).toBeNull(); // Should return null for non-existent
+    });
+
+    it("should export getCachedSummaryByBook function", async () => {
+      const result = await getCachedSummaryByBook("test-book", "concise");
+      expect(result).toBeNull(); // Should return null for non-existent
+    });
+
+    it("should export setCachedSummary function", async () => {
+      const mockSummary = {
+        id: "module-test",
+        bookId: "module-book",
+        bookTitle: "Module Test Book",
+        bookAuthors: ["Module Author"],
+        summaryType: "concise" as const,
+        content: "Module test content",
+        status: "completed" as const,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        generationTime: 500,
+        wordCount: 25,
+        readingTime: 1,
+        aiModel: "gpt-4o-mini",
+        promptVersion: "v1.0",
+        metadata: {
+          bookDataSource: "google-books" as const,
+          hadBookDescription: true,
+        },
+      };
+
+      // Should not throw
+      await setCachedSummary(mockSummary);
+
+      // Verify it was cached
+      const result = await getCachedSummaryById("module-test");
+      expect(result?.content).toBe("Module test content");
+    });
+
+    it("should export failure cache functions", async () => {
+      const bookId = "module-failure-test";
+      const summaryType = "detailed";
+      const errorMessage = "Module test error";
+
+      // Should not throw
+      await cacheFailure(bookId, summaryType, errorMessage);
+
+      // Verify it was cached
+      const result = await getRecentFailure(bookId, summaryType);
+      expect(result).toBe(errorMessage);
+
+      // Clear it
+      await clearFailure(bookId, summaryType);
+      const cleared = await getRecentFailure(bookId, summaryType);
+      expect(cleared).toBeNull();
     });
   });
 });

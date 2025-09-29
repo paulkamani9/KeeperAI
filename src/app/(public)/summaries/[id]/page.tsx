@@ -19,7 +19,6 @@ export async function generateMetadata({
   const { id: summaryId } = await params;
 
   try {
-
     // Create a server-side Convex client to fetch data for metadata
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
@@ -39,6 +38,13 @@ export async function generateMetadata({
         summary.summaryType.charAt(0).toUpperCase() +
         summary.summaryType.slice(1);
 
+      // Get base URL for absolute URLs (required for WhatsApp previews)
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://keeperai.com";
+      const absoluteUrl = `${baseUrl}/summaries/${summaryId}`;
+
+      // Default image for summaries (can be customized per book later)
+      const defaultImage = `${baseUrl}/images/summary-og-image.jpg`;
+
       return {
         title: `${titleCase} Summary | KeeperAI`,
         description: description,
@@ -50,12 +56,22 @@ export async function generateMetadata({
           title: `${titleCase} Summary | KeeperAI`,
           description: description,
           type: "article",
-          url: `/summaries/${summaryId}`,
+          url: absoluteUrl,
+          siteName: "KeeperAI",
+          images: [
+            {
+              url: defaultImage,
+              width: 1200,
+              height: 630,
+              alt: `${titleCase} Summary Preview`,
+            },
+          ],
         },
         twitter: {
-          card: "summary",
+          card: "summary_large_image",
           title: `${titleCase} Summary | KeeperAI`,
           description: description,
+          images: [defaultImage],
         },
       };
     }
@@ -65,6 +81,10 @@ export async function generateMetadata({
   }
 
   // Fallback metadata if fetch fails
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://keeperai.com";
+  const absoluteUrl = `${baseUrl}/summaries/${summaryId}`;
+  const defaultImage = `${baseUrl}/images/summary-og-image.jpg`;
+
   return {
     title: `Summary | KeeperAI`,
     description: `Read an AI-generated book summary on KeeperAI`,
@@ -76,12 +96,22 @@ export async function generateMetadata({
       title: `Summary | KeeperAI`,
       description: `Read an AI-generated book summary on KeeperAI`,
       type: "article",
-      url: `/summaries/${summaryId}`,
+      url: absoluteUrl,
+      siteName: "KeeperAI",
+      images: [
+        {
+          url: defaultImage,
+          width: 1200,
+          height: 630,
+          alt: "KeeperAI Summary Preview",
+        },
+      ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: `Summary | KeeperAI`,
       description: `Read an AI-generated book summary on KeeperAI`,
+      images: [defaultImage],
     },
   };
 }
@@ -92,7 +122,6 @@ export async function generateMetadata({
  */
 export default async function SummaryPage({ params }: SummaryPageProps) {
   const { id: summaryId } = await params;
-
 
   return <SummaryReadingView summaryId={summaryId} />;
 }

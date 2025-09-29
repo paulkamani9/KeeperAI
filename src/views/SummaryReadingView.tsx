@@ -49,10 +49,13 @@ export function SummaryReadingView({
     queryKey: ["summary", summaryId],
     queryFn: async (): Promise<Summary | null> => {
       try {
-        // Query the summary by ID from Convex
-        const result = await convex.query(api.summaries.getSummaryById, {
-          summaryId: summaryId, // Pass as string, the function will validate
-        });
+        // Query the summary by ID from Convex using action for Redis caching
+        const result = await convex.action(
+          api.summariesActions.getSummaryByIdAction,
+          {
+            summaryId: summaryId, // Pass as string, the function will validate
+          }
+        );
 
         if (
           !result ||
@@ -74,6 +77,8 @@ export function SummaryReadingView({
         return {
           id: String(result._id),
           bookId: result.bookId as string,
+          bookTitle: (result.bookTitle as string) || "", // Default for backward compatibility
+          bookAuthors: (result.bookAuthors as string[]) || [], // Default for backward compatibility
           summaryType: result.summaryType as any,
           content: result.content as string,
           status: result.status as any,

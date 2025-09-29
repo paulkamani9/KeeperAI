@@ -19,6 +19,7 @@ import {
   Copy,
   Twitter,
   Facebook,
+  MessageCircle,
   MoreVertical,
 } from "lucide-react";
 import type { Summary } from "../../types/summary";
@@ -84,6 +85,13 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
     window.open(facebookUrl, "_blank", "noopener,noreferrer");
   };
 
+  // Handle WhatsApp sharing
+  const handleShareWhatsApp = () => {
+    const text = `Check out this AI-generated summary on KeeperAI: ${window.location.href}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  };
+
   // Handle download (placeholder for future)
   const handleDownload = () => {
     toast.info("Download functionality coming soon!");
@@ -119,6 +127,10 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
             <DropdownMenuItem onClick={handleShareFacebook}>
               <Facebook className="h-4 w-4 mr-2" />
               Share on Facebook
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleShareWhatsApp}>
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Share on WhatsApp
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -176,6 +188,10 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
             <DropdownMenuItem onClick={handleShareFacebook}>
               <Facebook className="h-4 w-4 mr-2" />
               Share on Facebook
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleShareWhatsApp}>
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Share on WhatsApp
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
