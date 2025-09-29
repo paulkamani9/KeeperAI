@@ -8,7 +8,6 @@ import {
 import {
   type OpenLibrarySearchResponse,
   OpenLibrarySearchResponseSchema,
-  API_ERROR_CODES,
 } from "@/types/api";
 
 // Interface for handling raw OpenLibrary responses with flexible field formats

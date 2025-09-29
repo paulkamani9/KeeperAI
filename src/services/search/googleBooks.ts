@@ -9,7 +9,6 @@ import {
   type GoogleBooksResponse,
   type GoogleBooksVolume,
   GoogleBooksResponseSchema,
-  API_ERROR_CODES,
 } from "@/types/api";
 
 /**

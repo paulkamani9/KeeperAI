@@ -125,7 +125,7 @@ export class UnifiedSearchService implements BookService {
       } else if (actualSource === "open-library") {
         return await this.openLibrary.getWorkDetails(originalId);
       }
-    } catch (error) {
+    } catch (error ) {
       // If primary source fails, try the other source if fallback is enabled
       if (this.config.enableFallback) {
         const fallbackSource =

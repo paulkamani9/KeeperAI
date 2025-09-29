@@ -4,14 +4,12 @@
 
 import { describe, it, expect } from "vitest";
 import {
-  Summary,
   SummaryType,
   CreateSummaryInput,
   SummaryGenerationParams,
   SummarySchema,
   CreateSummaryInputSchema,
   SummaryGenerationParamsSchema,
-  SUMMARY_TYPES,
   SUMMARY_TYPE_DESCRIPTIONS,
   createSummaryCacheKey,
   calculateReadingTime,

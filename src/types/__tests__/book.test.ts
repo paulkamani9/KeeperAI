@@ -5,13 +5,10 @@ import {
   SearchResultsSchema,
   parseBook,
   parseSearchParams,
-  parseSearchResults,
   isBook,
   isSearchParams,
   isSearchResults,
   type Book,
-  type SearchParams,
-  type SearchResults,
 } from "../book";
 
 describe("Book Types", () => {

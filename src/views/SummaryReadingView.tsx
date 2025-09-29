@@ -152,7 +152,7 @@ export function SummaryReadingView({
                   <div className="space-y-2">
                     <h2 className="text-xl font-semibold">Summary Not Found</h2>
                     <p className="text-muted-foreground">
-                      We couldn't find the summary you're looking for. It may
+                      We couldn&apos;t find the summary you&apos;re looking for. It may
                       have been removed or the link is invalid.
                     </p>
                   </div>
