@@ -2,11 +2,12 @@
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, X, Loader2, Mic, ImageIcon } from "lucide-react";
+import { Search, X, Loader2, Mic, ImageIcon, ArrowRight } from "lucide-react";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import TextareaAutosize from "react-textarea-autosize";
 
 // Validation schema for search queries
 const searchQuerySchema = z
@@ -62,7 +63,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement | HTMLInputElement>(null);
 
   // Get initial value from URL params or props
   const initialValue = defaultValue || searchParams.get("q") || "";
@@ -124,8 +125,10 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     [debounceTimer]
   );
 
-  // Handle input changes
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle input changes (for both input and textarea)
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const value = event.target.value;
     setQuery(value);
     validateQuery(value);
@@ -168,14 +171,24 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   };
 
   // Handle keyboard shortcuts
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     if (event.key === "Escape") {
       if (query) {
         handleClear();
       } else {
         inputRef.current?.blur();
       }
-    } else if (event.key === "Enter") {
+      return;
+    }
+
+    if (event.key === "Enter" && !event.shiftKey && variant === "default") {
+      event.preventDefault();
+      handleSubmit();
+    } else if (event.key === "Enter" && variant === "compact") {
+      // compact stays single-line; Enter submits
+      event.preventDefault();
       handleSubmit();
     }
   };
@@ -186,133 +199,194 @@ export const SearchInput: React.FC<SearchInputProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className={cn("relative", className)}>
-      <div
-        className={cn(
-          // base styles + light-mode enhancement (white background + soft border)
-          "relative flex items-center rounded-full transition-all duration-200",
-          "focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-2",
-          // Show a visible background and border in light mode while preserving dark styling
-          "bg-white/90 border border-slate-200 dark:bg-transparent",
-          hasError &&
-            "border-destructive focus-within:border-destructive focus-within:ring-destructive/20",
-          isCompact ? "h-10" : "h-12 md:h-14",
-          "shadow-sm hover:shadow-md focus-within:shadow-lg"
-        )}
-      >
-        {/* Search Icon */}
+      {isCompact ? (
+        // Compact variant: Keep original single-line layout
         <div
-          className={cn("flex items-center pl-4", isCompact ? "pl-3" : "pl-4")}
-        >
-          <Search
-            className={cn(
-              "text-muted-foreground",
-              isCompact ? "h-4 w-4" : "h-5 w-5"
-            )}
-          />
-        </div>
-
-        {/* Input Field */}
-        <Input
-          ref={inputRef}
-          type="text"
-          value={query}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
           className={cn(
-            // make the input visually inset on light bg, keep transparent in dark
-            "bg-transparent placeholder:text-muted-foreground/70 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full border-0",
-            // when in light mode, ensure the input text area has padding and no extra border
-            isCompact
-              ? "text-sm h-10 px-3"
-              : "text-base h-12 md:h-14 px-4 md:text-lg"
+            "relative flex items-center rounded-full transition-all duration-200",
+            "focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-2",
+            "bg-white/90 border border-slate-200 dark:bg-transparent",
+            hasError &&
+              "border-destructive focus-within:border-destructive focus-within:ring-destructive/20",
+            "h-10",
+            "shadow-sm hover:shadow-md focus-within:shadow-lg"
           )}
-          aria-label="Search for books"
-          aria-describedby={hasError ? "search-error" : undefined}
-          aria-invalid={hasError}
-        />
-
-        {/* Action Icons Container - Future extensible slot */}
-        <div className="flex items-center space-x-1 pr-2">
-          {/* Future extension slots for voice/image input */}
-          <div className="hidden sm:flex items-center space-x-1 opacity-50">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "text-muted-foreground hover:text-foreground",
-                isCompact ? "h-8 w-8" : "h-9 w-9"
-              )}
-              disabled
-              title="Voice search (coming soon)"
-            >
-              <Mic className={cn(isCompact ? "h-3 w-3" : "h-4 w-4")} />
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "text-muted-foreground hover:text-foreground",
-                isCompact ? "h-8 w-8" : "h-9 w-9"
-              )}
-              disabled
-              title="Image search (coming soon)"
-              aria-label="Image search (coming soon)"
-            >
-              <ImageIcon
-                className={cn(isCompact ? "h-3 w-3" : "h-4 w-4")}
-                aria-hidden="true"
-              />
-            </Button>
+        >
+          {/* Search Icon */}
+          <div className="flex items-center pl-3">
+            <Search className="h-4 w-4 text-muted-foreground" />
           </div>
 
-          {/* Loading Indicator */}
-          {showLoader && (
-            <div className="flex items-center">
-              <Loader2
-                className={cn(
-                  "animate-spin text-muted-foreground",
-                  isCompact ? "h-4 w-4" : "h-5 w-5"
-                )}
-              />
-            </div>
-          )}
+          {/* Input Field */}
+          <Input
+            ref={inputRef as React.RefObject<HTMLInputElement>}
+            type="text"
+            value={query}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            className="bg-transparent placeholder:text-muted-foreground/70 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-full border-0 text-sm h-10 px-3"
+            aria-label="Search for books"
+            aria-describedby={hasError ? "search-error" : undefined}
+            aria-invalid={hasError}
+          />
 
-          {/* Clear Button */}
-          {query && !showLoader && (
+          {/* Action Icons Container */}
+          <div className="flex items-center space-x-1 pr-2">
+            {/* Future extension slots for voice/image input */}
+            <div className="hidden sm:flex items-center space-x-1 opacity-50">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground h-8 w-8"
+                disabled
+                title="Voice search (coming soon)"
+              >
+                <Mic className="h-3 w-3" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground h-8 w-8"
+                disabled
+                title="Image search (coming soon)"
+                aria-label="Image search (coming soon)"
+              >
+                <ImageIcon className="h-3 w-3" aria-hidden="true" />
+              </Button>
+            </div>
+
+            {/* Loading Indicator */}
+            {showLoader && (
+              <div className="flex items-center">
+                <Loader2 className="animate-spin text-muted-foreground h-4 w-4" />
+              </div>
+            )}
+
+            {/* Clear Button */}
+            {query && !showLoader && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={handleClear}
+                className="text-muted-foreground hover:text-foreground transition-colors h-8 w-8"
+                title="Clear search (Esc)"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            )}
+
+            {/* Submit Button */}
             <Button
-              type="button"
+              type="submit"
               variant="ghost"
               size="icon"
-              onClick={handleClear}
-              className={cn(
-                "text-muted-foreground hover:text-foreground transition-colors",
-                isCompact ? "h-8 w-8" : "h-9 w-9"
-              )}
-              title="Clear search (Esc)"
+              disabled={!query.trim() || hasError}
+              className="text-primary hover:text-primary/80 hover:bg-primary/10 transition-colors h-8 w-8"
+              title="Search (Enter)"
             >
-              <X className={cn(isCompact ? "h-3 w-3" : "h-4 w-4")} />
+              <Search className="h-3 w-3" />
             </Button>
-          )}
-
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            variant="ghost"
-            size="icon"
-            disabled={!query.trim() || hasError}
-            className={cn(
-              "text-primary hover:text-primary/80 hover:bg-primary/10 transition-colors",
-              isCompact ? "h-8 w-8" : "h-9 w-9"
-            )}
-            title="Search (Enter)"
-          >
-            <Search className={cn(isCompact ? "h-3 w-3" : "h-4 w-4")} />
-          </Button>
+          </div>
         </div>
-      </div>
+      ) : (
+        // Default variant: ChatGPT-style with auto-growing textarea
+        <div
+          className={cn(
+            "rounded-2xl border bg-white/90 dark:bg-transparent shadow-sm",
+            "p-3 md:p-4 transition-all duration-200",
+            "focus-within:ring-2 focus-within:ring-ring/50 focus-within:border-ring",
+            hasError &&
+              "border-destructive focus-within:border-destructive focus-within:ring-destructive/20",
+            "hover:shadow-md focus-within:shadow-lg"
+          )}
+        >
+          {/* Top: textarea only (no leading Search icon) */}
+          <TextareaAutosize
+            ref={inputRef as React.RefObject<HTMLTextAreaElement>}
+            value={query}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder={placeholder}
+            minRows={3}
+            maxRows={12}
+            className="w-full resize-none bg-transparent outline-none placeholder:text-muted-foreground/70 text-base md:text-lg leading-6 md:leading-7"
+            aria-label="Search for books"
+            aria-describedby={hasError ? "search-error" : undefined}
+            aria-invalid={hasError}
+          />
+
+          {/* Bottom toolbar: utilities left, submit button right */}
+          <div className="mt-2 pt-2 flex items-center gap-2 justify-between flex-wrap">
+            {/* Left: utilities */}
+            <div className="flex items-center gap-1">
+              {/* Future extension slots for voice/image input */}
+              <div className="hidden sm:flex items-center gap-1 opacity-50">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="text-muted-foreground hover:text-foreground h-9 w-9"
+                  disabled
+                  title="Voice search (coming soon)"
+                >
+                  <Mic className="h-4 w-4" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="text-muted-foreground hover:text-foreground h-9 w-9"
+                  disabled
+                  title="Image search (coming soon)"
+                  aria-label="Image search (coming soon)"
+                >
+                  <ImageIcon className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </div>
+
+              {/* Loading Indicator */}
+              {showLoader && (
+                <div className="flex items-center">
+                  <Loader2 className="animate-spin text-muted-foreground h-5 w-5" />
+                </div>
+              )}
+
+              {/* Clear Button */}
+              {query && !showLoader && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleClear}
+                  className="text-muted-foreground hover:text-foreground transition-colors h-9 w-9"
+                  title="Clear search (Esc)"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+
+            {/* Right: only primary Search button with ArrowRight */}
+            <div className="ml-auto">
+              <Button
+                type="submit"
+                variant="default"
+                size="icon"
+                disabled={!query.trim() || hasError}
+                title="Search (Enter)"
+                className="rounded-full shadow-sm transition-all hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary/40 active:scale-[0.98] group h-9 w-9"
+              >
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                <span className="sr-only">Search</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Error Message */}
       {hasError && (
