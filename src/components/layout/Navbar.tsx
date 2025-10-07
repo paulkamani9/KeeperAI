@@ -6,7 +6,7 @@ import { Search, Heart, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
-import { KeeperSymbol } from "@/components/shared/Logo";
+import Logo from "@/components/shared/Logo";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePathname } from "next/navigation";
@@ -43,7 +43,7 @@ export default function Navbar({ className }: NavbarProps) {
       icon: Heart,
     },
     {
-      href: "/summaries" ,
+      href: "/summaries",
       label: "Books",
       icon: BookOpen,
     },
@@ -74,9 +74,9 @@ export default function Navbar({ className }: NavbarProps) {
             <Link
               href="/"
               className="flex items-center transition-opacity hover:opacity-80"
-              aria-label="KeeperAI Home"
+              aria-label="OutClever Home"
             >
-              <KeeperSymbol size="sm" />
+              <Logo size="sm" />
             </Link>
           </div>
 
