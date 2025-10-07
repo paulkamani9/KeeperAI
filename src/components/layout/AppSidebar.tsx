@@ -19,7 +19,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { KeeperSymbol } from "@/components/shared/Logo";
+import Logo from "@/components/shared/Logo";
 
 interface NavItem {
   href: string;
@@ -92,23 +92,10 @@ export default function AppSidebar() {
             <Link
               href="/"
               className="flex items-center transition-opacity hover:opacity-80"
-              aria-label="KeeperAI Home"
+              aria-label="OutClever Home"
             >
-              <KeeperSymbol size="md" />
+              <Logo size={state === "expanded" ? "md" : "sm"} />
             </Link>
-            <div className="font-semibold text-sidebar-foreground">
-              <span
-                className={cn(
-                  "transition-all duration-300 ease-in-out",
-                  // Use group-data classes for better compatibility
-                  "group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:overflow-hidden",
-                  "group-data-[collapsible=offcanvas]:opacity-100 group-data-[collapsible=offcanvas]:w-auto",
-                  "group-data-[state=expanded]:opacity-100 group-data-[state=expanded]:w-auto"
-                )}
-              >
-                KeeperAI
-              </span>
-            </div>
           </div>
         </div>
       </SidebarHeader>
@@ -156,9 +143,9 @@ export default function AppSidebar() {
                         "transition-all duration-300 ease-in-out",
                         "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                         // Enhanced hover effects
-                        "group/menu-item relative overflow-hidden",
+                        "group/menu-item relative overflow-hidden"
                         // active &&
-                          // "bg-sidebar-accent text-sidebar-accent-foreground"
+                        // "bg-sidebar-accent text-sidebar-accent-foreground"
                       )}
                     >
                       <Link

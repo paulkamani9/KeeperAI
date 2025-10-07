@@ -1,10 +1,14 @@
 import React from "react";
+import { Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-interface LogoSymbolProps {
-  size?: "sm" | "md" | "lg" | "xl";
-  className?: string;
-}
+// Import Montserrat Extra Bold (900) using Next.js 15 font optimization
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["900"],
+  display: "swap",
+  variable: "--font-montserrat",
+});
 
 interface LogoTextProps {
   size?: "sm" | "md" | "lg" | "xl";
@@ -14,121 +18,68 @@ interface LogoTextProps {
 interface LogoProps {
   size?: "sm" | "md" | "lg" | "xl";
   className?: string;
-  showText?: boolean;
+  layout?: "horizontal" | "vertical"; // Kept for backward compatibility
 }
 
-// Keeper AI Symbol Component - Modern, minimal "K" inspired by streaming platforms
-const KeeperSymbol = ({ size = "md", className }: LogoSymbolProps) => {
-  const dimensions: Record<string, { width: number; height: number }> = {
-    sm: { width: 24, height: 24 },
-    md: { width: 32, height: 32 },
-    lg: { width: 48, height: 48 },
-    xl: { width: 64, height: 64 },
-  };
-
-  const { width, height } = dimensions[size];
-
-  return (
-    <svg
-      width={width}
-      height={height}
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={cn(
-        "flex-shrink-0 transition-transform duration-200 hover:scale-105",
-        className
-      )}
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="keeperGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" className="[stop-color:hsl(var(--primary))]" />
-          <stop
-            offset="100%"
-            className="[stop-color:hsl(var(--primary)/0.7)]"
-          />
-        </linearGradient>
-
-        {/* Glow effect for dark mode */}
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
-      {/* Modern circular container */}
-      <circle
-        cx="16"
-        cy="16"
-        r="14"
-        fill="url(#keeperGradient)"
-        className="transition-all duration-300"
-        filter="url(#glow)"
-      />
-
-      {/* Sleek "K" - Netflix/Spotify inspired */}
-      <path
-        d="M9 8V24M9 16L17 8M9 16L17 24"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="drop-shadow-sm"
-      />
-
-      {/* AI indicator - subtle blue dot */}
-      <circle cx="23" cy="9" r="2" fill="#4a9eff" className="animate-pulse" />
-    </svg>
-  );
-};
-
-// Keeper AI Text Component - Modern, minimal typography
-const KeeperText = ({ size = "md", className }: LogoTextProps) => {
+/**
+ * OutClever Text-Only Logo Component
+ *
+ * Philosophy: Presence over noise.
+ * OUTCLEVER itself is the icon — strong, geometric, timeless.
+ * When users see the word, they should feel: Smarter. Sharper. Faster.
+ */
+const OutCleverText = ({ size = "md", className }: LogoTextProps) => {
   const textSizes: Record<string, string> = {
-    sm: "text-sm",
-    md: "text-lg",
-    lg: "text-xl",
-    xl: "text-3xl",
+    sm: "text-sm md:text-base",
+    md: "text-lg md:text-xl",
+    lg: "text-2xl md:text-3xl",
+    xl: "text-3xl md:text-4xl lg:text-5xl",
   };
 
   return (
     <span
       className={cn(
-        "font-black tracking-tight text-foreground",
+        montserrat.className,
+        "font-black uppercase tracking-wide select-none",
+        "text-black dark:text-white",
         "transition-colors duration-300",
+        // Subtle hover effect for interactivity
+        "hover:opacity-90",
         textSizes[size],
         className
       )}
+      style={{
+        fontWeight: 900,
+        letterSpacing: "0.02em",
+      }}
+      aria-label="OutClever"
     >
-      Keeper{" "}
-      <span className="font-black bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-        AI
-      </span>
+      OUTCLEVER
     </span>
   );
 };
 
-// Combined Logo Component
-const Logo = ({ size = "md", className, showText = true }: LogoProps) => {
-  const gapSizes: Record<string, string> = {
-    sm: "gap-2",
-    md: "gap-3",
-    lg: "gap-3",
-    xl: "gap-4",
-  };
+/**
+ * OutClever Logo Component (Text-Only)
+ *
+ * Simplified to render only the wordmark.
+ * The text itself carries the brand identity with bold, confident typography.
+ */
+const Logo = ({
+  size = "md",
+  className,
+  layout = "horizontal", // Kept for backward compatibility but not used
+}: LogoProps) => {
+  // Suppress unused variable warning - layout kept for backward compatibility
+  void layout;
 
   return (
-    <div className={cn("inline-flex items-center", gapSizes[size], className)}>
-      <KeeperSymbol size={size} />
-      {showText && <KeeperText size={size} />}
+    <div className={cn("inline-flex items-center justify-center", className)}>
+      <OutCleverText size={size} />
     </div>
   );
 };
 
-// Export individual components for flexibility
-export { KeeperSymbol, KeeperText };
+// Export individual component for flexibility
+export { OutCleverText };
 export default Logo;
