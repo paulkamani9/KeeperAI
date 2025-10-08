@@ -1,0 +1,58 @@
+{
+  "name": "OutClever",
+  "short_name": "OutClever",
+  "description": "Smarter. Sharper. Faster. — AI-powered book insights and intelligent summaries",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-og.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["productivity", "education", "books"],
+  "shortcuts": [
+    {
+      "name": "Search Books",
+      "short_name": "Search",
+      "description": "Search for books and summaries",
+      "url": "/search",
+      "icons": [
+        {
+          "src": "/icon.png",
+          "sizes": "32x32"
+        }
+      ]
+    },
+    {
+      "name": "Favorites",
+      "short_name": "Favorites",
+      "description": "View your favorite books",
+      "url": "/favorites",
+      "icons": [
+        {
+          "src": "/icon.png",
+          "sizes": "32x32"
+        }
+      ]
+    }
+  ]
+}

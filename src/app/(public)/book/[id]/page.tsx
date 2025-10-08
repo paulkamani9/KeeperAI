@@ -21,25 +21,43 @@ export async function generateMetadata({
     const searchService = createUnifiedSearchService();
     const book = await searchService.getBookDetails(id);
 
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL || "https://outclever.studio";
+    const bookUrl = `${baseUrl}/book/${id}`;
+    const defaultImage = `${baseUrl}/logo-og.png`;
+
     if (!book) {
       return {
-        title: "Book Not Found | KeeperAI",
-        description: "The requested book could not be found.",
+        title: "Book Not Found — OutClever",
+        description: "The requested book could not be found on OutClever.",
+        openGraph: {
+          images: [defaultImage],
+        },
       };
     }
 
-    const title = `${book.title} | KeeperAI`;
+    const title = `${book.title} — OutClever`;
     const description = book.description
       ? book.description.slice(0, 160) +
         (book.description.length > 160 ? "..." : "")
-      : `Discover "${book.title}" by ${book.authors.join(", ")} on KeeperAI. Generate AI-powered summaries and add to your favorites.`;
+      : `Discover "${book.title}" by ${book.authors.join(", ")} on OutClever. Generate AI-powered summaries and add to your favorites. Smarter. Sharper. Faster.`;
 
     return {
       title,
       description,
+      keywords: [
+        book.title,
+        ...book.authors,
+        "OutClever",
+        "AI summaries",
+        "book insights",
+        ...(book.categories || []),
+      ],
       openGraph: {
         title,
         description,
+        url: bookUrl,
+        siteName: "OutClever",
         images: book.thumbnail
           ? [
               {
@@ -48,23 +66,44 @@ export async function generateMetadata({
                 height: 450,
                 alt: `Cover of ${book.title}`,
               },
+              {
+                url: defaultImage,
+                width: 1200,
+                height: 630,
+                alt: "OutClever Logo",
+              },
             ]
-          : [],
+          : [
+              {
+                url: defaultImage,
+                width: 1200,
+                height: 630,
+                alt: "OutClever Logo — Smarter. Sharper. Faster.",
+              },
+            ],
         type: "website",
       },
       twitter: {
         card: "summary_large_image",
+        site: "@OutClever",
         title,
         description,
-        images: book.thumbnail ? [book.thumbnail] : [],
+        images: book.thumbnail
+          ? [book.thumbnail, defaultImage]
+          : [defaultImage],
       },
     };
   } catch (error) {
     console.error("Error generating metadata for book:", error);
+    const baseUrl =
+      process.env.NEXT_PUBLIC_APP_URL || "https://outclever.studio";
     return {
-      title: "Book Details | KeeperAI",
+      title: "Book Details — OutClever",
       description:
-        "Discover books and generate AI-powered summaries on KeeperAI.",
+        "Discover books and generate AI-powered summaries on OutClever — Smarter. Sharper. Faster.",
+      openGraph: {
+        images: [`${baseUrl}/logo-og.png`],
+      },
     };
   }
 }

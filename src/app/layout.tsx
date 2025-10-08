@@ -15,11 +15,89 @@ const inter = Inter({
   display: "swap",
 });
 
+/**
+ * Global Metadata Configuration for OutClever
+ *
+ * Philosophy: Every shared link or Google result should immediately say:
+ * "This is OutClever — Smarter. Sharper. Faster."
+ */
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://outclever.studio";
+const APP_NAME = "OutClever";
+const APP_TITLE = "OutClever — Smarter. Sharper. Faster.";
+const APP_DESCRIPTION =
+  "Discover, summarize, and outthink with OutClever — the intelligent platform for AI-powered book insights.";
+const APP_KEYWORDS = [
+  "OutClever",
+  "AI summaries",
+  "book insights",
+  "AI tools",
+  "smarter tools",
+  "AI productivity",
+  "intelligent summaries",
+  "OutClever Studio",
+  "AI book app",
+  "creative intelligence",
+];
+
 export const metadata: Metadata = {
-  title:
-    "Book Keeper - Powerful AI Powered Book search with AI generated summaries",
-  description:
-    "Book Keeper helps you discover books and get AI-generated summaries",
+  metadataBase: new URL(APP_URL),
+  title: {
+    default: APP_TITLE,
+    template: `%s | ${APP_NAME}`,
+  },
+  description: APP_DESCRIPTION,
+  keywords: APP_KEYWORDS,
+  authors: [{ name: APP_NAME }],
+  creator: APP_NAME,
+  publisher: APP_NAME,
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: APP_URL,
+    siteName: APP_NAME,
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    images: [
+      {
+        url: "/logo-og.png",
+        width: 1200,
+        height: 630,
+        alt: "OutClever Logo — Smarter. Sharper. Faster.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@OutClever",
+    creator: "@OutClever",
+    title: APP_TITLE,
+    description: APP_DESCRIPTION,
+    images: ["/logo-og.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -27,8 +105,39 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // JSON-LD Structured Data for Organization
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: APP_NAME,
+    url: APP_URL,
+    logo: `${APP_URL}/logo-og.png`,
+    description: APP_DESCRIPTION,
+    sameAs: ["https://github.com/outclever", "https://twitter.com/outclever"],
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        {/* Theme Color - Adapts to light/dark mode */}
+        <meta
+          name="theme-color"
+          content="#ffffff"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="#000000"
+          media="(prefers-color-scheme: dark)"
+        />
+      </head>
       <body className={`${inter.variable} antialiased`}>
         <ClerkProvider>
           <ConvexClientProvider>
@@ -42,7 +151,7 @@ export default function RootLayout({
                 {children}
                 <Toaster />
                 <Analytics />
-                <SpeedInsights/>
+                <SpeedInsights />
               </ThemeProvider>
             </ReactQueryProvider>
           </ConvexClientProvider>
