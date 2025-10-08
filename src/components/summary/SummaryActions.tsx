@@ -87,7 +87,12 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
 
   // Handle WhatsApp sharing
   const handleShareWhatsApp = () => {
-    const text = `Check out this AI-generated summary on KeeperAI: ${window.location.href}`;
+    let text = "";
+    if (summary.bookTitle && summary.summaryType) {
+      text = `Check out the ${summary.summaryType} summary of ${summary.bookTitle}: ${window.location.href}`;
+    } else {
+      text = `Check out this AI-generated summary on OUTCLEVR: ${window.location.href}`;
+    }
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };

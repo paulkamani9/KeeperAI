@@ -11,12 +11,17 @@ interface SummaryPageProps {
 
 /**
  * Generate metadata for the summary page
- * This runs on the server and provides SEO optimization
+ * This runs on the server and provides SEO optimization for OutClever
  */
 export async function generateMetadata({
   params,
 }: SummaryPageProps): Promise<Metadata> {
   const { id: summaryId } = await params;
+
+  // Get base URL from environment or fallback
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://outclever.studio";
+  const absoluteUrl = `${baseUrl}/summaries/${summaryId}`;
+  const defaultImage = `${baseUrl}/logo-og.png`;
 
   try {
     // Create a server-side Convex client to fetch data for metadata
@@ -38,79 +43,90 @@ export async function generateMetadata({
         summary.summaryType.charAt(0).toUpperCase() +
         summary.summaryType.slice(1);
 
-      // Get base URL for absolute URLs (required for WhatsApp previews)
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://keeperai.com";
-      const absoluteUrl = `${baseUrl}/summaries/${summaryId}`;
-
-      // Default image for summaries (can be customized per book later)
-      const defaultImage = `${baseUrl}/images/summary-og-image.jpg`;
+      const pageTitle = `${titleCase} Summary — OutClever`;
+      const pageDescription = `${description} | AI-powered book insights on OutClever — Smarter. Sharper. Faster.`;
 
       return {
-        title: `${titleCase} Summary | KeeperAI`,
-        description: description,
+        title: pageTitle,
+        description: pageDescription,
+        keywords: [
+          "AI summaries",
+          "book insights",
+          titleCase,
+          "OutClever",
+          "intelligent summaries",
+          "book analysis",
+        ],
         robots: {
           index: true,
           follow: true,
         },
         openGraph: {
-          title: `${titleCase} Summary | KeeperAI`,
-          description: description,
+          title: pageTitle,
+          description: pageDescription,
           type: "article",
           url: absoluteUrl,
-          siteName: "KeeperAI",
+          siteName: "OutClever",
           images: [
             {
               url: defaultImage,
               width: 1200,
               height: 630,
-              alt: `${titleCase} Summary Preview`,
+              alt: "OutClever Logo — Smarter. Sharper. Faster.",
             },
           ],
         },
         twitter: {
           card: "summary_large_image",
-          title: `${titleCase} Summary | KeeperAI`,
-          description: description,
+          site: "@OutClever",
+          title: pageTitle,
+          description: pageDescription,
           images: [defaultImage],
         },
       };
     }
   } catch (error) {
     console.error("Failed to fetch summary for metadata:", error);
-    // Fall back to basic metadata
+    // Fall through to fallback metadata
   }
 
   // Fallback metadata if fetch fails
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://keeperai.com";
-  const absoluteUrl = `${baseUrl}/summaries/${summaryId}`;
-  const defaultImage = `${baseUrl}/images/summary-og-image.jpg`;
-
   return {
-    title: `Summary | KeeperAI`,
-    description: `Read an AI-generated book summary on KeeperAI`,
+    title: "AI-Powered Summary — OutClever",
+    description:
+      "Discover intelligent book summaries on OutClever — Smarter. Sharper. Faster.",
+    keywords: [
+      "AI summaries",
+      "book insights",
+      "OutClever",
+      "intelligent summaries",
+    ],
     robots: {
       index: true,
       follow: true,
     },
     openGraph: {
-      title: `Summary | KeeperAI`,
-      description: `Read an AI-generated book summary on KeeperAI`,
+      title: "AI-Powered Summary — OutClever",
+      description:
+        "Discover intelligent book summaries on OutClever — Smarter. Sharper. Faster.",
       type: "article",
       url: absoluteUrl,
-      siteName: "KeeperAI",
+      siteName: "OutClever",
       images: [
         {
           url: defaultImage,
           width: 1200,
           height: 630,
-          alt: "KeeperAI Summary Preview",
+          alt: "OutClever Logo — Smarter. Sharper. Faster.",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `Summary | KeeperAI`,
-      description: `Read an AI-generated book summary on KeeperAI`,
+      site: "@OutClever",
+      title: "AI-Powered Summary — OutClever",
+      description:
+        "Discover intelligent book summaries on OutClever — Smarter. Sharper. Faster.",
       images: [defaultImage],
     },
   };
