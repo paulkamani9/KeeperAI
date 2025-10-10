@@ -1,6 +1,6 @@
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import ConvexClientProvider from "@/providers/ConvexClientProvider";
@@ -14,6 +14,9 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
+
+
+
 
 /**
  * Global Metadata Configuration for OutClever

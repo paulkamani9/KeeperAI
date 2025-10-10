@@ -1,9 +1,12 @@
 import React from "react";
-import { Montserrat } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Montserrat } from "next/font/google";
+
+
+
 
 // Import Montserrat Extra Bold (900) using Next.js 15 font optimization
-const montserrat = Montserrat({
+export const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["900"],
   display: "swap",
