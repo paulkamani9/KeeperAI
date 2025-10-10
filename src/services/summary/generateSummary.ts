@@ -81,7 +81,7 @@ export async function generateBookSummary(
       options,
     });
 
-    const mockSummary = await generateMockSummary(book, summaryType, options);
+    const mockSummary = await generateMockSummary(book, summaryType);
     return {
       ...mockSummary,
     };
