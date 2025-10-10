@@ -21,7 +21,7 @@ export async function generateMetadata({
   // Get base URL from environment or fallback
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://outclever.studio";
   const absoluteUrl = `${baseUrl}/summaries/${summaryId}`;
-  const defaultImage = `${baseUrl}/logo-og.png`;
+  const defaultImage = `${baseUrl}/logo/logo-og.png`;
 
   try {
     // Create a server-side Convex client to fetch data for metadata
