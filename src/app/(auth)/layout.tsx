@@ -1,4 +1,4 @@
-import { AuthHero } from "@/components/Auth/AuthHero";
+import { AuthHero } from "@/components/auth/AuthHero";
 import React from "react";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {

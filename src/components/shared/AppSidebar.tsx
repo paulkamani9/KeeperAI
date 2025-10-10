@@ -94,7 +94,7 @@ export default function AppSidebar() {
               className="flex items-center transition-opacity hover:opacity-80"
               aria-label="OutClever Home"
             >
-              <Logo size={state === "expanded" ? "md" : "sm"} />
+              {state === "expanded" ? (  <Logo size="md" />) : <p>🚀</p>}
             </Link>
           </div>
         </div>

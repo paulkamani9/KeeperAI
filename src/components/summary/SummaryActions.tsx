@@ -73,7 +73,12 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
 
   // Handle social sharing
   const handleShareTwitter = () => {
-    const text = `Check out this AI-generated summary on KeeperAI`;
+    let text = "";
+    if (summary.bookTitle && summary.summaryType) {
+      text = `Check out the ${summary.summaryType} summary of ${summary.bookTitle}`;
+    } else {
+      text = `Check out this AI-generated summary on OUTCLEVR`;
+    }
     const url = `${window.location.origin}/summaries/${summary.id}`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl, "_blank", "noopener,noreferrer");

@@ -48,6 +48,3 @@ next-env.d.ts
 .github/
 .github/*
 
-# Documentation
-docs
-docs/*

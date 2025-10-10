@@ -16,7 +16,6 @@ import type {
 import type * as analytics from "../analytics.js";
 import type * as http from "../http.js";
 import type * as summaries from "../summaries.js";
-import type * as summariesActions from "../summariesActions.js";
 import type * as users from "../users.js";
 
 /**
@@ -31,7 +30,6 @@ declare const fullApi: ApiFromModules<{
   analytics: typeof analytics;
   http: typeof http;
   summaries: typeof summaries;
-  summariesActions: typeof summariesActions;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

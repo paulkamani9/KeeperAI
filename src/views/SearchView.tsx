@@ -8,7 +8,7 @@ import {
   type SearchResults as ComponentSearchResults,
   type PaginationInfo,
 } from "@/components/search/ResultsList";
-import MainContent from "@/components/layout/MainContent";
+import MainContent from "@/components/shared/MainContent";
 import { useBookSearch } from "@/hooks/useBookSearch";
 import type { SearchResults as ApiSearchResults } from "@/types/book";
 
@@ -127,7 +127,6 @@ export const SearchView = () => {
   const handleFavoriteToggle = useCallback(
     (bookId: string, isFavorite: boolean) => {
       // TODO: Integrate with favorites system when implemented
-      console.log("Favorite toggled:", bookId, isFavorite);
     },
     []
   );

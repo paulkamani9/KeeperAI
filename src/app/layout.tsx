@@ -1,6 +1,6 @@
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import ConvexClientProvider from "@/providers/ConvexClientProvider";
@@ -15,6 +15,9 @@ const inter = Inter({
   display: "swap",
 });
 
+
+
+
 /**
  * Global Metadata Configuration for OutClever
  *
@@ -22,8 +25,8 @@ const inter = Inter({
  * "This is OutClever — Smarter. Sharper. Faster."
  */
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://outclever.studio";
-const APP_NAME = "OutClever";
-const APP_TITLE = "OutClever — Smarter. Sharper. Faster.";
+const APP_NAME = "OUTCLEVER";
+const APP_TITLE = "OUTCLEVER — Smarter. Sharper. Faster.";
 const APP_DESCRIPTION =
   "Discover, summarize, and outthink with OutClever — the intelligent platform for AI-powered book insights.";
 const APP_KEYWORDS = [
@@ -37,6 +40,13 @@ const APP_KEYWORDS = [
   "OutClever Studio",
   "AI book app",
   "creative intelligence",
+  "articifial intellegence",
+  "books",
+  "google books",
+  "open library",
+  "free books",
+  "summaries",
+  "book summaries",
 ];
 
 export const metadata: Metadata = {
@@ -64,7 +74,7 @@ export const metadata: Metadata = {
     description: APP_DESCRIPTION,
     images: [
       {
-        url: "/logo-og.png",
+        url: "logo/logo-og.png",
         width: 1200,
         height: 630,
         alt: "OutClever Logo — Smarter. Sharper. Faster.",
@@ -77,7 +87,7 @@ export const metadata: Metadata = {
     creator: "@OutClever",
     title: APP_TITLE,
     description: APP_DESCRIPTION,
-    images: ["/logo-og.png"],
+    images: ["logo/logo-og.png"],
   },
   robots: {
     index: true,
@@ -92,10 +102,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+      { url: "logo/favicon.ico", sizes: "any" },
+      { url: "logo/logo-32.png", type: "image/png", sizes: "32x32" },
     ],
-    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: "logo/logo-apple.png", sizes: "180x180", type: "image/png" }],
   },
   manifest: "/manifest.json",
 };
@@ -111,9 +121,12 @@ export default function RootLayout({
     "@type": "Organization",
     name: APP_NAME,
     url: APP_URL,
-    logo: `${APP_URL}/logo-og.png`,
+    logo: `${APP_URL}/logo/logo-og.png`,
     description: APP_DESCRIPTION,
-    sameAs: ["https://github.com/outclever", "https://twitter.com/outclever"],
+    sameAs: [
+      "https://github.com/paulkamani9/outclever",
+      // "https://twitter.com/outclever",
+    ],
   };
 
   return (

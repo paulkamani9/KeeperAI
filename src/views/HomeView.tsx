@@ -1,4 +1,4 @@
-import MainContent from "@/components/layout/MainContent";
+import MainContent from "@/components/shared/MainContent";
 import { SearchInput } from "@/components/search/SearchInput";
 
 /**
