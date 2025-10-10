@@ -69,7 +69,6 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
           <div className="h-2 w-28 bg-current"></div>
         </div>
       </div>
-
       <AuthHero />
       {children}
     </div>
