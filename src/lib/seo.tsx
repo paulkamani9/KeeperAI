@@ -22,10 +22,13 @@ export function generateOrganizationSchema() {
     "@type": "Organization",
     name: APP_NAME,
     url: APP_URL,
-    logo: `${APP_URL}/logo-og.png`,
+    logo: `${APP_URL}/logo/logo-og.png`,
     description:
       "OutClever — Smarter. Sharper. Faster. AI-powered book insights and intelligent summaries.",
-    sameAs: ["https://github.com/outclever", "https://twitter.com/outclever"],
+    sameAs: [
+      "https://github.com/outclever",
+      // "https://twitter.com/outclever",
+    ],
   };
 }
 
@@ -79,7 +82,7 @@ export function generateBookSchema(props: BookSchemaProps) {
     },
     description: props.description,
     url: props.url,
-    image: props.image || `${APP_URL}/logo-og.png`,
+    image: props.image || `${APP_URL}/logo/logo-og.png`,
     ...(props.isbn && { isbn: props.isbn }),
     ...(props.publishedDate && { datePublished: props.publishedDate }),
   };
@@ -106,7 +109,7 @@ export function generateArticleSchema(props: ArticleSchemaProps) {
     headline: props.headline,
     description: props.description,
     url: props.url,
-    image: props.image || `${APP_URL}/logo-og.png`,
+    image: props.image || `${APP_URL}/logo/logo-og.png`,
     datePublished: props.datePublished,
     dateModified: props.dateModified || props.datePublished,
     author: props.author
@@ -123,7 +126,7 @@ export function generateArticleSchema(props: ArticleSchemaProps) {
       name: APP_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${APP_URL}/logo-og.png`,
+        url: `${APP_URL}/logo/logo-og.png`,
       },
     },
     mainEntityOfPage: {
@@ -184,8 +187,8 @@ export function generateFAQSchema(items: FAQItem[]) {
  * Note: Structured data should typically be added via script tags in the page
  */
 export function injectStructuredData(
-  metadata: Metadata,
-  schema: object | object[]
+  metadata: Metadata
+  // schema: object | object[]
 ): Metadata {
   // We return metadata as-is since structured data is better handled via script tags
   // Use StructuredDataScript component in your page instead
@@ -227,7 +230,7 @@ export interface DefaultMetadataProps {
 }
 
 export function generateDefaultMetadata(props: DefaultMetadataProps): Metadata {
-  const image = props.image || `${APP_URL}/logo-og.png`;
+  const image = props.image || `${APP_URL}/logo/logo-og.png`;
 
   return {
     title: props.title,
