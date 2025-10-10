@@ -13,13 +13,9 @@ import {
 export async function generateMockSummary(
   book: Book,
   summaryType: SummaryType,
-  options: SummaryGenerationOptions = {}
 ): Promise<SummaryGenerationResult> {
-  console.log("🚀 MockSummaryService.generateSummary called with: ", {
-    book,
-    summaryType,
-    options,
-  });
+ 
+
   // Simulate generation time
   const delay = Math.random() * 2000 + 1000; // 1-3 seconds
   await new Promise((resolve) => setTimeout(resolve, delay));

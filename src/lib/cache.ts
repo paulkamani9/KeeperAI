@@ -112,12 +112,10 @@ const getDefaultCache = (): CacheAdapter => {
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
     if (url && token) {
-      console.log("[Cache] Using Upstash Redis adapter");
+      
       return createCacheAdapter(url, token);
     } else {
-      console.warn(
-        "[Cache] UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN missing – falling back to non-persistent InMemory cache."
-      );
+      
       return new InMemoryCache();
     }
   // }
@@ -209,10 +207,7 @@ export class SummaryCache {
     try {
       const key = cacheKeys.summaryById(summaryId);
       const cached = await this.cacheAdapter.get(key);
-      console.log(
-        `Cache lookup for ID ${summaryId}, key: ${key}, found: ${cached ? "YES" : "NO"}`
-      );
-
+      
       if (!cached) {
         return null;
       }
@@ -229,8 +224,7 @@ export class SummaryCache {
         !parsed.summaryType ||
         !parsed.content
       ) {
-        console.warn(`Invalid cached summary structure for ID ${summaryId}`);
-        return null;
+       
       }
 
       // Convert ISO string dates back to Date objects
@@ -240,10 +234,6 @@ export class SummaryCache {
         updatedAt: new Date(parsed.updatedAt),
       } as Summary;
     } catch (error) {
-      console.error(
-        `Error retrieving cached summary by ID ${summaryId}:`,
-        error
-      );
       return null;
     }
   }
@@ -259,9 +249,6 @@ export class SummaryCache {
     try {
       const key = cacheKeys.bookSummary(bookId, summaryType);
       const cached = await this.cacheAdapter.get(key);
-      console.log(
-        `Cache lookup for book ${bookId}:${summaryType}, key: ${key}, found: ${cached ? "YES" : "NO"}`
-      );
 
       if (!cached) {
         return null;
@@ -279,9 +266,6 @@ export class SummaryCache {
         !parsed.summaryType ||
         !parsed.content
       ) {
-        console.warn(
-          `Invalid cached summary structure for book ${bookId}, type ${summaryType}`
-        );
         return null;
       }
 
@@ -292,10 +276,6 @@ export class SummaryCache {
         updatedAt: new Date(parsed.updatedAt),
       } as Summary;
     } catch (error) {
-      console.error(
-        `Error retrieving cached summary for book ${bookId}, type ${summaryType}:`,
-        error
-      );
       return null;
     }
   }
@@ -328,9 +308,7 @@ export class SummaryCache {
         summary.bookId,
         summary.summaryType
       );
-      console.log(
-        `Setting cache for summary ${summary.id}, keys: ${idKey}, ${bookKey}`
-      );
+     
 
       // Cache with both keys for different access patterns
       await Promise.all([
@@ -348,7 +326,7 @@ export class SummaryCache {
         ),
       ]);
     } catch (error) {
-      console.error(`Error caching summary ${summary.id}:`, error);
+     
       // Don't throw - caching errors shouldn't break the flow
     }
   }
@@ -368,7 +346,6 @@ export class SummaryCache {
         this.cacheAdapter.delete(cacheKeys.bookSummary(bookId, summaryType)),
       ]);
     } catch (error) {
-      console.error(`Error invalidating cached summary ${summaryId}:`, error);
       // Don't throw - caching errors shouldn't break the flow
     }
   }
@@ -425,10 +402,6 @@ export class SummaryCache {
 
       await this.cacheAdapter.set(key, failureData, cacheTTL.failure);
     } catch (error) {
-      console.error(
-        `Error caching failure for ${bookId}:${summaryType}:`,
-        error
-      );
     }
   }
 
@@ -451,10 +424,7 @@ export class SummaryCache {
       const parsed = JSON.parse(cached);
       return parsed.error || null;
     } catch (error) {
-      console.error(
-        `Error checking recent failure for ${bookId}:${summaryType}:`,
-        error
-      );
+     
       return null;
     }
   }
@@ -468,10 +438,6 @@ export class SummaryCache {
       const key = cacheKeys.summaryFailure(bookId, summaryType);
       await this.cacheAdapter.delete(key);
     } catch (error) {
-      console.error(
-        `Error clearing failure cache for ${bookId}:${summaryType}:`,
-        error
-      );
     }
   }
 
