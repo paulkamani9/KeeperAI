@@ -10,6 +10,59 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("byExternalId", ["externalId"]),
 
+  books: defineTable({
+    // Unique identifier for the book (composite from source)
+    id: v.string(),
+    // Book title
+    title: v.string(),
+    // List of authors (can be empty)
+    authors: v.array(v.string()),
+    // Book description/summary (optional)
+    description: v.optional(v.string()),
+    // Publication date in ISO format (optional)
+    publishedDate: v.optional(v.string()),
+    // Publisher name (optional)
+    publisher: v.optional(v.string()),
+    // Number of pages (optional)
+    pageCount: v.optional(v.number()),
+    // Array of category/genre tags (optional)
+    categories: v.optional(v.array(v.string())),
+    // Language code (e.g., 'en', 'es')
+    language: v.optional(v.string()),
+    // ISBN-10 identifier (optional)
+    isbn10: v.optional(v.string()),
+    // ISBN-13 identifier (optional)
+    isbn13: v.optional(v.string()),
+    // URL to book cover thumbnail image (optional)
+    thumbnail: v.optional(v.string()),
+    // URL to small cover image (optional)
+    smallThumbnail: v.optional(v.string()),
+    // URL to medium cover image (optional)
+    mediumThumbnail: v.optional(v.string()),
+    // URL to large cover image (optional)
+    largeThumbnail: v.optional(v.string()),
+    // Average rating from 1-5 (optional)
+    averageRating: v.optional(v.number()),
+    // Total number of ratings (optional)
+    ratingsCount: v.optional(v.number()),
+    // Preview/sample URL for reading (optional)
+    previewLink: v.optional(v.string()),
+    // Purchase/info link (optional)
+    infoLink: v.optional(v.string()),
+    // API source this book came from
+    source: v.union(v.literal("google-books"), v.literal("open-library")),
+    // Original API response ID for debugging
+    originalId: v.string(),
+    // Timestamp when this book was first cached
+    cachedAt: v.number(),
+    // Timestamp when this book was last accessed
+    lastAccessedAt: v.number(),
+  })
+    .index("by_book_id", ["id"])
+    .index("by_original_id_and_source", ["originalId", "source"])
+    .index("by_isbn13", ["isbn13"])
+    .index("by_isbn10", ["isbn10"]),
+
   favorites: defineTable({
     userId: v.id("users"),
     bookId: v.string(), // External book identifier (ISBN/API ID)

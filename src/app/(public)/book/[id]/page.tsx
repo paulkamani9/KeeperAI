@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { BookDetailView } from "@/views/BookDetailView";
-import { createUnifiedSearchService } from "@/services/search/searchService";
+import { getBookWithCache } from "@/lib/getBookWithCache";
 
 interface BookDetailPageProps {
   params: {
@@ -18,8 +18,7 @@ export async function generateMetadata({
 }: BookDetailPageProps): Promise<Metadata> {
   try {
     const { id } = await params;
-    const searchService = createUnifiedSearchService();
-    const book = await searchService.getBookDetails(id);
+    const book = await getBookWithCache(id);
 
     const baseUrl =
       process.env.NEXT_PUBLIC_APP_URL || "https://outclever.studio";
@@ -120,8 +119,7 @@ export async function generateMetadata({
 export default async function BookDetailPage({ params }: BookDetailPageProps) {
   try {
     const { id } = await params;
-    const searchService = createUnifiedSearchService();
-    const book = await searchService.getBookDetails(id);
+    const book = await getBookWithCache(id);
 
     if (!book) {
       notFound();
