@@ -57,6 +57,12 @@ export default defineSchema({
     cachedAt: v.number(),
     // Timestamp when this book was last accessed
     lastAccessedAt: v.number(),
+    // NEW: Marks if this book is eligible for "Book of the Day" feature
+    // Only true for curated books from seed list
+    isBookOfTheDay: v.optional(v.boolean()),
+    // NEW: Short explanation of why this book was curated
+    // Example: "A practical guide to building better habits"
+    seedReason: v.optional(v.string()),
   })
     .index("by_book_id", ["id"])
     .index("by_original_id_and_source", ["originalId", "source"])
@@ -198,4 +204,21 @@ export default defineSchema({
     .index("byTimestamp", ["timestamp"])
     .index("bySuccess", ["success"])
     .index("byBookAndType", ["bookId", "summaryType"]),
+
+  // New: Book of the Day - stores one book per day with rolling 300-day window
+  bookOfTheDay: defineTable({
+    // Date in YYYY-MM-DD format
+    date: v.string(),
+    // Reference to the books table (Convex internal ID)
+    bookId: v.id("books"),
+    // Original book ID from source (Google Books / Open Library) for frontend routing
+    originalBookId: v.string(),
+    // Snapshot data for stable rendering (no joins needed)
+    title: v.string(),
+    author: v.string(), // Primary author or "Various Authors"
+    thumbnail: v.optional(v.string()), // Best available thumbnail
+    reason: v.optional(v.string()), // From seedReason - why this book was curated
+  })
+    .index("byDate", ["date"])
+    .index("byBookId", ["bookId"]),
 });

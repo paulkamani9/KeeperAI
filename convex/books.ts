@@ -34,6 +34,8 @@ const bookObjectValidator = v.object({
   originalId: v.string(),
   cachedAt: v.number(),
   lastAccessedAt: v.number(),
+  isBookOfTheDay: v.optional(v.boolean()),
+  seedReason: v.optional(v.string()),
 });
 
 /**
@@ -113,6 +115,8 @@ export const upsertBook = mutation({
     infoLink: v.optional(v.string()),
     source: v.union(v.literal("google-books"), v.literal("open-library")),
     originalId: v.string(),
+    isBookOfTheDay: v.optional(v.boolean()),
+    seedReason: v.optional(v.string()),
   },
   returns: v.id("books"),
   handler: async (ctx, args) => {
@@ -148,6 +152,8 @@ export const upsertBook = mutation({
         source: args.source,
         originalId: args.originalId,
         lastAccessedAt: now,
+        isBookOfTheDay: args.isBookOfTheDay,
+        seedReason: args.seedReason,
       });
       return existingBook._id;
     } else {
@@ -176,6 +182,8 @@ export const upsertBook = mutation({
         originalId: args.originalId,
         cachedAt: now,
         lastAccessedAt: now,
+        isBookOfTheDay: args.isBookOfTheDay,
+        seedReason: args.seedReason,
       });
     }
   },

@@ -69,6 +69,18 @@ export interface Book {
 
   /** Original API response ID for debugging */
   originalId: string;
+
+  /**
+   * Indicates if this book is part of the curated "Book of the Day" pool
+   * Only true for books seeded from the approved list
+   */
+  isBookOfTheDay?: boolean;
+
+  /**
+   * Short explanation of why this book was selected for curation
+   * Only present for curated books (when isBookOfTheDay is true)
+   */
+  seedReason?: string;
 }
 
 /**
@@ -102,6 +114,8 @@ export const BookSchema = z.object({
   infoLink: z.string().url().optional(),
   source: z.enum(["google-books", "open-library"]),
   originalId: z.string().min(1, "Original ID is required"),
+  isBookOfTheDay: z.boolean().optional(),
+  seedReason: z.string().optional(),
 });
 
 /**

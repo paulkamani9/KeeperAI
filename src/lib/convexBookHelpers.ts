@@ -30,6 +30,8 @@ export function convexBookToBook(convexBook: Doc<"books">): Book {
     infoLink: convexBook.infoLink,
     source: convexBook.source,
     originalId: convexBook.originalId,
+    isBookOfTheDay: convexBook.isBookOfTheDay ?? false,
+    seedReason: convexBook.seedReason ?? undefined,
   };
 }
 
@@ -59,5 +61,8 @@ export function bookToConvexBook(book: Book) {
     infoLink: book.infoLink,
     source: book.source,
     originalId: book.originalId,
+    isBookOfTheDay: book.isBookOfTheDay ?? false,
+    seedReason: book.seedReason ?? undefined,
+    // Note: cachedAt, lastAccessedAt, and accessCount are managed by Convex functions
   };
 }
