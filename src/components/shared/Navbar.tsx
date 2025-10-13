@@ -76,7 +76,7 @@ export default function Navbar({ className }: NavbarProps) {
               className="flex items-center transition-opacity hover:opacity-80"
               aria-label="OutClever Home"
             >
-              <Logo size="sm" />
+              {/* <Logo size="sm" /> */}
             </Link>
           </div>
 

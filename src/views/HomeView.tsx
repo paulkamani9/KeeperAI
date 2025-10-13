@@ -14,7 +14,7 @@ export const HomeView = () => {
   return (
     <MainContent maxWidth="md" padding="none">
       {/* Hero Section - Minimal and Immersive with Prominent Search */}
-      <div className="min-h-[70vh] flex items-center justify-center pt-12 sm:pt-16">
+      <div className="min-h-[70vh] flex items-center justify-center pt-16">
         <div className="w-full max-w-xl px-6 text-center space-y-8">
           {/* Primary: Search Section */}
           <div>

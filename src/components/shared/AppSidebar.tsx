@@ -20,6 +20,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import Logo from "@/components/shared/Logo";
+import { is } from "zod/v4/locales";
 
 interface NavItem {
   href: string;
@@ -94,7 +95,14 @@ export default function AppSidebar() {
               className="flex items-center transition-opacity hover:opacity-80"
               aria-label="OutClever Home"
             >
-              {state === "expanded" ? (  <Logo size="md" />) : <p>🚀</p>}
+              {state === "expanded" && !isMobile ? (
+                <Logo size="md" />
+              ) : (
+                <div className={cn(isMobile && "hidden", 
+                  "text-2xl"
+                )}>🚀</div>
+              )}
+              {isMobile && <Logo size="sm" />}
             </Link>
           </div>
         </div>
