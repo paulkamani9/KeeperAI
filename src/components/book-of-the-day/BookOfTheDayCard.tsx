@@ -46,7 +46,7 @@ export function BookOfTheDayCard() {
 
   return (
     <Link
-      href={`/book/${book.bookId}`}
+      href={`/book/${book.originalBookId}`}
       className="block group"
       aria-label={`View ${book.title} by ${book.author}`}
     >
@@ -59,7 +59,7 @@ export function BookOfTheDayCard() {
       >
         {/* Header with subtle label */}
         <CardHeader className="pb-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-center sm:justify-start">
             <BookOpen className="h-4 w-4 text-primary" aria-hidden="true" />
             <CardTitle className="text-sm font-medium text-primary">
               Book of the Day
@@ -67,16 +67,16 @@ export function BookOfTheDayCard() {
           </div>
         </CardHeader>
 
-        {/* Content: Responsive layout */}
+        {/* Content: Fully Responsive Layout */}
         <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-            {/* Book Cover - Left on desktop, top on mobile */}
+          <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+            {/* Book Cover - Centered on mobile, left on desktop */}
             {thumbnail && (
               <div className="flex-shrink-0">
                 <div
                   className={cn(
                     "relative overflow-hidden rounded-lg",
-                    "w-24 h-36 sm:w-28 sm:h-42",
+                    "w-32 h-48 sm:w-28 sm:h-42",
                     "shadow-md group-hover:shadow-xl transition-shadow duration-300"
                   )}
                 >
@@ -89,8 +89,8 @@ export function BookOfTheDayCard() {
               </div>
             )}
 
-            {/* Book Details - Right on desktop, bottom on mobile */}
-            <div className="flex-1 space-y-2 min-w-0">
+            {/* Book Details - Centered on mobile, left-aligned on desktop */}
+            <div className="flex-1 space-y-2 min-w-0 text-center sm:text-left">
               {/* Title */}
               <h3
                 className={cn(
@@ -133,7 +133,7 @@ function BookOfTheDayCardSkeleton() {
     <Card className="border-primary/10">
       {/* Header skeleton */}
       <CardHeader className="pb-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-center sm:justify-start">
           <Skeleton className="h-4 w-4" />
           <Skeleton className="h-4 w-32" />
         </div>
@@ -141,18 +141,18 @@ function BookOfTheDayCardSkeleton() {
 
       {/* Content skeleton */}
       <CardContent>
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+        <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
           {/* Cover skeleton */}
           <div className="flex-shrink-0">
-            <Skeleton className="w-24 h-36 sm:w-28 sm:h-42 rounded-lg" />
+            <Skeleton className="w-32 h-48 sm:w-28 sm:h-42 rounded-lg" />
           </div>
 
-          {/* Details skeleton */}
-          <div className="flex-1 space-y-2">
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
+          {/* Details skeleton - centered on mobile */}
+          <div className="flex-1 space-y-2 w-full">
+            <Skeleton className="h-6 w-3/4 mx-auto sm:mx-0" />
+            <Skeleton className="h-4 w-1/2 mx-auto sm:mx-0" />
             <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
+            <Skeleton className="h-4 w-5/6 mx-auto sm:mx-0" />
           </div>
         </div>
       </CardContent>

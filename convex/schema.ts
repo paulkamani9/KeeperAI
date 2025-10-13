@@ -209,8 +209,10 @@ export default defineSchema({
   bookOfTheDay: defineTable({
     // Date in YYYY-MM-DD format
     date: v.string(),
-    // Reference to the books table
+    // Reference to the books table (Convex internal ID)
     bookId: v.id("books"),
+    // Original book ID from source (Google Books / Open Library) for frontend routing
+    originalBookId: v.string(),
     // Snapshot data for stable rendering (no joins needed)
     title: v.string(),
     author: v.string(), // Primary author or "Various Authors"

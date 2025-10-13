@@ -39,6 +39,7 @@ export const getBookOfTheDay = query({
       _creationTime: v.number(),
       date: v.string(),
       bookId: v.id("books"),
+      originalBookId: v.string(),
       title: v.string(),
       author: v.string(),
       thumbnail: v.optional(v.string()),
@@ -193,6 +194,7 @@ export const pickBookOfTheDay = internalMutation({
     const newRecord = await ctx.db.insert("bookOfTheDay", {
       date: today,
       bookId: selectedBook._id,
+      originalBookId: selectedBook.id, // External ID for frontend routing
       title: selectedBook.title,
       author,
       thumbnail,
