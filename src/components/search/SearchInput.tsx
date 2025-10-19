@@ -2,7 +2,16 @@
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, X, Loader2, Mic, ImageIcon, ArrowRight } from "lucide-react";
+import {
+  Search,
+  X,
+  Loader2,
+  Mic,
+  ImageIcon,
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,6 +23,12 @@ const searchQuerySchema = z
   .string()
   .min(1, "Search query cannot be empty")
   .max(200, "Search query must be 200 characters or less")
+  .trim();
+
+// Validation schema for author query (optional)
+const authorQuerySchema = z
+  .string()
+  .max(200, "Author query must be 200 characters or less")
   .trim();
 
 interface SearchInputProps {
@@ -52,6 +67,8 @@ interface SearchInputProps {
  * - Keyboard shortcuts provide power user experience
  * - Icon container allows future extensions (voice, image search)
  * - Zod validation ensures data quality
+ * - Collapsible advanced filters enable power users without overwhelming casual users
+ * - Optional author field provides precise search filtering (backwards compatible)
  */
 export const SearchInput: React.FC<SearchInputProps> = ({
   defaultValue = "",
@@ -64,13 +81,20 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const inputRef = useRef<HTMLTextAreaElement | HTMLInputElement>(null);
+  const authorInputRef = useRef<HTMLInputElement>(null);
 
-  // Get initial value from URL params or props
+  // Get initial values from URL params or props
   const initialValue = defaultValue || searchParams.get("q") || "";
+  const initialAuthorValue = searchParams.get("author") || "";
 
   const [query, setQuery] = useState(initialValue);
+  const [authorQuery, setAuthorQuery] = useState(initialAuthorValue);
+  const [showAdvanced, setShowAdvanced] = useState(Boolean(initialAuthorValue));
   const [isValidating, setIsValidating] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [authorValidationError, setAuthorValidationError] = useState<
+    string | null
+  >(null);
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
     null
   );
@@ -134,6 +158,26 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     validateQuery(value);
   };
 
+  // Handle author input changes
+  const handleAuthorInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setAuthorQuery(value);
+
+    // Validate author query
+    try {
+      if (value.length > 0) {
+        authorQuerySchema.parse(value);
+      }
+      setAuthorValidationError(null);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setAuthorValidationError(error.issues[0].message);
+      }
+    }
+  };
+
   // Handle form submission
   const handleSubmit = (event?: React.FormEvent) => {
     event?.preventDefault();
@@ -150,9 +194,16 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       if (onSearch) {
         onSearch(validatedQuery);
       } else {
-        // Navigate to search page with query parameter
+        // Navigate to search page with query parameters
         const params = new URLSearchParams();
         params.set("q", validatedQuery);
+
+        // Add author query if provided
+        if (authorQuery.trim()) {
+          const validatedAuthorQuery = authorQuerySchema.parse(authorQuery);
+          params.set("author", validatedAuthorQuery);
+        }
+
         router.push(`/search?${params.toString()}`);
       }
     } catch (error) {
@@ -165,7 +216,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   // Clear input and focus
   const handleClear = () => {
     setQuery("");
+    setAuthorQuery("");
     setValidationError(null);
+    setAuthorValidationError(null);
     setIsValidating(false);
     inputRef.current?.focus();
   };
@@ -319,10 +372,62 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             aria-invalid={hasError}
           />
 
+          {/* Advanced Filters Section (collapsible) */}
+          {showAdvanced && (
+            <div className="mt-3 pt-3 border-t">
+              <label
+                htmlFor="author-search"
+                className="block text-sm font-medium text-muted-foreground mb-2"
+              >
+                Filter by Author (optional)
+              </label>
+              <Input
+                ref={authorInputRef}
+                id="author-search"
+                type="text"
+                value={authorQuery}
+                onChange={handleAuthorInputChange}
+                placeholder="e.g., George Orwell"
+                className="bg-transparent"
+                aria-label="Filter by author"
+                aria-describedby={
+                  authorValidationError ? "author-error" : undefined
+                }
+                aria-invalid={!!authorValidationError}
+              />
+              {authorValidationError && (
+                <p
+                  id="author-error"
+                  className="mt-1 text-sm text-destructive"
+                  role="alert"
+                >
+                  {authorValidationError}
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Bottom toolbar: utilities left, submit button right */}
           <div className="mt-2 pt-2 flex items-center gap-2 justify-between flex-wrap">
             {/* Left: utilities */}
             <div className="flex items-center gap-1">
+              {/* Advanced Filters Toggle */}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowAdvanced(!showAdvanced)}
+                className="text-muted-foreground hover:text-foreground h-9 px-3"
+                title={showAdvanced ? "Hide filters" : "Show advanced filters"}
+              >
+                <span className="text-xs sm:text-sm">Advanced</span>
+                {showAdvanced ? (
+                  <ChevronUp className="ml-1 h-3 w-3" />
+                ) : (
+                  <ChevronDown className="ml-1 h-3 w-3" />
+                )}
+              </Button>
+
               {/* Future extension slots for voice/image input */}
               <div className="hidden sm:flex items-center gap-1 opacity-50">
                 <Button

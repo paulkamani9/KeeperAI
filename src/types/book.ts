@@ -147,6 +147,9 @@ export interface SearchParams {
   /** Search query string */
   query: string;
 
+  /** Optional author query for precise filtering */
+  authorQuery?: string;
+
   /** Maximum number of results to return */
   maxResults?: number;
 
@@ -168,6 +171,10 @@ export interface SearchParams {
 
 export const SearchParamsSchema = z.object({
   query: z.string().min(1, "Search query is required"),
+  authorQuery: z
+    .string()
+    .max(200, "Author query must be 200 characters or less")
+    .optional(),
   maxResults: z.number().int().positive().max(100).default(20),
   startIndex: z.number().int().min(0).default(0),
   searchIn: z.enum(["title", "author", "all"]).default("all"),
