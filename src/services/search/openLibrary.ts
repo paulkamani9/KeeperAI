@@ -137,6 +137,13 @@ export class OpenLibraryService {
   private buildSearchQuery(params: SearchParams): string {
     let query = params.query.trim();
 
+    // If authorQuery is provided, combine title and author fields for precise search
+    if (params.authorQuery && params.authorQuery.trim()) {
+      const titleQuery = `title:${query}`;
+      const authorQuery = `author:${params.authorQuery.trim()}`;
+      return `${titleQuery} ${authorQuery}`;
+    }
+
     // If searchIn is specified, use Open Library field queries
     if (params.searchIn && params.searchIn !== "all") {
       switch (params.searchIn) {

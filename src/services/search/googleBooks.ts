@@ -134,6 +134,13 @@ export class GoogleBooksService {
   private buildSearchQuery(params: SearchParams): string {
     let query = params.query.trim();
 
+    // If authorQuery is provided, combine title and author fields for precise search
+    if (params.authorQuery && params.authorQuery.trim()) {
+      const titleQuery = `intitle:${query}`;
+      const authorQuery = `inauthor:${params.authorQuery.trim()}`;
+      return `${titleQuery} ${authorQuery}`;
+    }
+
     // If searchIn is specified, use Google Books field operators
     if (params.searchIn && params.searchIn !== "all") {
       switch (params.searchIn) {

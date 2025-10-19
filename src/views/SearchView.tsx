@@ -60,6 +60,7 @@ export const SearchView = () => {
 
   // Extract search parameters from URL
   const query = searchParams.get("q") || "";
+  const authorQuery = searchParams.get("author") || "";
   const page = parseInt(searchParams.get("page") || "0", 10);
   const maxResults = parseInt(searchParams.get("limit") || "20", 10);
 
@@ -78,6 +79,7 @@ export const SearchView = () => {
     isSearching,
   } = useBookSearch({
     query,
+    authorQuery: authorQuery || undefined, // Pass undefined if empty to maintain backwards compatibility
     startIndex: page * maxResults,
     maxResults,
     enabled: Boolean(query.trim()), // Only search if query exists
@@ -142,7 +144,7 @@ export const SearchView = () => {
         <SearchInput
           defaultValue={query}
           placeholder="Search for books by title, author, or keyword..."
-          variant="compact"
+          // variant="compact"
           className="max-w-2xl w-full mx-auto"
           onSearch={handleSearch}
         />

@@ -79,6 +79,7 @@ export function useBookSearch(
     };
 
     // Only include optional parameters if they are provided
+    if (params.authorQuery) normalized.authorQuery = params.authorQuery;
     if (params.searchIn) normalized.searchIn = params.searchIn;
     if (params.language) normalized.language = params.language;
     if (params.publishedAfter)
@@ -89,6 +90,7 @@ export function useBookSearch(
     return normalized;
   }, [
     params.query,
+    params.authorQuery,
     params.maxResults,
     params.startIndex,
     params.searchIn,
