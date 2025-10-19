@@ -21,6 +21,7 @@ import {
   Facebook,
   MessageCircle,
   MoreVertical,
+  BookMarkedIcon,
 } from "lucide-react";
 import type { Summary } from "../../types/summary";
 
@@ -63,11 +64,11 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
     window.print();
   };
 
-  // Handle save to favorites (placeholder)
-  const handleSaveToFavorites = () => {
+  // Handle save summary (placeholder)
+  const handleSaveSummary = () => {
     setIsSaved(!isSaved);
     toast.success(
-      isSaved ? "Summary removed from favorites" : "Summary saved to favorites"
+      isSaved ? "Summary removed from saved summaries" : "Summary saved to saved summaries"
     );
   };
 
@@ -157,15 +158,15 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
           <span className="hidden lg:inline-block ml-2">Print</span>
         </Button>
 
-        {/* Save to Favorites Button (Placeholder for Phase 3) */}
+        {/* Add to Saved Summaries Button (Placeholder for Phase 3) */}
         <Button
           variant={isSaved ? "default" : "ghost"}
           size="sm"
-          onClick={handleSaveToFavorites}
+          onClick={handleSaveSummary}
           className="shrink-0"
           aria-label={isSaved ? "Remove from favorites" : "Save to favorites"}
         >
-          <Heart className={cn("h-4 w-4", isSaved && "fill-current")} />
+          <BookMarkedIcon className="h-4 w-4" />
           <span className="hidden lg:inline-block ml-2">
             {isSaved ? "Saved" : "Save"}
           </span>
@@ -211,11 +212,11 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
               <Printer className="h-4 w-4 mr-2" />
               Print Summary
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleSaveToFavorites}>
-              <Heart
-                className={cn("h-4 w-4 mr-2", isSaved && "fill-current")}
+            <DropdownMenuItem onClick={handleSaveSummary}>
+              <BookMarkedIcon
+                className={cn("h-4 w-4 mr-2", isSaved && "stroke-white")}
               />
-              {isSaved ? "Remove from Favorites" : "Save to Favorites"}
+              {isSaved ? "Remove Summary" : "Save Summary"}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleDownload} disabled>
               <Download className="h-4 w-4 mr-2" />

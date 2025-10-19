@@ -12,10 +12,13 @@ import {
   Sparkles,
   ChevronLeft,
   BookOpenIcon,
+  BookMarked,
+  Check,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useUser, SignInButton } from "@clerk/nextjs";
 
 import { BookCover } from "@/components/shared/BookCover";
 import { BookDescription } from "@/components/shared/BookDescription";
@@ -26,9 +29,17 @@ import {
 import { SummaryGenerationProgress } from "@/components/summary/SummaryGenerationProgress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
 import { useSummaryGeneration } from "@/hooks/useSummaryGeneration";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useReadList, type ReadingStatus } from "@/hooks/useReadList";
 
 interface BookDetailViewProps {
   /** Book data to display */
@@ -50,9 +61,26 @@ interface BookDetailViewProps {
  */
 export function BookDetailView({ book, className }: BookDetailViewProps) {
   const router = useRouter();
+  const { user } = useUser();
   const [selectedSummaryType, setSelectedSummaryType] =
     useState<SummaryType>("concise");
   const [hasGeneratedSummary, setHasGeneratedSummary] = useState(false); // used when summary is generated the first time
+
+  // Initialize hooks for user interactions
+  const {
+    isFavorited,
+    toggleFavorite,
+    isAuthenticated: isFavoritesAuthenticated,
+  } = useFavorites(book.id);
+
+  const {
+    isInReadList,
+    currentStatus,
+    addBook,
+    removeBook,
+    updateReadingStatus,
+    isAuthenticated: isReadListAuthenticated,
+  } = useReadList(book.id);
 
   // Initialize summary generation hook
   const {
@@ -168,9 +196,86 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
     }
   }, [error, isGenerating]);
 
-  // Handle add to favorites (placeholder for Phase 3)
-  const handleAddToFavorites = () => {
-    toast.info("Add to favorites functionality coming in Phase 3!");
+  // Handle favorite toggle (book already persisted by getBookWithCache)
+  const handleToggleFavorite = async () => {
+    if (!isFavoritesAuthenticated) {
+      toast.error("Please sign in to favorite books");
+      return;
+    }
+
+    try {
+      // Pass only bookId string (book already persisted)
+      await toggleFavorite(book.id);
+      toast.success(
+        isFavorited ? "Removed from favorites" : "Added to favorites"
+      );
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      toast.error("Failed to update favorites. Please try again.");
+    }
+  };
+
+  // Handle reading list actions
+  const handleAddToReadList = async (status?: ReadingStatus) => {
+    if (!isReadListAuthenticated) {
+      toast.error("Please sign in to manage your reading list");
+      return;
+    }
+
+    try {
+      // Pass only bookId string (book already persisted)
+      await addBook(book.id, status);
+      toast.success(
+        `Added to reading list${status ? ` as "${getStatusLabel(status)}"` : ""}`
+      );
+    } catch (error) {
+      console.error("Error adding to reading list:", error);
+      toast.error("Failed to add to reading list. Please try again.");
+    }
+  };
+
+  const handleRemoveFromReadList = async () => {
+    if (!isReadListAuthenticated) {
+      toast.error("Please sign in to manage your reading list");
+      return;
+    }
+
+    try {
+      await removeBook(book.id);
+      toast.success("Removed from reading list");
+    } catch (error) {
+      console.error("Error removing from reading list:", error);
+      toast.error("Failed to remove from reading list. Please try again.");
+    }
+  };
+
+  const handleUpdateStatus = async (status: ReadingStatus) => {
+    if (!isReadListAuthenticated) {
+      toast.error("Please sign in to manage your reading list");
+      return;
+    }
+
+    try {
+      await updateReadingStatus(book.id, status);
+      toast.success(`Updated status to "${getStatusLabel(status)}"`);
+    } catch (error) {
+      console.error("Error updating reading status:", error);
+      toast.error("Failed to update status. Please try again.");
+    }
+  };
+
+  // Helper to get readable status label
+  const getStatusLabel = (status: ReadingStatus) => {
+    switch (status) {
+      case "want-to-read":
+        return "Want to Read";
+      case "reading":
+        return "Reading";
+      case "completed":
+        return "Completed";
+      default:
+        return status;
+    }
   };
 
   const ratingInfo = formatRating(book.averageRating, book.ratingsCount);
@@ -356,14 +461,123 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
 
                   {/* Secondary Actions */}
                   <div className="flex gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={handleAddToFavorites}
-                      className="flex-1"
-                    >
-                      <Heart className="h-4 w-4 mr-2" />
-                      Add to Favorites
-                    </Button>
+                    {/* Favorite Button */}
+                    {isFavoritesAuthenticated ? (
+                      <Button
+                        variant={isFavorited ? "default" : "outline"}
+                        onClick={handleToggleFavorite}
+                        className="flex-1"
+                      >
+                        <Heart
+                          className={cn(
+                            "h-4 w-4 mr-2",
+                            isFavorited && "fill-current"
+                          )}
+                        />
+                        {isFavorited ? "Favorited" : "Add to Favorites"}
+                      </Button>
+                    ) : (
+                      <SignInButton mode="modal">
+                        <Button variant="outline" className="flex-1">
+                          <Heart className="h-4 w-4 mr-2" />
+                          Add to Favorites
+                        </Button>
+                      </SignInButton>
+                    )}
+
+                    {/* Reading List Dropdown */}
+                    {isReadListAuthenticated ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant={isInReadList ? "default" : "outline"}
+                            className="flex-1"
+                          >
+                            <BookMarked
+                              className={cn(
+                                "h-4 w-4 mr-2",
+                                isInReadList && "fill-current"
+                              )}
+                            />
+                            {isInReadList
+                              ? currentStatus
+                                ? getStatusLabel(currentStatus)
+                                : "In Reading List"
+                              : "Add to List"}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          {isInReadList ? (
+                            <>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleUpdateStatus("want-to-read")
+                                }
+                              >
+                                {currentStatus === "want-to-read" && (
+                                  <Check className="h-4 w-4 mr-2" />
+                                )}
+                                Want to Read
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleUpdateStatus("reading")}
+                              >
+                                {currentStatus === "reading" && (
+                                  <Check className="h-4 w-4 mr-2" />
+                                )}
+                                Reading
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleUpdateStatus("completed")}
+                              >
+                                {currentStatus === "completed" && (
+                                  <Check className="h-4 w-4 mr-2" />
+                                )}
+                                Completed
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={handleRemoveFromReadList}
+                                className="text-destructive"
+                              >
+                                Remove from List
+                              </DropdownMenuItem>
+                            </>
+                          ) : (
+                            <>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleAddToReadList("want-to-read")
+                                }
+                              >
+                                Want to Read
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleAddToReadList("reading")}
+                              >
+                                Reading
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleAddToReadList("completed")}
+                              >
+                                Completed
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleAddToReadList()}
+                              >
+                                Add without Status
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : (
+                      <SignInButton mode="modal">
+                        <Button variant="outline" className="flex-1">
+                          <BookMarked className="h-4 w-4 mr-2" />
+                          Add to List
+                        </Button>
+                      </SignInButton>
+                    )}
 
                     {book.previewLink && (
                       <Button variant="outline" size="icon" asChild>

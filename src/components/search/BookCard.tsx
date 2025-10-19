@@ -16,7 +16,10 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BookCover } from "@/components/shared/BookCover";
 import { cn } from "@/lib/utils";
-import type {  Book } from "@/types/book";
+import type { Book } from "@/types/book";
+import { useFavorites } from "@/hooks/useFavorites";
+import { SignInButton } from "@clerk/nextjs";
+import { toast } from "sonner";
 
 interface BookCardProps {
   /** Book data to display */
@@ -49,12 +52,23 @@ interface BookCardProps {
 export const BookCard: React.FC<BookCardProps> = ({
   book,
   isLoading = false,
-  isFavorite = false,
+  isFavorite: isFavoriteProp,
   onFavoriteToggle,
   variant = "default",
   className,
   showActions = true,
 }) => {
+  // Use favorites hook for state management
+  const {
+    isFavorited,
+    toggleFavorite,
+    isAuthenticated,
+    isLoading: isFavoriteLoading,
+  } = useFavorites(book.id);
+
+  // Use prop value if provided, otherwise use hook value
+  const isFavorite = isFavoriteProp ?? isFavorited;
+
   // Format authors for display
   const authorsText = book.authors.join(", ");
 
@@ -63,11 +77,32 @@ export const BookCard: React.FC<BookCardProps> = ({
     ? new Date(book.publishedDate).getFullYear()
     : null;
 
-  // Handle favorite toggle
-  const handleFavoriteClick = (e: React.MouseEvent) => {
+  // Handle favorite toggle with authentication check
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation
     e.stopPropagation(); // Prevent card click
+
+    // If callback provided, use it (for custom handling)
     if (onFavoriteToggle && !isLoading) {
       onFavoriteToggle(book.id, !isFavorite);
+      return;
+    }
+
+    // Otherwise use hook's toggle function
+    if (!isAuthenticated) {
+      toast.error("Please sign in to favorite books");
+      return;
+    }
+
+    try {
+      // Pass full Book object (from search results context)
+      await toggleFavorite(book);
+      toast.success(
+        isFavorite ? "Removed from favorites" : "Added to favorites"
+      );
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      toast.error("Failed to update favorites. Please try again.");
     }
   };
 
@@ -183,27 +218,41 @@ export const BookCard: React.FC<BookCardProps> = ({
             {/* Actions */}
             {showActions && (
               <CardAction className="flex flex-col gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={cn(
-                    "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
-                    isFavorite && "opacity-100"
-                  )}
-                  onClick={handleFavoriteClick}
-                  title={
-                    isFavorite ? "Remove from favorites" : "Add to favorites"
-                  }
-                >
-                  <Heart
+                {isAuthenticated ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     className={cn(
-                      "h-4 w-4 transition-colors",
-                      isFavorite
-                        ? "fill-red-500 text-red-500"
-                        : "text-muted-foreground hover:text-red-500"
+                      "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
+                      isFavorite && "opacity-100"
                     )}
-                  />
-                </Button>
+                    onClick={handleFavoriteClick}
+                    disabled={isFavoriteLoading}
+                    title={
+                      isFavorite ? "Remove from favorites" : "Add to favorites"
+                    }
+                  >
+                    <Heart
+                      className={cn(
+                        "h-4 w-4 transition-colors",
+                        isFavorite
+                          ? "fill-red-500 text-red-500"
+                          : "text-muted-foreground hover:text-red-500"
+                      )}
+                    />
+                  </Button>
+                ) : (
+                  <SignInButton mode="modal">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Sign in to favorite"
+                    >
+                      <Heart className="h-4 w-4 text-muted-foreground hover:text-red-500" />
+                    </Button>
+                  </SignInButton>
+                )}
 
                 {book.previewLink && (
                   <Button
