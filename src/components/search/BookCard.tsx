@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { Heart, ExternalLink, BookOpen, Calendar, Star } from "lucide-react";
 import {
   Card,
@@ -179,297 +178,329 @@ export const BookCard: React.FC<BookCardProps> = ({
   const isCompact = variant === "compact";
   const isDetailed = variant === "detailed";
 
+  // Handle card click for navigation
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Prevent navigation if clicking on interactive elements
+    const target = e.target as HTMLElement;
+    const isInteractive =
+      target.closest("button") ||
+      target.closest("a") ||
+      target.closest('[role="menuitem"]') ||
+      target.closest("[data-radix-collection-item]");
+
+    if (!isInteractive) {
+      window.location.href = `/book/${book.id}`;
+    }
+  };
+
   return (
-    <Link href={`/book/${book.id}`} className="block">
-      <Card
-        className={cn(
-          "group overflow-hidden transition-all duration-200 hover:shadow-card-hover cursor-pointer",
-          "border-border/50 hover:border-primary/20",
-          isCompact && "p-3",
-          className
-        )}
-      >
-        <CardHeader className={cn(isCompact && "p-0 gap-3")}>
-          <div className={cn("flex gap-4", isCompact && "gap-3")}>
-            {/* Book Cover */}
-            {!isCompact && (
-              <div className="flex-shrink-0">
-                <BookCover
-                  title={book.title}
-                  authors={book.authors}
-                  src={
-                    book.largeThumbnail ||
-                    book.mediumThumbnail ||
-                    book.thumbnail ||
-                    book.smallThumbnail
-                  }
-                  fallbackSrcs={
-                    [
-                      book.mediumThumbnail,
-                      book.thumbnail,
-                      book.smallThumbnail,
-                    ].filter(Boolean) as string[]
-                  }
-                  size="small"
-                  clickable={false}
-                  className="transition-transform group-hover:scale-105"
-                />
-              </div>
-            )}
+    <Card
+      className={cn(
+        "group overflow-hidden transition-all duration-200 hover:shadow-card-hover cursor-pointer",
+        "border-border/50 hover:border-primary/20",
+        isCompact && "p-3",
+        className
+      )}
+      onClick={handleCardClick}
+    >
+      <CardHeader className={cn(isCompact && "p-0 gap-3")}>
+        <div className={cn("flex gap-4", isCompact && "gap-3")}>
+          {/* Book Cover */}
+          {!isCompact && (
+            <div className="flex-shrink-0">
+              <BookCover
+                title={book.title}
+                authors={book.authors}
+                src={
+                  book.largeThumbnail ||
+                  book.mediumThumbnail ||
+                  book.thumbnail ||
+                  book.smallThumbnail
+                }
+                fallbackSrcs={
+                  [
+                    book.mediumThumbnail,
+                    book.thumbnail,
+                    book.smallThumbnail,
+                  ].filter(Boolean) as string[]
+                }
+                size="small"
+                clickable={false}
+                className="transition-transform group-hover:scale-105"
+              />
+            </div>
+          )}
 
-            {/* Book Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start gap-2 mb-1">
-                <CardTitle
-                  className={cn(
-                    "line-clamp-2 group-hover:text-primary transition-colors flex-1",
-                    isCompact ? "text-sm" : "text-base"
-                  )}
-                >
-                  {book.title}
-                </CardTitle>
-                {/* Status badge for reading list */}
-                {showReadingListActions && currentReadingStatus && (
-                  <Badge
-                    variant={getStatusInfo(currentReadingStatus)?.variant}
-                    className="flex-shrink-0"
-                  >
-                    {getStatusInfo(currentReadingStatus)?.label}
-                  </Badge>
-                )}
-              </div>
+          {/* Book Info */}
+          <div className="flex-1 min-w-0">
+            <CardTitle
+              className={cn(
+                "line-clamp-2 group-hover:text-primary transition-colors",
+                isCompact ? "text-sm" : "text-base"
+              )}
+            >
+              {book.title}
+            </CardTitle>
 
+            <div className="flex items-center gap-2 mt-1">
               <CardDescription
                 className={cn(
-                  "line-clamp-1 mt-1",
+                  "line-clamp-1",
                   isCompact ? "text-xs" : "text-sm"
                 )}
               >
                 {authorsText}
               </CardDescription>
+              {/* Status badge for reading list - inline with author to save space */}
+              {showReadingListActions && currentReadingStatus && (
+                <Badge
+                  variant={getStatusInfo(currentReadingStatus)?.variant}
+                  className="flex-shrink-0 hidden sm:inline-flex"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                >
+                  {getStatusInfo(currentReadingStatus)?.label}
+                </Badge>
+              )}
+            </div>
 
-              {/* Additional info for compact variant */}
-              {isCompact && publicationYear && (
-                <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                  <Calendar className="h-3 w-3" />
-                  <span>{publicationYear}</span>
-                  {book.averageRating && (
+            {/* Mobile status badge - shown below on small screens */}
+            {showReadingListActions && currentReadingStatus && (
+              <Badge
+                variant={getStatusInfo(currentReadingStatus)?.variant}
+                className="flex-shrink-0 sm:hidden mt-1 inline-flex w-fit"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                {getStatusInfo(currentReadingStatus)?.label}
+              </Badge>
+            )}
+
+            {/* Additional info for compact variant */}
+            {isCompact && publicationYear && (
+              <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                <Calendar className="h-3 w-3" />
+                <span>{publicationYear}</span>
+                {book.averageRating && (
+                  <>
+                    <Star className="h-3 w-3 fill-current text-yellow-500 ml-2" />
+                    <span>{book.averageRating.toFixed(1)}</span>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
+          {showActions && (
+            <CardAction className="flex flex-col gap-1">
+              {/* Reading List Management Actions (for ReadListView) */}
+              {showReadingListActions ? (
+                <ReadingListDropdown
+                  currentStatus={currentReadingStatus}
+                  isInReadList={true}
+                  onStatusChange={(status) => {
+                    if (onStatusChange) {
+                      onStatusChange(book.id, status);
+                    }
+                  }}
+                  onRemove={() => {
+                    if (onRemove) {
+                      onRemove(book.id);
+                    }
+                  }}
+                  variant="icon"
+                  isAuthenticated={isReadListAuthenticated}
+                  isLoading={isReadListLoading}
+                  onTriggerClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                />
+              ) : (
+                /* Standard Actions (for Search Results) */
+                <>
+                  {isAuthenticated ? (
                     <>
-                      <Star className="h-3 w-3 fill-current text-yellow-500 ml-2" />
-                      <span>{book.averageRating.toFixed(1)}</span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className={cn(
+                          "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
+                          isFavorite && "opacity-100"
+                        )}
+                        onClick={handleFavoriteClick}
+                        disabled={isFavoriteLoading}
+                        title={
+                          isFavorite
+                            ? "Remove from favorites"
+                            : "Add to favorites"
+                        }
+                      >
+                        <Heart
+                          className={cn(
+                            "h-4 w-4 transition-colors",
+                            isFavorite
+                              ? "fill-red-500 text-red-500"
+                              : "text-muted-foreground hover:text-red-500"
+                          )}
+                        />
+                      </Button>
+                      <ReadingListDropdown
+                        currentStatus={undefined}
+                        isInReadList={isInReadList}
+                        onAdd={async (status) => {
+                          // Handle adding book to reading list from search
+                          if (!isReadListAuthenticated) {
+                            toast.error(
+                              "Please sign in to manage your reading list"
+                            );
+                            return;
+                          }
+                          try {
+                            await addBook(book, status);
+                            toast.success("Added to reading list");
+                          } catch (error) {
+                            console.error(
+                              "Error adding to reading list:",
+                              error
+                            );
+                            toast.error(
+                              "Failed to add to reading list. Please try again."
+                            );
+                          }
+                        }}
+                        variant="icon"
+                        isAuthenticated={isReadListAuthenticated}
+                        isLoading={isReadListLoading}
+                        onTriggerClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                      />
                     </>
+                  ) : (
+                    <>
+                      <SignInButton mode="modal">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                          title="Sign in to favorite"
+                        >
+                          <Heart className="h-4 w-4 text-muted-foreground hover:text-red-500" />
+                        </Button>
+                      </SignInButton>
+                      <ReadingListDropdown
+                        currentStatus={undefined}
+                        isInReadList={false}
+                        variant="icon"
+                        isAuthenticated={false}
+                        onTriggerClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+
+              {book.previewLink && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => handleLinkClick(e, book.previewLink)}
+                  title="Preview book"
+                >
+                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                </Button>
+              )}
+            </CardAction>
+          )}
+        </div>
+      </CardHeader>
+
+      {/* Detailed content for non-compact variants */}
+      {!isCompact && (
+        <>
+          {/* Description */}
+          {book.description && (
+            <CardContent>
+              <p
+                className={cn(
+                  "text-sm text-muted-foreground leading-relaxed",
+                  isDetailed ? "line-clamp-4" : "line-clamp-2"
+                )}
+              >
+                {book.description}
+              </p>
+            </CardContent>
+          )}
+
+          {/* Footer with metadata */}
+          <CardFooter className="pt-0">
+            <div className="flex items-center justify-between w-full text-xs text-muted-foreground">
+              <div className="flex items-center gap-4">
+                {publicationYear && (
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    <span>{publicationYear}</span>
+                  </div>
+                )}
+
+                {book.pageCount && (
+                  <div className="flex items-center gap-1">
+                    <BookOpen className="h-3 w-3" />
+                    <span>{book.pageCount} pages</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Rating */}
+              {book.averageRating && (
+                <div className="flex items-center gap-1">
+                  <Star className="h-3 w-3 fill-current text-yellow-500" />
+                  <span className="font-medium">
+                    {book.averageRating.toFixed(1)}
+                  </span>
+                  {book.ratingsCount && (
+                    <span className="text-muted-foreground">
+                      ({book.ratingsCount.toLocaleString()})
+                    </span>
                   )}
                 </div>
               )}
             </div>
+          </CardFooter>
 
-            {/* Actions */}
-            {showActions && (
-              <CardAction className="flex flex-col gap-1">
-                {/* Reading List Management Actions (for ReadListView) */}
-                {showReadingListActions ? (
-                  <ReadingListDropdown
-                    currentStatus={currentReadingStatus}
-                    isInReadList={true}
-                    onStatusChange={(status) => {
-                      if (onStatusChange) {
-                        onStatusChange(book.id, status);
-                      }
-                    }}
-                    onRemove={() => {
-                      if (onRemove) {
-                        onRemove(book.id);
-                      }
-                    }}
-                    variant="icon"
-                    isAuthenticated={isReadListAuthenticated}
-                    isLoading={isReadListLoading}
-                    onTriggerClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                  />
-                ) : (
-                  /* Standard Actions (for Search Results) */
-                  <>
-                    {isAuthenticated ? (
-                      <>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className={cn(
-                            "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
-                            isFavorite && "opacity-100"
-                          )}
-                          onClick={handleFavoriteClick}
-                          disabled={isFavoriteLoading}
-                          title={
-                            isFavorite
-                              ? "Remove from favorites"
-                              : "Add to favorites"
-                          }
-                        >
-                          <Heart
-                            className={cn(
-                              "h-4 w-4 transition-colors",
-                              isFavorite
-                                ? "fill-red-500 text-red-500"
-                                : "text-muted-foreground hover:text-red-500"
-                            )}
-                          />
-                        </Button>
-                        <ReadingListDropdown
-                          currentStatus={undefined}
-                          isInReadList={isInReadList}
-                          onAdd={async (status) => {
-                            // Handle adding book to reading list from search
-                            if (!isReadListAuthenticated) {
-                              toast.error(
-                                "Please sign in to manage your reading list"
-                              );
-                              return;
-                            }
-                            try {
-                              await addBook(book, status);
-                              toast.success("Added to reading list");
-                            } catch (error) {
-                              console.error(
-                                "Error adding to reading list:",
-                                error
-                              );
-                              toast.error(
-                                "Failed to add to reading list. Please try again."
-                              );
-                            }
-                          }}
-                          variant="icon"
-                          isAuthenticated={isReadListAuthenticated}
-                          isLoading={isReadListLoading}
-                          onTriggerClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                          }}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <SignInButton mode="modal">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                            title="Sign in to favorite"
-                          >
-                            <Heart className="h-4 w-4 text-muted-foreground hover:text-red-500" />
-                          </Button>
-                        </SignInButton>
-                        <ReadingListDropdown
-                          currentStatus={undefined}
-                          isInReadList={false}
-                          variant="icon"
-                          isAuthenticated={false}
-                          onTriggerClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                          }}
-                        />
-                      </>
-                    )}
-                  </>
-                )}
-
-                {book.previewLink && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={(e) => handleLinkClick(e, book.previewLink)}
-                    title="Preview book"
-                  >
-                    <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                  </Button>
-                )}
-              </CardAction>
-            )}
-          </div>
-        </CardHeader>
-
-        {/* Detailed content for non-compact variants */}
-        {!isCompact && (
-          <>
-            {/* Description */}
-            {book.description && (
-              <CardContent>
-                <p
-                  className={cn(
-                    "text-sm text-muted-foreground leading-relaxed",
-                    isDetailed ? "line-clamp-4" : "line-clamp-2"
-                  )}
-                >
-                  {book.description}
-                </p>
-              </CardContent>
-            )}
-
-            {/* Footer with metadata */}
+          {/* Categories for detailed variant */}
+          {isDetailed && book.categories && book.categories.length > 0 && (
             <CardFooter className="pt-0">
-              <div className="flex items-center justify-between w-full text-xs text-muted-foreground">
-                <div className="flex items-center gap-4">
-                  {publicationYear && (
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      <span>{publicationYear}</span>
-                    </div>
-                  )}
-
-                  {book.pageCount && (
-                    <div className="flex items-center gap-1">
-                      <BookOpen className="h-3 w-3" />
-                      <span>{book.pageCount} pages</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Rating */}
-                {book.averageRating && (
-                  <div className="flex items-center gap-1">
-                    <Star className="h-3 w-3 fill-current text-yellow-500" />
-                    <span className="font-medium">
-                      {book.averageRating.toFixed(1)}
-                    </span>
-                    {book.ratingsCount && (
-                      <span className="text-muted-foreground">
-                        ({book.ratingsCount.toLocaleString()})
-                      </span>
-                    )}
-                  </div>
+              <div className="flex flex-wrap gap-1">
+                {book.categories.slice(0, 3).map((category) => (
+                  <span
+                    key={category}
+                    className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full"
+                  >
+                    {category}
+                  </span>
+                ))}
+                {book.categories.length > 3 && (
+                  <span className="px-2 py-1 text-xs bg-muted text-muted-foreground rounded-full">
+                    +{book.categories.length - 3} more
+                  </span>
                 )}
               </div>
             </CardFooter>
-
-            {/* Categories for detailed variant */}
-            {isDetailed && book.categories && book.categories.length > 0 && (
-              <CardFooter className="pt-0">
-                <div className="flex flex-wrap gap-1">
-                  {book.categories.slice(0, 3).map((category) => (
-                    <span
-                      key={category}
-                      className="px-2 py-1 text-xs bg-primary/10 text-primary rounded-full"
-                    >
-                      {category}
-                    </span>
-                  ))}
-                  {book.categories.length > 3 && (
-                    <span className="px-2 py-1 text-xs bg-muted text-muted-foreground rounded-full">
-                      +{book.categories.length - 3} more
-                    </span>
-                  )}
-                </div>
-              </CardFooter>
-            )}
-          </>
-        )}
-      </Card>
-    </Link>
+          )}
+        </>
+      )}
+    </Card>
   );
 };

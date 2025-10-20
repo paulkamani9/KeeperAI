@@ -250,14 +250,25 @@ export function ReadingListDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{renderTrigger()}</DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent
+        align="end"
+        className="w-48"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
         <DropdownMenuLabel>
           {isInReadList ? "Change Status" : "Add to Reading List"}
         </DropdownMenuLabel>
 
         {/* Status Options */}
         <DropdownMenuItem
-          onClick={() => handleStatusSelect("want-to-read")}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleStatusSelect("want-to-read");
+          }}
           className={cn(
             currentStatus === "want-to-read" &&
               getStatusInfo("want-to-read").bgColor
@@ -270,7 +281,11 @@ export function ReadingListDropdown({
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          onClick={() => handleStatusSelect("reading")}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleStatusSelect("reading");
+          }}
           className={cn(
             currentStatus === "reading" && getStatusInfo("reading").bgColor
           )}
@@ -282,7 +297,11 @@ export function ReadingListDropdown({
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          onClick={() => handleStatusSelect("completed")}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleStatusSelect("completed");
+          }}
           className={cn(
             currentStatus === "completed" && getStatusInfo("completed").bgColor
           )}
@@ -298,7 +317,11 @@ export function ReadingListDropdown({
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={handleRemove}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleRemove();
+              }}
               className="text-destructive focus:text-destructive"
             >
               <Trash2 className="h-4 w-4 mr-2" />
