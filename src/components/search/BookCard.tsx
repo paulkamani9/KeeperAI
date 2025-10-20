@@ -2,7 +2,14 @@
 
 import React from "react";
 import Link from "next/link";
-import { Heart, ExternalLink, BookOpen, Calendar, Star } from "lucide-react";
+import {
+  Heart,
+  ExternalLink,
+  BookOpen,
+  Calendar,
+  Star,
+  ListPlus,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -20,6 +27,7 @@ import type { Book } from "@/types/book";
 import { useFavorites } from "@/hooks/useFavorites";
 import { SignInButton } from "@clerk/nextjs";
 import { toast } from "sonner";
+import { useReadList } from "@/hooks/useReadList";
 
 interface BookCardProps {
   /** Book data to display */
@@ -66,6 +74,13 @@ export const BookCard: React.FC<BookCardProps> = ({
     isLoading: isFavoriteLoading,
   } = useFavorites(book.id);
 
+  const {
+    isInReadList,
+    addBook,
+    isAuthenticated: isReadListAuthenticated,
+    isLoading: isReadListLoading,
+  } = useReadList(book.id);
+
   // Use prop value if provided, otherwise use hook value
   const isFavorite = isFavoriteProp ?? isFavorited;
 
@@ -103,6 +118,26 @@ export const BookCard: React.FC<BookCardProps> = ({
     } catch (error) {
       console.error("Error toggling favorite:", error);
       toast.error("Failed to update favorites. Please try again.");
+    }
+  };
+
+  // Handle reading list toggle with authentication check
+  const handleReadListClick = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation
+    e.stopPropagation(); // Prevent card click
+
+    if (!isReadListAuthenticated) {
+      toast.error("Please sign in to manage your reading list");
+      return;
+    }
+
+    try {
+      // Pass full Book object (from search results context)
+      await addBook(book, "want-to-read");
+      toast.success("Added to reading list");
+    } catch (error) {
+      console.error("Error adding to reading list:", error);
+      toast.error("Failed to add to reading list. Please try again.");
     }
   };
 
@@ -219,39 +254,77 @@ export const BookCard: React.FC<BookCardProps> = ({
             {showActions && (
               <CardAction className="flex flex-col gap-1">
                 {isAuthenticated ? (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={cn(
-                      "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
-                      isFavorite && "opacity-100"
-                    )}
-                    onClick={handleFavoriteClick}
-                    disabled={isFavoriteLoading}
-                    title={
-                      isFavorite ? "Remove from favorites" : "Add to favorites"
-                    }
-                  >
-                    <Heart
-                      className={cn(
-                        "h-4 w-4 transition-colors",
-                        isFavorite
-                          ? "fill-red-500 text-red-500"
-                          : "text-muted-foreground hover:text-red-500"
-                      )}
-                    />
-                  </Button>
-                ) : (
-                  <SignInButton mode="modal">
+                  <>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                      title="Sign in to favorite"
+                      className={cn(
+                        "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
+                        isFavorite && "opacity-100"
+                      )}
+                      onClick={handleFavoriteClick}
+                      disabled={isFavoriteLoading}
+                      title={
+                        isFavorite
+                          ? "Remove from favorites"
+                          : "Add to favorites"
+                      }
                     >
-                      <Heart className="h-4 w-4 text-muted-foreground hover:text-red-500" />
+                      <Heart
+                        className={cn(
+                          "h-4 w-4 transition-colors",
+                          isFavorite
+                            ? "fill-red-500 text-red-500"
+                            : "text-muted-foreground hover:text-red-500"
+                        )}
+                      />
                     </Button>
-                  </SignInButton>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={cn(
+                        "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
+                        isInReadList && "opacity-100"
+                      )}
+                      onClick={handleReadListClick}
+                      disabled={isReadListLoading}
+                      title={
+                        isInReadList ? "In reading list" : "Add to reading list"
+                      }
+                    >
+                      <ListPlus
+                        className={cn(
+                          "h-4 w-4 transition-colors",
+                          isInReadList
+                            ? "fill-blue-500 text-blue-500"
+                            : "text-muted-foreground hover:text-blue-500"
+                        )}
+                      />
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <SignInButton mode="modal">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Sign in to favorite"
+                      >
+                        <Heart className="h-4 w-4 text-muted-foreground hover:text-red-500" />
+                      </Button>
+                    </SignInButton>
+                    <SignInButton mode="modal">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Sign in to add to reading list"
+                      >
+                        <ListPlus className="h-4 w-4 text-muted-foreground hover:text-blue-500" />
+                      </Button>
+                    </SignInButton>
+                  </>
                 )}
 
                 {book.previewLink && (
