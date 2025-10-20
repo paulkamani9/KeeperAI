@@ -33,7 +33,7 @@ export interface PaginationInfo {
 // Search results structure
 export interface SearchResults {
   /** Array of books returned from search */
-  books: Book[]
+  books: Book[];
   /** Pagination information */
   pagination: PaginationInfo;
   /** The query that generated these results */
@@ -285,7 +285,6 @@ export const ResultsList: React.FC<ResultsListProps> = ({
                   ? "compact"
                   : "default"
             }
-            isFavorite={favoriteBookIds.has(book.id)}
             onFavoriteToggle={onFavoriteToggle}
           />
         ))}

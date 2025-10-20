@@ -9,6 +9,8 @@ import { Heart, Loader2 } from "lucide-react";
 import { convexBookToBook } from "@/lib/convexBookHelpers";
 import Link from "next/link";
 import MainContent from "@/components/shared/MainContent";
+import type { Book } from "@/types/book";
+import { fa } from "zod/v4/locales";
 
 export function FavoritesView() {
   const { user, isLoaded } = useUser();
@@ -79,14 +81,18 @@ export function FavoritesView() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {favoritesWithBooks.map((favorite) => (
-            <BookCard
-              key={favorite._id}
-              book={convexBookToBook(favorite.book)}
-              isFavorite={true}
-              showActions={true}
-            />
-          ))}
+          {favoritesWithBooks.map((favorite) => {
+            const book: Book = favorite.book;
+
+            return (
+              <BookCard
+                key={favorite._id}
+                book={book}
+                isFavorite={true}
+                showActions={true}
+              />
+            );
+          })}
         </div>
       )}
     </MainContent>

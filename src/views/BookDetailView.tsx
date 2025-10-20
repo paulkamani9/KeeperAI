@@ -549,22 +549,20 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
                                   handleAddToReadList("want-to-read")
                                 }
                               >
+                                <span className="h-2 w-2 rounded-sm bg-blue-400 mr-1" />{" "}
                                 Want to Read
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => handleAddToReadList("reading")}
                               >
+                                <span className="h-2 w-2 rounded-sm bg-yellow-400 mr-1" />{" "}
                                 Reading
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => handleAddToReadList("completed")}
                               >
+                                <span className="h-2 w-2 rounded-sm bg-green-400 mr-1" />
                                 Completed
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleAddToReadList()}
-                              >
-                                Add without Status
                               </DropdownMenuItem>
                             </>
                           )}

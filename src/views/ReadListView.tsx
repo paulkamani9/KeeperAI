@@ -11,6 +11,9 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import MainContent from "@/components/shared/MainContent";
+import { useReadList } from "@/hooks/useReadList";
+import { toast } from "sonner";
+import type { Book } from "@/types/book";
 
 type StatusFilter = "all" | "want-to-read" | "reading" | "completed";
 
@@ -28,6 +31,54 @@ export function ReadListView() {
         }
       : "skip"
   );
+
+  // Initialize reading list hook for managing books
+  const { updateReadingStatus, removeBook } = useReadList();
+
+  // Handler for status changes
+  const handleStatusChange = async (
+    bookId: string,
+    status: "want-to-read" | "reading" | "completed"
+  ) => {
+    if (!user) return;
+
+    try {
+      await updateReadingStatus(bookId, status);
+      toast.success(
+        `Status updated to "${getStatusLabel(status).replace(/-/g, " ")}"`
+      );
+    } catch (error) {
+      console.error("Error updating status:", error);
+      toast.error("Failed to update status. Please try again.");
+    }
+  };
+
+  // Handler for removing from reading list
+  const handleRemove = async (bookId: string) => {
+    if (!user) return;
+
+    try {
+      await removeBook(bookId);
+      toast.success("Removed from reading list");
+    } catch (error) {
+      console.error("Error removing book:", error);
+      toast.error("Failed to remove book. Please try again.");
+    }
+  };
+
+  // Helper to get readable status label
+  const getStatusLabel = (status: "want-to-read" | "reading" | "completed") => {
+    switch (status) {
+      case "want-to-read":
+        return "Want to Read";
+      case "reading":
+        return "Reading";
+      case "completed":
+        return "Completed";
+      default:
+        return status;
+    }
+  };
 
   // Loading state
   if (!isLoaded) {
@@ -104,13 +155,21 @@ export function ReadListView() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {readListItems.map((item) => (
-                <BookCard
-                  key={item._id}
-                  book={convexBookToBook(item.book)}
-                  showActions={true}
-                />
-              ))}
+              {readListItems.map((item) => {
+                const book: Book = item.book;
+
+                return (
+                  <BookCard
+                    key={item._id}
+                    book={book}
+                    showActions={true}
+                    showReadingListActions={true}
+                    currentReadingStatus={item.status}
+                    onStatusChange={handleStatusChange}
+                    onRemove={handleRemove}
+                  />
+                );
+              })}
             </div>
           )}
         </TabsContent>

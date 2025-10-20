@@ -125,14 +125,6 @@ export const SearchView = () => {
     [router, searchParams]
   );
 
-  // Handle favorite toggle - could integrate with favorites system
-  const handleFavoriteToggle = useCallback(
-    (bookId: string, isFavorite: boolean) => {
-      // TODO: Integrate with favorites system when implemented
-    },
-    []
-  );
-
   // Format error message for display
   const errorMessage = error ? String(error.message || error) : null;
 
@@ -155,7 +147,6 @@ export const SearchView = () => {
         results={transformedResults}
         isLoading={isLoading || isSearching}
         error={errorMessage}
-        onFavoriteToggle={handleFavoriteToggle}
         onPageChange={handlePageChange}
         showMetadata={true}
         variant="grid"

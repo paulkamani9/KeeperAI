@@ -9,6 +9,8 @@ import {
   Calendar,
   Star,
   ListPlus,
+  Trash2,
+  MoreVertical,
 } from "lucide-react";
 import {
   Card,
@@ -28,6 +30,15 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { SignInButton } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { useReadList } from "@/hooks/useReadList";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
 interface BookCardProps {
   /** Book data to display */
@@ -44,6 +55,17 @@ interface BookCardProps {
   className?: string;
   /** Whether to show action buttons */
   showActions?: boolean;
+  /** Whether to show reading list management actions (status change, remove) */
+  showReadingListActions?: boolean;
+  /** Current reading status (if in reading list) */
+  currentReadingStatus?: "want-to-read" | "reading" | "completed";
+  /** Callback when reading status is changed */
+  onStatusChange?: (
+    bookId: string,
+    status: "want-to-read" | "reading" | "completed"
+  ) => void;
+  /** Callback when book is removed from reading list */
+  onRemove?: (bookId: string) => void;
 }
 
 /**
@@ -65,6 +87,10 @@ export const BookCard: React.FC<BookCardProps> = ({
   variant = "default",
   className,
   showActions = true,
+  showReadingListActions = false,
+  currentReadingStatus,
+  onStatusChange,
+  onRemove,
 }) => {
   // Use favorites hook for state management
   const {
@@ -149,6 +175,43 @@ export const BookCard: React.FC<BookCardProps> = ({
     }
   };
 
+  // Handle reading status change
+  const handleStatusChange = async (
+    e: React.MouseEvent,
+    status: "want-to-read" | "reading" | "completed"
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (onStatusChange) {
+      onStatusChange(book.id, status);
+    }
+  };
+
+  // Handle remove from reading list
+  const handleRemove = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (onRemove) {
+      onRemove(book.id);
+    }
+  };
+
+  // Helper to get status label and color
+  const getStatusInfo = (status?: "want-to-read" | "reading" | "completed") => {
+    switch (status) {
+      case "want-to-read":
+        return { label: "Want to Read", variant: "info" as const };
+      case "reading":
+        return { label: "Reading", variant: "warning" as const };
+      case "completed":
+        return { label: "Completed", variant: "success" as const };
+      default:
+        return null;
+    }
+  };
+
   // Loading skeleton
   if (isLoading) {
     return (
@@ -217,14 +280,25 @@ export const BookCard: React.FC<BookCardProps> = ({
 
             {/* Book Info */}
             <div className="flex-1 min-w-0">
-              <CardTitle
-                className={cn(
-                  "line-clamp-2 group-hover:text-primary transition-colors",
-                  isCompact ? "text-sm" : "text-base"
+              <div className="flex items-start gap-2 mb-1">
+                <CardTitle
+                  className={cn(
+                    "line-clamp-2 group-hover:text-primary transition-colors flex-1",
+                    isCompact ? "text-sm" : "text-base"
+                  )}
+                >
+                  {book.title}
+                </CardTitle>
+                {/* Status badge for reading list */}
+                {showReadingListActions && currentReadingStatus && (
+                  <Badge
+                    variant={getStatusInfo(currentReadingStatus)?.variant}
+                    className="flex-shrink-0"
+                  >
+                    {getStatusInfo(currentReadingStatus)?.label}
+                  </Badge>
                 )}
-              >
-                {book.title}
-              </CardTitle>
+              </div>
 
               <CardDescription
                 className={cn(
@@ -253,77 +327,138 @@ export const BookCard: React.FC<BookCardProps> = ({
             {/* Actions */}
             {showActions && (
               <CardAction className="flex flex-col gap-1">
-                {isAuthenticated ? (
+                {/* Reading List Management Actions (for ReadListView) */}
+                {showReadingListActions ? (
                   <>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className={cn(
-                        "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
-                        isFavorite && "opacity-100"
-                      )}
-                      onClick={handleFavoriteClick}
-                      disabled={isFavoriteLoading}
-                      title={
-                        isFavorite
-                          ? "Remove from favorites"
-                          : "Add to favorites"
-                      }
-                    >
-                      <Heart
-                        className={cn(
-                          "h-4 w-4 transition-colors",
-                          isFavorite
-                            ? "fill-red-500 text-red-500"
-                            : "text-muted-foreground hover:text-red-500"
-                        )}
-                      />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className={cn(
-                        "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
-                        isInReadList && "opacity-100"
-                      )}
-                      onClick={handleReadListClick}
-                      disabled={isReadListLoading}
-                      title={
-                        isInReadList ? "In reading list" : "Add to reading list"
-                      }
-                    >
-                      <ListPlus
-                        className={cn(
-                          "h-4 w-4 transition-colors",
-                          isInReadList
-                            ? "fill-blue-500 text-blue-500"
-                            : "text-muted-foreground hover:text-blue-500"
-                        )}
-                      />
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                          title="Manage reading status"
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Change Status</DropdownMenuLabel>
+                        <DropdownMenuItem
+                          onClick={(e) => handleStatusChange(e, "want-to-read")}
+                          className={cn(
+                            currentReadingStatus === "want-to-read" &&
+                              "bg-blue-50 dark:bg-blue-950"
+                          )}
+                        >
+                          Want to Read
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => handleStatusChange(e, "reading")}
+                          className={cn(
+                            currentReadingStatus === "reading" &&
+                              "bg-yellow-50 dark:bg-yellow-950"
+                          )}
+                        >
+                          Reading
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={(e) => handleStatusChange(e, "completed")}
+                          className={cn(
+                            currentReadingStatus === "completed" &&
+                              "bg-green-50 dark:bg-green-950"
+                          )}
+                        >
+                          Completed
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={handleRemove}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Remove from List
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </>
                 ) : (
+                  /* Standard Actions (for Search Results) */
                   <>
-                    <SignInButton mode="modal">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                        title="Sign in to favorite"
-                      >
-                        <Heart className="h-4 w-4 text-muted-foreground hover:text-red-500" />
-                      </Button>
-                    </SignInButton>
-                    <SignInButton mode="modal">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                        title="Sign in to add to reading list"
-                      >
-                        <ListPlus className="h-4 w-4 text-muted-foreground hover:text-blue-500" />
-                      </Button>
-                    </SignInButton>
+                    {isAuthenticated ? (
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={cn(
+                            "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
+                            isFavorite && "opacity-100"
+                          )}
+                          onClick={handleFavoriteClick}
+                          disabled={isFavoriteLoading}
+                          title={
+                            isFavorite
+                              ? "Remove from favorites"
+                              : "Add to favorites"
+                          }
+                        >
+                          <Heart
+                            className={cn(
+                              "h-4 w-4 transition-colors",
+                              isFavorite
+                                ? "fill-red-500 text-red-500"
+                                : "text-muted-foreground hover:text-red-500"
+                            )}
+                          />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={cn(
+                            "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
+                            isInReadList && "opacity-100"
+                          )}
+                          onClick={handleReadListClick}
+                          disabled={isReadListLoading}
+                          title={
+                            isInReadList
+                              ? "In reading list"
+                              : "Add to reading list"
+                          }
+                        >
+                          <ListPlus
+                            className={cn(
+                              "h-4 w-4 transition-colors",
+                              isInReadList
+                                ? "fill-blue-500 text-blue-500"
+                                : "text-muted-foreground hover:text-blue-500"
+                            )}
+                          />
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <SignInButton mode="modal">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                            title="Sign in to favorite"
+                          >
+                            <Heart className="h-4 w-4 text-muted-foreground hover:text-red-500" />
+                          </Button>
+                        </SignInButton>
+                        <SignInButton mode="modal">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                            title="Sign in to add to reading list"
+                          >
+                            <ListPlus className="h-4 w-4 text-muted-foreground hover:text-blue-500" />
+                          </Button>
+                        </SignInButton>
+                      </>
+                    )}
                   </>
                 )}
 
