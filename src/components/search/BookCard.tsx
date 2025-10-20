@@ -2,16 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import {
-  Heart,
-  ExternalLink,
-  BookOpen,
-  Calendar,
-  Star,
-  ListPlus,
-  Trash2,
-  MoreVertical,
-} from "lucide-react";
+import { Heart, ExternalLink, BookOpen, Calendar, Star } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -30,15 +21,9 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { SignInButton } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { useReadList } from "@/hooks/useReadList";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { ReadingListDropdown } from "@/components/shared/ReadingListDropdown";
+import type { ReadingStatus } from "@/components/shared/ReadingListDropdown";
 
 interface BookCardProps {
   /** Book data to display */
@@ -58,12 +43,9 @@ interface BookCardProps {
   /** Whether to show reading list management actions (status change, remove) */
   showReadingListActions?: boolean;
   /** Current reading status (if in reading list) */
-  currentReadingStatus?: "want-to-read" | "reading" | "completed";
+  currentReadingStatus?: ReadingStatus;
   /** Callback when reading status is changed */
-  onStatusChange?: (
-    bookId: string,
-    status: "want-to-read" | "reading" | "completed"
-  ) => void;
+  onStatusChange?: (bookId: string, status: ReadingStatus) => void;
   /** Callback when book is removed from reading list */
   onRemove?: (bookId: string) => void;
 }
@@ -147,26 +129,6 @@ export const BookCard: React.FC<BookCardProps> = ({
     }
   };
 
-  // Handle reading list toggle with authentication check
-  const handleReadListClick = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
-    e.stopPropagation(); // Prevent card click
-
-    if (!isReadListAuthenticated) {
-      toast.error("Please sign in to manage your reading list");
-      return;
-    }
-
-    try {
-      // Pass full Book object (from search results context)
-      await addBook(book, "want-to-read");
-      toast.success("Added to reading list");
-    } catch (error) {
-      console.error("Error adding to reading list:", error);
-      toast.error("Failed to add to reading list. Please try again.");
-    }
-  };
-
   // Handle external link click
   const handleLinkClick = (e: React.MouseEvent, url?: string) => {
     e.stopPropagation(); // Prevent card click
@@ -175,31 +137,8 @@ export const BookCard: React.FC<BookCardProps> = ({
     }
   };
 
-  // Handle reading status change
-  const handleStatusChange = async (
-    e: React.MouseEvent,
-    status: "want-to-read" | "reading" | "completed"
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (onStatusChange) {
-      onStatusChange(book.id, status);
-    }
-  };
-
-  // Handle remove from reading list
-  const handleRemove = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (onRemove) {
-      onRemove(book.id);
-    }
-  };
-
   // Helper to get status label and color
-  const getStatusInfo = (status?: "want-to-read" | "reading" | "completed") => {
+  const getStatusInfo = (status?: ReadingStatus) => {
     switch (status) {
       case "want-to-read":
         return { label: "Want to Read", variant: "info" as const };
@@ -329,58 +268,27 @@ export const BookCard: React.FC<BookCardProps> = ({
               <CardAction className="flex flex-col gap-1">
                 {/* Reading List Management Actions (for ReadListView) */}
                 {showReadingListActions ? (
-                  <>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                          title="Manage reading status"
-                        >
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Change Status</DropdownMenuLabel>
-                        <DropdownMenuItem
-                          onClick={(e) => handleStatusChange(e, "want-to-read")}
-                          className={cn(
-                            currentReadingStatus === "want-to-read" &&
-                              "bg-blue-50 dark:bg-blue-950"
-                          )}
-                        >
-                          Want to Read
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={(e) => handleStatusChange(e, "reading")}
-                          className={cn(
-                            currentReadingStatus === "reading" &&
-                              "bg-yellow-50 dark:bg-yellow-950"
-                          )}
-                        >
-                          Reading
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={(e) => handleStatusChange(e, "completed")}
-                          className={cn(
-                            currentReadingStatus === "completed" &&
-                              "bg-green-50 dark:bg-green-950"
-                          )}
-                        >
-                          Completed
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={handleRemove}
-                          className="text-destructive focus:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Remove from List
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </>
+                  <ReadingListDropdown
+                    currentStatus={currentReadingStatus}
+                    isInReadList={true}
+                    onStatusChange={(status) => {
+                      if (onStatusChange) {
+                        onStatusChange(book.id, status);
+                      }
+                    }}
+                    onRemove={() => {
+                      if (onRemove) {
+                        onRemove(book.id);
+                      }
+                    }}
+                    variant="icon"
+                    isAuthenticated={isReadListAuthenticated}
+                    isLoading={isReadListLoading}
+                    onTriggerClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  />
                 ) : (
                   /* Standard Actions (for Search Results) */
                   <>
@@ -410,30 +318,38 @@ export const BookCard: React.FC<BookCardProps> = ({
                             )}
                           />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className={cn(
-                            "h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity",
-                            isInReadList && "opacity-100"
-                          )}
-                          onClick={handleReadListClick}
-                          disabled={isReadListLoading}
-                          title={
-                            isInReadList
-                              ? "In reading list"
-                              : "Add to reading list"
-                          }
-                        >
-                          <ListPlus
-                            className={cn(
-                              "h-4 w-4 transition-colors",
-                              isInReadList
-                                ? "fill-blue-500 text-blue-500"
-                                : "text-muted-foreground hover:text-blue-500"
-                            )}
-                          />
-                        </Button>
+                        <ReadingListDropdown
+                          currentStatus={undefined}
+                          isInReadList={isInReadList}
+                          onAdd={async (status) => {
+                            // Handle adding book to reading list from search
+                            if (!isReadListAuthenticated) {
+                              toast.error(
+                                "Please sign in to manage your reading list"
+                              );
+                              return;
+                            }
+                            try {
+                              await addBook(book, status);
+                              toast.success("Added to reading list");
+                            } catch (error) {
+                              console.error(
+                                "Error adding to reading list:",
+                                error
+                              );
+                              toast.error(
+                                "Failed to add to reading list. Please try again."
+                              );
+                            }
+                          }}
+                          variant="icon"
+                          isAuthenticated={isReadListAuthenticated}
+                          isLoading={isReadListLoading}
+                          onTriggerClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                        />
                       </>
                     ) : (
                       <>
@@ -447,16 +363,16 @@ export const BookCard: React.FC<BookCardProps> = ({
                             <Heart className="h-4 w-4 text-muted-foreground hover:text-red-500" />
                           </Button>
                         </SignInButton>
-                        <SignInButton mode="modal">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                            title="Sign in to add to reading list"
-                          >
-                            <ListPlus className="h-4 w-4 text-muted-foreground hover:text-blue-500" />
-                          </Button>
-                        </SignInButton>
+                        <ReadingListDropdown
+                          currentStatus={undefined}
+                          isInReadList={false}
+                          variant="icon"
+                          isAuthenticated={false}
+                          onTriggerClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                        />
                       </>
                     )}
                   </>

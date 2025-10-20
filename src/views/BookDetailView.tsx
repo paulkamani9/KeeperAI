@@ -11,9 +11,6 @@ import {
   Heart,
   Sparkles,
   ChevronLeft,
-  BookOpenIcon,
-  BookMarked,
-  Check,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -29,17 +26,12 @@ import {
 import { SummaryGenerationProgress } from "@/components/summary/SummaryGenerationProgress";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
 import { useSummaryGeneration } from "@/hooks/useSummaryGeneration";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useReadList, type ReadingStatus } from "@/hooks/useReadList";
+import { ReadingListDropdown } from "@/components/shared/ReadingListDropdown";
 
 interface BookDetailViewProps {
   /** Book data to display */
@@ -429,7 +421,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
                           className="w-full"
                           size="lg"
                         >
-                          <BookOpenIcon className="h-4 w-4 mr-2" />
+                          <BookOpen className="h-4 w-4 mr-2" />
                           View Summary
                         </Button>
                       )}
@@ -471,7 +463,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
                         <Heart
                           className={cn(
                             "h-4 w-4 mr-2",
-                            isFavorited && "fill-current"
+                            isFavorited && "text-red-400 fill-red-500"
                           )}
                         />
                         {isFavorited ? "Favorited" : "Add to Favorites"}
@@ -486,96 +478,15 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
                     )}
 
                     {/* Reading List Dropdown */}
-                    {isReadListAuthenticated ? (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant={isInReadList ? "default" : "outline"}
-                            className="flex-1"
-                          >
-                            <BookMarked
-                              className={cn(
-                                "h-4 w-4 mr-2",
-                                isInReadList && "fill-current"
-                              )}
-                            />
-                            {isInReadList
-                              ? currentStatus
-                                ? getStatusLabel(currentStatus)
-                                : "In Reading List"
-                              : "Add to List"}
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          {isInReadList ? (
-                            <>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleUpdateStatus("want-to-read")
-                                }
-                              >
-                                {currentStatus === "want-to-read" && (
-                                  <Check className="h-4 w-4 mr-2" />
-                                )}
-                                Want to Read
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleUpdateStatus("reading")}
-                              >
-                                {currentStatus === "reading" && (
-                                  <Check className="h-4 w-4 mr-2" />
-                                )}
-                                Reading
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleUpdateStatus("completed")}
-                              >
-                                {currentStatus === "completed" && (
-                                  <Check className="h-4 w-4 mr-2" />
-                                )}
-                                Completed
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={handleRemoveFromReadList}
-                                className="text-destructive"
-                              >
-                                Remove from List
-                              </DropdownMenuItem>
-                            </>
-                          ) : (
-                            <>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleAddToReadList("want-to-read")
-                                }
-                              >
-                                <span className="h-2 w-2 rounded-sm bg-blue-400 mr-1" />{" "}
-                                Want to Read
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleAddToReadList("reading")}
-                              >
-                                <span className="h-2 w-2 rounded-sm bg-yellow-400 mr-1" />{" "}
-                                Reading
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleAddToReadList("completed")}
-                              >
-                                <span className="h-2 w-2 rounded-sm bg-green-400 mr-1" />
-                                Completed
-                              </DropdownMenuItem>
-                            </>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    ) : (
-                      <SignInButton mode="modal">
-                        <Button variant="outline" className="flex-1">
-                          <BookMarked className="h-4 w-4 mr-2" />
-                          Add to List
-                        </Button>
-                      </SignInButton>
-                    )}
+                    <ReadingListDropdown
+                      currentStatus={currentStatus}
+                      isInReadList={isInReadList}
+                      onStatusChange={handleUpdateStatus}
+                      onAdd={handleAddToReadList}
+                      onRemove={handleRemoveFromReadList}
+                      variant="button"
+                      isAuthenticated={isReadListAuthenticated}
+                    />
 
                     {book.previewLink && (
                       <Button variant="outline" size="icon" asChild>
