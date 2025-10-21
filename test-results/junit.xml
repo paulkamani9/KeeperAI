@@ -1,2 +1,184 @@
-<testsuites id="" name="" tests="0" failures="0" skipped="0" errors="0" time="0.26275200000032783">
+<testsuites id="" name="" tests="5" failures="5" skipped="0" errors="0" time="10.379324000000022">
+<testsuite name="__tests__/e2e/summary-saving.visual.test.ts" timestamp="2025-10-21T10:23:57.833Z" hostname="chromium" tests="5" failures="5" skipped="0" time="20.698" errors="0">
+<testcase name="Summary Saving Flow › should save and unsave a summary" classname="__tests__/e2e/summary-saving.visual.test.ts" time="4.409">
+<failure message="summary-saving.visual.test.ts:40:7 should save and unsave a summary" type="FAILURE">
+<![CDATA[  [chromium] › __tests__/e2e/summary-saving.visual.test.ts:40:7 › Summary Saving Flow › should save and unsave a summary 
+
+    Error: locator.isVisible: Error: strict mode violation: getByRole('button', { name: /sign in/i }) resolved to 2 elements:
+        1) <button data-slot="button" component="SignInButton" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg…>…</button> aka locator('div').filter({ hasText: /^Sign In$/ }).getByRole('button')
+        2) <button data-slot="button" component="SignInButton" class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background…>…</button> aka getByLabel('Primary navigation').getByRole('button', { name: 'Sign In' })
+
+    Call log:
+        - checking visibility of getByRole('button', { name: /sign in/i })
+
+
+      23 |     // Click sign in button (if visible)
+      24 |     const signInButton = page.getByRole("button", { name: /sign in/i });
+    > 25 |     if (await signInButton.isVisible()) {
+         |                            ^
+      26 |       await signInButton.click();
+      27 |
+      28 |       // Fill in Clerk sign-in form (adjust selectors based on your setup)
+        at /Users/paulkamani/Documents/projects/OUTCLEVER/src/__tests__/e2e/summary-saving.visual.test.ts:25:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/__tests__-e2e-summary-savi-092f2-d-save-and-unsave-a-summary-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/__tests__-e2e-summary-savi-092f2-d-save-and-unsave-a-summary-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|__tests__-e2e-summary-savi-092f2-d-save-and-unsave-a-summary-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|__tests__-e2e-summary-savi-092f2-d-save-and-unsave-a-summary-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Summary Saving Flow › should not allow unauthenticated user to save summary" classname="__tests__/e2e/summary-saving.visual.test.ts" time="4.956">
+<failure message="summary-saving.visual.test.ts:138:7 should not allow unauthenticated user to save summary" type="FAILURE">
+<![CDATA[  [chromium] › __tests__/e2e/summary-saving.visual.test.ts:138:7 › Summary Saving Flow › should not allow unauthenticated user to save summary 
+
+    Error: locator.isVisible: Error: strict mode violation: getByRole('button', { name: /sign in/i }) resolved to 2 elements:
+        1) <button data-slot="button" component="SignInButton" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg…>…</button> aka locator('div').filter({ hasText: /^Sign In$/ }).getByRole('button')
+        2) <button data-slot="button" component="SignInButton" class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background…>…</button> aka getByLabel('Primary navigation').getByRole('button', { name: 'Sign In' })
+
+    Call log:
+        - checking visibility of getByRole('button', { name: /sign in/i })
+
+
+      23 |     // Click sign in button (if visible)
+      24 |     const signInButton = page.getByRole("button", { name: /sign in/i });
+    > 25 |     if (await signInButton.isVisible()) {
+         |                            ^
+      26 |       await signInButton.click();
+      27 |
+      28 |       // Fill in Clerk sign-in form (adjust selectors based on your setup)
+        at /Users/paulkamani/Documents/projects/OUTCLEVER/src/__tests__/e2e/summary-saving.visual.test.ts:25:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/__tests__-e2e-summary-savi-42f45-icated-user-to-save-summary-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/__tests__-e2e-summary-savi-42f45-icated-user-to-save-summary-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|__tests__-e2e-summary-savi-42f45-icated-user-to-save-summary-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|__tests__-e2e-summary-savi-42f45-icated-user-to-save-summary-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Summary Saving Flow › should show saved summaries in the saved summaries page" classname="__tests__/e2e/summary-saving.visual.test.ts" time="4.665">
+<failure message="summary-saving.visual.test.ts:167:7 should show saved summaries in the saved summaries page" type="FAILURE">
+<![CDATA[  [chromium] › __tests__/e2e/summary-saving.visual.test.ts:167:7 › Summary Saving Flow › should show saved summaries in the saved summaries page 
+
+    Error: locator.isVisible: Error: strict mode violation: getByRole('button', { name: /sign in/i }) resolved to 2 elements:
+        1) <button data-slot="button" component="SignInButton" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg…>…</button> aka locator('div').filter({ hasText: /^Sign In$/ }).getByRole('button')
+        2) <button data-slot="button" component="SignInButton" class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background…>…</button> aka getByLabel('Primary navigation').getByRole('button', { name: 'Sign In' })
+
+    Call log:
+        - checking visibility of getByRole('button', { name: /sign in/i })
+
+
+      23 |     // Click sign in button (if visible)
+      24 |     const signInButton = page.getByRole("button", { name: /sign in/i });
+    > 25 |     if (await signInButton.isVisible()) {
+         |                            ^
+      26 |       await signInButton.click();
+      27 |
+      28 |       // Fill in Clerk sign-in form (adjust selectors based on your setup)
+        at /Users/paulkamani/Documents/projects/OUTCLEVER/src/__tests__/e2e/summary-saving.visual.test.ts:25:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/__tests__-e2e-summary-savi-ba9e2-in-the-saved-summaries-page-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/__tests__-e2e-summary-savi-ba9e2-in-the-saved-summaries-page-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|__tests__-e2e-summary-savi-ba9e2-in-the-saved-summaries-page-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|__tests__-e2e-summary-savi-ba9e2-in-the-saved-summaries-page-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Summary Saving Flow › should handle save errors gracefully" classname="__tests__/e2e/summary-saving.visual.test.ts" time="4.322">
+<failure message="summary-saving.visual.test.ts:192:7 should handle save errors gracefully" type="FAILURE">
+<![CDATA[  [chromium] › __tests__/e2e/summary-saving.visual.test.ts:192:7 › Summary Saving Flow › should handle save errors gracefully 
+
+    Error: locator.isVisible: Error: strict mode violation: getByRole('button', { name: /sign in/i }) resolved to 2 elements:
+        1) <button data-slot="button" component="SignInButton" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg…>…</button> aka locator('div').filter({ hasText: /^Sign In$/ }).getByRole('button')
+        2) <button data-slot="button" component="SignInButton" class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background…>…</button> aka getByLabel('Primary navigation').getByRole('button', { name: 'Sign In' })
+
+    Call log:
+        - checking visibility of getByRole('button', { name: /sign in/i })
+
+
+      23 |     // Click sign in button (if visible)
+      24 |     const signInButton = page.getByRole("button", { name: /sign in/i });
+    > 25 |     if (await signInButton.isVisible()) {
+         |                            ^
+      26 |       await signInButton.click();
+      27 |
+      28 |       // Fill in Clerk sign-in form (adjust selectors based on your setup)
+        at /Users/paulkamani/Documents/projects/OUTCLEVER/src/__tests__/e2e/summary-saving.visual.test.ts:25:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/__tests__-e2e-summary-savi-87f8a-ndle-save-errors-gracefully-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/__tests__-e2e-summary-savi-87f8a-ndle-save-errors-gracefully-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|__tests__-e2e-summary-savi-87f8a-ndle-save-errors-gracefully-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|__tests__-e2e-summary-savi-87f8a-ndle-save-errors-gracefully-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Summary Saving Flow › should preserve saved state across page refreshes" classname="__tests__/e2e/summary-saving.visual.test.ts" time="2.346">
+<failure message="summary-saving.visual.test.ts:216:7 should preserve saved state across page refreshes" type="FAILURE">
+<![CDATA[  [chromium] › __tests__/e2e/summary-saving.visual.test.ts:216:7 › Summary Saving Flow › should preserve saved state across page refreshes 
+
+    Error: locator.isVisible: Error: strict mode violation: getByRole('button', { name: /sign in/i }) resolved to 2 elements:
+        1) <button data-slot="button" component="SignInButton" class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg…>…</button> aka locator('div').filter({ hasText: /^Sign In$/ }).getByRole('button')
+        2) <button data-slot="button" component="SignInButton" class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background…>…</button> aka getByLabel('Primary navigation').getByRole('button', { name: 'Sign In' })
+
+    Call log:
+        - checking visibility of getByRole('button', { name: /sign in/i })
+
+
+      23 |     // Click sign in button (if visible)
+      24 |     const signInButton = page.getByRole("button", { name: /sign in/i });
+    > 25 |     if (await signInButton.isVisible()) {
+         |                            ^
+      26 |       await signInButton.click();
+      27 |
+      28 |       // Fill in Clerk sign-in form (adjust selectors based on your setup)
+        at /Users/paulkamani/Documents/projects/OUTCLEVER/src/__tests__/e2e/summary-saving.visual.test.ts:25:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../test-results/__tests__-e2e-summary-savi-7b9be-state-across-page-refreshes-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../test-results/__tests__-e2e-summary-savi-7b9be-state-across-page-refreshes-chromium/error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|__tests__-e2e-summary-savi-7b9be-state-across-page-refreshes-chromium/test-failed-1.png]]
+
+[[ATTACHMENT|__tests__-e2e-summary-savi-7b9be-state-across-page-refreshes-chromium/error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
 </testsuites>

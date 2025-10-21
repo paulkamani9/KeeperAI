@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import {
@@ -33,6 +33,7 @@ import { FavoriteToggle } from "../shared/FavoriteToggle";
 import { useUser } from "@clerk/nextjs";
 import { useReadList, type ReadingStatus } from "@/hooks/useReadList";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useSavedSummaries } from "@/hooks/useSavedSummaries";
 
 interface SummaryActionsProps {
   /** Summary data */
@@ -55,7 +56,6 @@ interface SummaryActionsProps {
  */
 export function SummaryActions({ summary, className }: SummaryActionsProps) {
   const { user } = useUser();
-  const [isSaved, setIsSaved] = useState(false); // TODO: Replace with real state in Phase 3
 
   // Reading list hook
   const {
@@ -68,11 +68,15 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
   } = useReadList(summary.bookId);
 
   // Favorites hook
+  const { isFavorited, toggleFavorite } = useFavorites(summary.bookId);
+
+  // Saved summaries hook
   const {
-    isFavorited,
-    toggleFavorite,
-    isLoading: favoriteLoading,
-  } = useFavorites(summary.bookId);
+    isSaved,
+    toggleSave,
+    isAuthenticated: isSavedAuthenticated,
+    isLoading: savedLoading,
+  } = useSavedSummaries(summary.id);
 
   // Handle copy summary link
   const handleCopyLink = async () => {
@@ -91,14 +95,24 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
     window.print();
   };
 
-  // Handle save summary (placeholder)
-  const handleSaveSummary = () => {
-    setIsSaved(!isSaved);
-    toast.success(
-      isSaved
-        ? "Summary removed from saved summaries"
-        : "Summary saved to saved summaries"
-    );
+  // Handle save summary
+  const handleSaveSummary = async () => {
+    if (!user) {
+      toast.error("Please sign in to save summaries");
+      return;
+    }
+
+    try {
+      await toggleSave(summary.bookId);
+      toast.success(
+        isSaved
+          ? "Summary removed from saved summaries"
+          : "Summary saved to your collection"
+      );
+    } catch (error) {
+      toast.error("Failed to save summary. Please try again.");
+      console.error("Error saving summary:", error);
+    }
   };
 
   // Handle social sharing
