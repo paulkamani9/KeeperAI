@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardAction,
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -203,11 +202,19 @@ export const BookCard: React.FC<BookCardProps> = ({
       )}
       onClick={handleCardClick}
     >
-      <CardHeader className={cn(isCompact && "p-0 gap-3")}>
-        <div className={cn("flex gap-4", isCompact && "gap-3")}>
+      <CardHeader className={cn(isCompact && "p-0")}>
+        <div
+          className={cn(
+            "grid items-start",
+            isCompact
+              ? "gap-3 grid-cols-[minmax(0,1fr)] sm:grid-cols-[minmax(0,1fr)_auto]"
+              : "gap-4 grid-cols-[auto_minmax(0,1fr)] sm:grid-cols-[auto_minmax(0,1fr)_auto]"
+          )}
+        >
+          {/* Responsive grid keeps actions accessible when width is constrained */}
           {/* Book Cover */}
           {!isCompact && (
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 self-start">
               <BookCover
                 title={book.title}
                 authors={book.authors}
@@ -232,20 +239,20 @@ export const BookCard: React.FC<BookCardProps> = ({
           )}
 
           {/* Book Info */}
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0">
             <CardTitle
               className={cn(
-                "line-clamp-2 group-hover:text-primary transition-colors",
+                "line-clamp-2 break-words group-hover:text-primary transition-colors",
                 isCompact ? "text-sm" : "text-base"
               )}
             >
               {book.title}
             </CardTitle>
 
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-1 min-w-0">
               <CardDescription
                 className={cn(
-                  "line-clamp-1",
+                  "line-clamp-1 break-words",
                   isCompact ? "text-xs" : "text-sm"
                 )}
               >
@@ -297,7 +304,14 @@ export const BookCard: React.FC<BookCardProps> = ({
 
           {/* Actions */}
           {showActions && (
-            <CardAction className="flex flex-col gap-1">
+            <div
+              data-slot="card-action"
+              className={cn(
+                "col-span-full mt-4 flex w-full flex-row flex-wrap items-center justify-end gap-1",
+                "ml-auto sm:ml-0 sm:col-span-1 sm:col-start-auto sm:mt-0 sm:w-auto sm:flex-col sm:items-end sm:justify-start sm:row-span-full",
+                isCompact ? "sm:col-start-2" : "sm:col-start-3"
+              )}
+            >
               {/* Reading List Management Actions (for ReadListView) */}
               {showReadingListActions ? (
                 <ReadingListDropdown
@@ -421,7 +435,7 @@ export const BookCard: React.FC<BookCardProps> = ({
                   <ExternalLink className="h-4 w-4 text-muted-foreground" />
                 </Button>
               )}
-            </CardAction>
+            </div>
           )}
         </div>
       </CardHeader>
