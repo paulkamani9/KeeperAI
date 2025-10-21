@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { SearchInput } from "@/components/search/SearchInput";
-import { BookCard } from "@/components/search/BookCard";
+import { BookCard } from "@/components/shared/BookCard";
 import type { Book } from "@/types/book";
 import {
   ResultsList,

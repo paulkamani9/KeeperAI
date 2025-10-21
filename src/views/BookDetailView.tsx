@@ -53,7 +53,6 @@ interface BookDetailViewProps {
  */
 export function BookDetailView({ book, className }: BookDetailViewProps) {
   const router = useRouter();
-  const { user } = useUser();
   const [selectedSummaryType, setSelectedSummaryType] =
     useState<SummaryType>("concise");
   const [hasGeneratedSummary, setHasGeneratedSummary] = useState(false); // used when summary is generated the first time

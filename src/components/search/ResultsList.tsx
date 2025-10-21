@@ -8,7 +8,7 @@ import {
   BookOpen,
   Loader2,
 } from "lucide-react";
-import { BookCard } from "./BookCard";
+import { BookCard } from "../shared/BookCard";
 import type { Book } from "@/types/book";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -82,7 +82,7 @@ export const ResultsList: React.FC<ResultsListProps> = ({
   error = null,
   variant = "grid",
   skeletonCount = 12,
-  favoriteBookIds = new Set(),
+  // favoriteBookIds = new Set(),
 
   onFavoriteToggle,
   onPageChange,

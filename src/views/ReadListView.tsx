@@ -3,10 +3,9 @@
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { BookCard } from "@/components/search/BookCard";
+import { BookCard } from "@/components/shared/BookCard";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Loader2 } from "lucide-react";
-import { convexBookToBook } from "@/lib/convexBookHelpers";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";

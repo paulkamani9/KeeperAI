@@ -3,14 +3,13 @@
 import { useUser, SignInButton } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { BookCard } from "@/components/search/BookCard";
+import { BookCard } from "@/components/shared/BookCard";
 import { Button } from "@/components/ui/button";
 import { Heart, Loader2 } from "lucide-react";
-import { convexBookToBook } from "@/lib/convexBookHelpers";
 import Link from "next/link";
 import MainContent from "@/components/shared/MainContent";
 import type { Book } from "@/types/book";
-import { fa } from "zod/v4/locales";
+
 
 export function FavoritesView() {
   const { user, isLoaded } = useUser();
