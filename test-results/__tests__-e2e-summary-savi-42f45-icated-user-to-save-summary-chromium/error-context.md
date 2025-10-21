@@ -1,0 +1,94 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e6]:
+      - link "OutClever Home" [ref=e10] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11] [cursor=pointer]: 🚀
+      - generic [ref=e12]:
+        - button "Toggle Sidebar" [ref=e14]:
+          - img
+          - generic [ref=e15]: Toggle Sidebar
+        - generic [ref=e16]:
+          - generic [ref=e17]: Main Menu
+          - list [ref=e19]:
+            - listitem [ref=e20]:
+              - link "Home H" [ref=e21] [cursor=pointer]:
+                - /url: /
+                - img [ref=e22] [cursor=pointer]
+                - generic: Home
+                - generic [ref=e25] [cursor=pointer]: H
+            - listitem [ref=e26]:
+              - link "Search S" [ref=e27] [cursor=pointer]:
+                - /url: /search
+                - img [ref=e28] [cursor=pointer]
+                - generic: Search
+                - generic [ref=e31] [cursor=pointer]: S
+            - listitem [ref=e32]:
+              - link "Favorites F" [ref=e33] [cursor=pointer]:
+                - /url: /favorites
+                - img [ref=e34] [cursor=pointer]
+                - generic: Favorites
+                - generic [ref=e36] [cursor=pointer]: F
+            - listitem [ref=e37]:
+              - link "Reading List L" [ref=e38] [cursor=pointer]:
+                - /url: /readlist
+                - img [ref=e39] [cursor=pointer]
+                - generic: Reading List
+                - generic [ref=e42] [cursor=pointer]: L
+            - listitem [ref=e43]:
+              - link "Summaries R" [ref=e44] [cursor=pointer]:
+                - /url: /saved-summaries
+                - img [ref=e45] [cursor=pointer]
+                - generic: Summaries
+                - generic [ref=e47] [cursor=pointer]: R
+      - generic [ref=e48]:
+        - button "Sign In" [ref=e50]:
+          - img
+          - generic: Sign In
+        - paragraph [ref=e52]: KeeperAI v1.0
+    - generic [ref=e53]:
+      - banner [ref=e54]:
+        - navigation "Primary navigation" [ref=e55]:
+          - generic [ref=e56]:
+            - button "Sign In" [ref=e57]:
+              - img
+              - text: Sign In
+            - button "Toggle theme" [ref=e58]:
+              - img
+              - generic [ref=e59]: Toggle theme
+      - main [ref=e60]:
+        - generic [ref=e64]:
+          - heading "What do you wanna read today?" [level=2] [ref=e65]
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - textbox "Search for books" [active] [ref=e68]
+              - generic [ref=e69]:
+                - generic [ref=e70]:
+                  - button "Advanced" [ref=e71]:
+                    - generic [ref=e72]: Advanced
+                    - img
+                  - generic [ref=e73]:
+                    - button "Voice search (coming soon)" [disabled]:
+                      - img
+                    - button "Image search (coming soon)" [disabled]:
+                      - img
+                - generic [ref=e74]:
+                  - button "Search" [disabled]:
+                    - img
+                    - generic: Search
+            - paragraph [ref=e75]:
+              - text: Press
+              - generic [ref=e76]: Ctrl+K
+              - text: to focus
+  - region "Notifications alt+T"
+  - generic [ref=e92]:
+    - img [ref=e94]
+    - button "Open Tanstack query devtools" [ref=e142] [cursor=pointer]:
+      - img [ref=e143] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e196] [cursor=pointer]:
+    - img [ref=e197] [cursor=pointer]
+  - alert [ref=e200]
+```

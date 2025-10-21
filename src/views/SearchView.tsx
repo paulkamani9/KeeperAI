@@ -125,21 +125,13 @@ export const SearchView = () => {
     [router, searchParams]
   );
 
-  // Handle favorite toggle - could integrate with favorites system
-  const handleFavoriteToggle = useCallback(
-    (bookId: string, isFavorite: boolean) => {
-      // TODO: Integrate with favorites system when implemented
-    },
-    []
-  );
-
   // Format error message for display
   const errorMessage = error ? String(error.message || error) : null;
 
   return (
     <MainContent maxWidth="full" padding="lg">
       {/* Search Header */}
-      <div id="search-header" className="mb-10 md:mb-0" />
+      <div id="search-header" className="absolute -top-14" />
       <div className="mb-8">
         <SearchInput
           defaultValue={query}
@@ -155,7 +147,6 @@ export const SearchView = () => {
         results={transformedResults}
         isLoading={isLoading || isSearching}
         error={errorMessage}
-        onFavoriteToggle={handleFavoriteToggle}
         onPageChange={handlePageChange}
         showMetadata={true}
         variant="grid"

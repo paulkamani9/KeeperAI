@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
@@ -14,15 +15,25 @@ import { toast } from "sonner";
 import {
   Share2,
   Printer,
-  Heart,
-  Download,
   Copy,
   Twitter,
   Facebook,
   MessageCircle,
   MoreVertical,
+  BookMarkedIcon,
+  BookmarkPlus,
+  BookOpen,
+  CheckCircle,
+  Trash2,
+  Library,
+  ChevronDown,
 } from "lucide-react";
 import type { Summary } from "../../types/summary";
+import { FavoriteToggle } from "../shared/FavoriteToggle";
+import { useUser } from "@clerk/nextjs";
+import { useReadList, type ReadingStatus } from "@/hooks/useReadList";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useSavedSummaries } from "@/hooks/useSavedSummaries";
 
 interface SummaryActionsProps {
   /** Summary data */
@@ -44,7 +55,28 @@ interface SummaryActionsProps {
  * - Extensible for future actions
  */
 export function SummaryActions({ summary, className }: SummaryActionsProps) {
-  const [isSaved, setIsSaved] = useState(false); // TODO: Replace with real state in Phase 3
+  const { user } = useUser();
+
+  // Reading list hook
+  const {
+    isInReadList,
+    currentStatus,
+    addBook,
+    removeBook,
+    updateReadingStatus,
+    isLoading: readListLoading,
+  } = useReadList(summary.bookId);
+
+  // Favorites hook
+  const { isFavorited, toggleFavorite } = useFavorites(summary.bookId);
+
+  // Saved summaries hook
+  const {
+    isSaved,
+    toggleSave,
+    isAuthenticated: isSavedAuthenticated,
+    isLoading: savedLoading,
+  } = useSavedSummaries(summary.id);
 
   // Handle copy summary link
   const handleCopyLink = async () => {
@@ -63,12 +95,24 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
     window.print();
   };
 
-  // Handle save to favorites (placeholder)
-  const handleSaveToFavorites = () => {
-    setIsSaved(!isSaved);
-    toast.success(
-      isSaved ? "Summary removed from favorites" : "Summary saved to favorites"
-    );
+  // Handle save summary
+  const handleSaveSummary = async () => {
+    if (!user) {
+      toast.error("Please sign in to save summaries");
+      return;
+    }
+
+    try {
+      await toggleSave(summary.bookId);
+      toast.success(
+        isSaved
+          ? "Summary removed from saved summaries"
+          : "Summary saved to your collection"
+      );
+    } catch (error) {
+      toast.error("Failed to save summary. Please try again.");
+      console.error("Error saving summary:", error);
+    }
   };
 
   // Handle social sharing
@@ -107,11 +151,77 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
     toast.info("Download functionality coming soon!");
   };
 
+  // Handle reading status change for mobile dropdown
+  const handleStatusChange = async (status: ReadingStatus) => {
+    try {
+      if (!isInReadList) {
+        await addBook(summary.bookId, status);
+        toast.success(`Added to Reading List: ${formatStatus(status)}`);
+      } else if (currentStatus === status) {
+        await removeBook(summary.bookId);
+        toast.success("Removed from Reading List");
+      } else {
+        await updateReadingStatus(summary.bookId, status);
+        toast.success(`Reading status updated: ${formatStatus(status)}`);
+      }
+    } catch (error) {
+      toast.error("Failed to update reading list");
+      console.error(error);
+    }
+  };
+
+  // Handle favorite toggle for mobile dropdown
+  const handleFavoriteToggle = async () => {
+    try {
+      await toggleFavorite(summary.bookId);
+      toast.success(
+        isFavorited ? "Removed from Favorites" : "Added to Favorites"
+      );
+    } catch (error) {
+      toast.error("Failed to update favorites");
+      console.error(error);
+    }
+  };
+
+  // Format reading status for display
+  const formatStatus = (status: ReadingStatus): string => {
+    const labels = {
+      "want-to-read": "Want to Read",
+      reading: "Reading",
+      completed: "Completed",
+    };
+    return labels[status];
+  };
+
+  // Get status icon and color
+  const getStatusInfo = (status: ReadingStatus) => {
+    switch (status) {
+      case "want-to-read":
+        return {
+          icon: BookmarkPlus,
+          color: "text-blue-600 dark:text-blue-400",
+          bgColor: "bg-blue-50 dark:bg-blue-950",
+        };
+      case "reading":
+        return {
+          icon: BookOpen,
+          color: "text-orange-600 dark:text-orange-400",
+          bgColor: "bg-orange-50 dark:bg-orange-950",
+        };
+      case "completed":
+        return {
+          icon: CheckCircle,
+          color: "text-green-600 dark:text-green-400",
+          bgColor: "bg-green-50 dark:bg-green-950",
+        };
+    }
+  };
+
   return (
-    <div className={cn("flex items-center space-x-2", className)}>
-      {/* Desktop Actions */}
-      <div className="hidden sm:flex items-center space-x-2">
-        {/* Share Button with Dropdown */}
+    <div className={cn("flex items-center gap-2", className)}>
+      {/* Desktop Actions - Consolidated */}
+      <div className="hidden sm:flex items-center gap-2">
+        {/* Share Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -121,7 +231,8 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
               aria-label="Share summary"
             >
               <Share2 className="h-4 w-4" />
-              <span className="hidden md:inline-block ml-2">Share</span>
+              <span className="hidden lg:inline-block ml-2">Share</span>
+              <ChevronDown className="h-3 w-3 ml-1 opacity-50 hidden lg:inline-block" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
@@ -132,44 +243,143 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleShareTwitter}>
               <Twitter className="h-4 w-4 mr-2" />
-              Share on Twitter
+              Twitter
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleShareFacebook}>
               <Facebook className="h-4 w-4 mr-2" />
-              Share on Facebook
+              Facebook
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleShareWhatsApp}>
               <MessageCircle className="h-4 w-4 mr-2" />
-              Share on WhatsApp
+              WhatsApp
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            {/* Print action */}
+            <DropdownMenuItem onClick={handlePrint}>
+              <Printer className="h-4 w-4 mr-2" />
+              Print
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Print Button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handlePrint}
-          className="shrink-0"
-          aria-label="Print summary"
-        >
-          <Printer className="h-4 w-4" />
-          <span className="hidden lg:inline-block ml-2">Print</span>
-        </Button>
+        {/* Library Actions Dropdown (Favorites, Reading List, Save Summary) */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="shrink-0"
+              aria-label="Library actions"
+            >
+              <Library className="h-4 w-4" />
+              <span className="hidden lg:inline-block ml-2">Library</span>
+              <ChevronDown className="h-3 w-3 ml-1 opacity-50 hidden lg:inline-block" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52">
+            {/* Favorite Toggle */}
+            <FavoriteToggle bookId={summary.bookId} variant="menu-item" />
 
-        {/* Save to Favorites Button (Placeholder for Phase 3) */}
-        <Button
-          variant={isSaved ? "default" : "ghost"}
-          size="sm"
-          onClick={handleSaveToFavorites}
-          className="shrink-0"
-          aria-label={isSaved ? "Remove from favorites" : "Save to favorites"}
-        >
-          <Heart className={cn("h-4 w-4", isSaved && "fill-current")} />
-          <span className="hidden lg:inline-block ml-2">
-            {isSaved ? "Saved" : "Save"}
-          </span>
-        </Button>
+            <DropdownMenuSeparator />
+
+            {/* Save Summary */}
+            <DropdownMenuItem onClick={handleSaveSummary}>
+              <BookMarkedIcon
+                className={cn("h-4 w-4 mr-2", isSaved && "fill-current")}
+              />
+              {isSaved ? "Unsave Summary" : "Save Summary"}
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            {/* Reading List Section */}
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+              Reading List
+            </DropdownMenuLabel>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleStatusChange("want-to-read");
+              }}
+              disabled={!user || readListLoading}
+              className={cn(
+                currentStatus === "want-to-read" &&
+                  getStatusInfo("want-to-read").bgColor
+              )}
+            >
+              <BookmarkPlus
+                className={cn(
+                  "h-4 w-4 mr-2",
+                  getStatusInfo("want-to-read").color
+                )}
+              />
+              Want to Read
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleStatusChange("reading");
+              }}
+              disabled={!user || readListLoading}
+              className={cn(
+                currentStatus === "reading" && getStatusInfo("reading").bgColor
+              )}
+            >
+              <BookOpen
+                className={cn("h-4 w-4 mr-2", getStatusInfo("reading").color)}
+              />
+              Reading
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleStatusChange("completed");
+              }}
+              disabled={!user || readListLoading}
+              className={cn(
+                currentStatus === "completed" &&
+                  getStatusInfo("completed").bgColor
+              )}
+            >
+              <CheckCircle
+                className={cn("h-4 w-4 mr-2", getStatusInfo("completed").color)}
+              />
+              Completed
+            </DropdownMenuItem>
+
+            {/* Remove from Reading List (if in list) */}
+            {isInReadList && user && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try {
+                      await removeBook(summary.bookId);
+                      toast.success("Removed from Reading List");
+                    } catch (error) {
+                      toast.error("Failed to remove from reading list");
+                    }
+                  }}
+                  disabled={readListLoading}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Remove from List
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Mobile Actions - Dropdown */}
@@ -185,8 +395,11 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuContent align="end" className="w-52">
             {/* Share Options */}
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+              Share
+            </DropdownMenuLabel>
             <DropdownMenuItem onClick={handleCopyLink}>
               <Copy className="h-4 w-4 mr-2" />
               Copy Link
@@ -207,20 +420,110 @@ export function SummaryActions({ summary, className }: SummaryActionsProps) {
             <DropdownMenuSeparator />
 
             {/* Action Options */}
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+              Actions
+            </DropdownMenuLabel>
             <DropdownMenuItem onClick={handlePrint}>
               <Printer className="h-4 w-4 mr-2" />
               Print Summary
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleSaveToFavorites}>
-              <Heart
-                className={cn("h-4 w-4 mr-2", isSaved && "fill-current")}
+            <DropdownMenuItem onClick={handleSaveSummary}>
+              <BookMarkedIcon
+                className={cn("h-4 w-4 mr-2", isSaved && "stroke-white")}
               />
-              {isSaved ? "Remove from Favorites" : "Save to Favorites"}
+              {isSaved ? "Remove Summary" : "Save Summary"}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleDownload} disabled>
-              <Download className="h-4 w-4 mr-2" />
-              Download (Coming Soon)
+
+            <DropdownMenuSeparator />
+
+            {/* Library Actions */}
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+              Library
+            </DropdownMenuLabel>
+
+            {/* Favorite Toggle */}
+            <FavoriteToggle bookId={summary.bookId} variant="menu-item" />
+
+            {/* Reading List Options */}
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleStatusChange("want-to-read");
+              }}
+              disabled={!user || readListLoading}
+              className={cn(
+                currentStatus === "want-to-read" &&
+                  getStatusInfo("want-to-read").bgColor
+              )}
+            >
+              <BookmarkPlus
+                className={cn(
+                  "h-4 w-4 mr-2",
+                  getStatusInfo("want-to-read").color
+                )}
+              />
+              Want to Read
             </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleStatusChange("reading");
+              }}
+              disabled={!user || readListLoading}
+              className={cn(
+                currentStatus === "reading" && getStatusInfo("reading").bgColor
+              )}
+            >
+              <BookOpen
+                className={cn("h-4 w-4 mr-2", getStatusInfo("reading").color)}
+              />
+              Reading
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleStatusChange("completed");
+              }}
+              disabled={!user || readListLoading}
+              className={cn(
+                currentStatus === "completed" &&
+                  getStatusInfo("completed").bgColor
+              )}
+            >
+              <CheckCircle
+                className={cn("h-4 w-4 mr-2", getStatusInfo("completed").color)}
+              />
+              Completed
+            </DropdownMenuItem>
+
+            {/* Remove from Reading List (if in list) */}
+            {isInReadList && user && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try {
+                      await removeBook(summary.bookId);
+                      toast.success("Removed from Reading List");
+                    } catch (error) {
+                      toast.error("Failed to remove from reading list");
+                    }
+                  }}
+                  disabled={readListLoading}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Remove from List
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

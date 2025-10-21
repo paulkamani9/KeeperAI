@@ -70,15 +70,40 @@ export default defineSchema({
     .index("by_isbn10", ["isbn10"]),
 
   favorites: defineTable({
-    userId: v.id("users"),
-    bookId: v.string(), // External book identifier (ISBN/API ID)
-    bookTitle: v.string(),
-    bookAuthor: v.string(),
-    genre: v.optional(v.string()),
+    userId: v.string(), // Clerk user ID
+    bookIdRef: v.id("books"), // Reference to books table
     addedAt: v.number(),
   })
     .index("byUserId", ["userId"])
-    .index("byUserAndBook", ["userId", "bookId"]),
+    .index("byUserAndBook", ["userId", "bookIdRef"]),
+
+  // New: Read List table for tracking reading progress
+  readList: defineTable({
+    userId: v.string(), // Clerk user ID
+    bookIdRef: v.id("books"), // Reference to books table
+    addedAt: v.number(),
+    status: v.optional(
+      v.union(
+        v.literal("want-to-read"),
+        v.literal("reading"),
+        v.literal("completed")
+      )
+    ),
+  })
+    .index("byUserId", ["userId"])
+    .index("byUserAndBook", ["userId", "bookIdRef"])
+    .index("byUserAndStatus", ["userId", "status"]),
+
+  // New: Saved Summaries table linking users, books, and summaries
+  savedSummaries: defineTable({
+    userId: v.string(), // Clerk user ID
+    bookIdRef: v.id("books"), // Reference to books table
+    summaryIdRef: v.id("summaries"), // Reference to summaries table
+    savedAt: v.number(),
+  })
+    .index("byUserId", ["userId"])
+    .index("byUserAndBook", ["userId", "bookIdRef"])
+    .index("byUserAndSummary", ["userId", "summaryIdRef"]),
 
   summaries: defineTable({
     userId: v.optional(v.id("users")),

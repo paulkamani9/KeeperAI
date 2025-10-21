@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, Heart, BookOpen, Home } from "lucide-react";
+import { Search, Heart, BookOpen, Home, BookMarked, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sidebar as SidebarComponent,
@@ -20,7 +20,8 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import Logo from "@/components/shared/Logo";
-import { is } from "zod/v4/locales";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
 
 interface NavItem {
   href: string;
@@ -42,6 +43,7 @@ interface NavItem {
 export default function AppSidebar() {
   const pathname = usePathname();
   const { isMobile, state } = useSidebar();
+  const { isSignedIn, isLoaded, user } = useUser();
 
   const navigationItems: NavItem[] = [
     {
@@ -63,7 +65,13 @@ export default function AppSidebar() {
       shortcut: "F",
     },
     {
-      href: "/summaries",
+      href: "/readlist",
+      label: "Reading List",
+      icon: BookMarked,
+      shortcut: "L",
+    },
+    {
+      href: "/saved-summaries",
       label: "Summaries",
       icon: BookOpen,
       shortcut: "R",
@@ -98,9 +106,7 @@ export default function AppSidebar() {
               {state === "expanded" && !isMobile ? (
                 <Logo size="md" />
               ) : (
-                <div className={cn(isMobile && "hidden", 
-                  "text-2xl"
-                )}>🚀</div>
+                <div className={cn(isMobile && "hidden", "text-2xl")}>🚀</div>
               )}
               {isMobile && <Logo size="sm" />}
             </Link>
@@ -205,6 +211,73 @@ export default function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t border-sidebar-border">
+        {/* Authentication Section */}
+        <div className="mb-4">
+          {!isLoaded && (
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+              <div
+                className={cn(
+                  "h-4 bg-muted rounded flex-1 animate-pulse transition-all duration-300 ease-in-out",
+                  "group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0",
+                  "group-data-[state=expanded]:opacity-100 group-data-[state=expanded]:w-auto"
+                )}
+              />
+            </div>
+          )}
+
+          {isLoaded && !isSignedIn && (
+            <SignInButton mode="modal">
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full justify-start gap-2 transition-all duration-300 ease-in-out",
+                  "group-data-[collapsible=icon]:px-2",
+                  "group-data-[state=expanded]:px-4"
+                )}
+              >
+                <User className="h-4 w-4 flex-shrink-0" />
+                <span
+                  className={cn(
+                    "transition-all duration-300 ease-in-out",
+                    "group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:overflow-hidden",
+                    "group-data-[state=expanded]:opacity-100 group-data-[state=expanded]:w-auto"
+                  )}
+                >
+                  Sign In
+                </span>
+              </Button>
+            </SignInButton>
+          )}
+
+          {isLoaded && isSignedIn && (
+            <div className="flex items-center gap-2">
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    avatarBox: "h-8 w-8",
+                  },
+                }}
+              />
+              <div
+                className={cn(
+                  "flex-1 min-w-0 transition-all duration-300 ease-in-out",
+                  "group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:overflow-hidden",
+                  "group-data-[state=expanded]:opacity-100 group-data-[state=expanded]:w-auto"
+                )}
+              >
+                <p className="text-sm font-medium truncate">
+                  {user?.firstName || user?.username || "User"}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {user?.primaryEmailAddress?.emailAddress}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div
           className={cn(
             "text-center text-xs text-sidebar-foreground/60 transition-all duration-300 ease-in-out",

@@ -396,3 +396,26 @@ export const getSummariesByBook = query({
     }));
   },
 });
+
+/**
+ * Get all completed summaries for sitemap generation
+ * Returns only completed summaries with essential metadata
+ */
+export const getAllCompletedSummaries = query({
+  args: {},
+  returns: v.any(), // Simplified return type
+  handler: async (ctx) => {
+    const summaries = await ctx.db
+      .query("summaries")
+      .withIndex("byStatus", (q) => q.eq("status", "completed"))
+      .collect();
+
+    return summaries.map((summary) => ({
+      _id: summary._id,
+      bookId: summary.bookId,
+      summaryType: summary.summaryType,
+      updatedAt: summary.updatedAt,
+      createdAt: summary.createdAt,
+    }));
+  },
+});

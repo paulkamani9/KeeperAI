@@ -3,7 +3,7 @@
 import React from "react";
 import { useQuery } from "convex/react";
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Heart, ListPlus } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import {
   Card,
@@ -12,8 +12,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useReadList } from "@/hooks/useReadList";
+import { SignInButton } from "@clerk/nextjs";
+import { toast } from "sonner";
 
 /**
  * BookOfTheDayCard Component
@@ -31,6 +36,21 @@ import { cn } from "@/lib/utils";
 export function BookOfTheDayCard() {
   const book = useQuery(api.bookOfTheDay.getBookOfTheDay);
 
+  // Hooks for favorites and reading list (using originalBookId - book already in DB)
+  const {
+    isFavorited,
+    toggleFavorite,
+    isAuthenticated: isFavoritesAuthenticated,
+    isLoading: isFavoriteLoading,
+  } = useFavorites(book?.originalBookId);
+
+  const {
+    isInReadList,
+    addBook,
+    isAuthenticated: isReadListAuthenticated,
+    isLoading: isReadListLoading,
+  } = useReadList(book?.originalBookId);
+
   // Loading state with skeleton
   if (book === undefined) {
     return <BookOfTheDayCardSkeleton />;
@@ -44,6 +64,48 @@ export function BookOfTheDayCard() {
   // Get best available thumbnail with fallback
   const thumbnail = book.thumbnail;
 
+  // Handle favorite toggle with authentication check
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isFavoritesAuthenticated) {
+      toast.error("Please sign in to favorite books");
+      return;
+    }
+
+    try {
+      // Pass bookId string (book already persisted in DB)
+      await toggleFavorite(book.originalBookId);
+      toast.success(
+        isFavorited ? "Removed from favorites" : "Added to favorites"
+      );
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      toast.error("Failed to update favorites. Please try again.");
+    }
+  };
+
+  // Handle reading list toggle with authentication check
+  const handleReadListClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isReadListAuthenticated) {
+      toast.error("Please sign in to manage your reading list");
+      return;
+    }
+
+    try {
+      // Pass bookId string (book already persisted in DB)
+      await addBook(book.originalBookId, "want-to-read");
+      toast.success("Added to reading list");
+    } catch (error) {
+      console.error("Error adding to reading list:", error);
+      toast.error("Failed to add to reading list. Please try again.");
+    }
+  };
+
   return (
     <Link
       href={`/book/${book.originalBookId}`}
@@ -52,11 +114,82 @@ export function BookOfTheDayCard() {
     >
       <Card
         className={cn(
-          "transition-all duration-300 cursor-pointer",
+          "relative transition-all duration-300 cursor-pointer",
           "hover:shadow-lg hover:scale-[1.02]",
           "border-primary/10 hover:border-primary/30"
         )}
       >
+        {/* Action Buttons - Top Right Overlay (appears on hover) */}
+        <div className="absolute top-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          {isFavoritesAuthenticated ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-background/95",
+                isFavorited && "bg-background/95"
+              )}
+              onClick={handleFavoriteClick}
+              disabled={isFavoriteLoading}
+              title={isFavorited ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Heart
+                className={cn(
+                  "h-4 w-4 transition-colors",
+                  isFavorited
+                    ? "fill-red-500 text-red-500"
+                    : "text-muted-foreground hover:text-red-500"
+                )}
+              />
+            </Button>
+          ) : (
+            <SignInButton mode="modal">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-background/95"
+                title="Sign in to favorite"
+              >
+                <Heart className="h-4 w-4 text-muted-foreground hover:text-red-500" />
+              </Button>
+            </SignInButton>
+          )}
+
+          {isReadListAuthenticated ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-background/95",
+                isInReadList && "bg-background/95"
+              )}
+              onClick={handleReadListClick}
+              disabled={isReadListLoading}
+              title={isInReadList ? "In reading list" : "Add to reading list"}
+            >
+              <ListPlus
+                className={cn(
+                  "h-4 w-4 transition-colors",
+                  isInReadList
+                    ? "fill-blue-500 text-blue-500"
+                    : "text-muted-foreground hover:text-blue-500"
+                )}
+              />
+            </Button>
+          ) : (
+            <SignInButton mode="modal">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-background/95"
+                title="Sign in to add to reading list"
+              >
+                <ListPlus className="h-4 w-4 text-muted-foreground hover:text-blue-500" />
+              </Button>
+            </SignInButton>
+          )}
+        </div>
+
         {/* Header with subtle label */}
         <CardHeader className="pb-4">
           <div className="flex items-center gap-2 justify-center sm:justify-start">

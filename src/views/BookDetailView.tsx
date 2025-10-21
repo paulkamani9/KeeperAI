@@ -11,11 +11,11 @@ import {
   Heart,
   Sparkles,
   ChevronLeft,
-  BookOpenIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useUser, SignInButton } from "@clerk/nextjs";
 
 import { BookCover } from "@/components/shared/BookCover";
 import { BookDescription } from "@/components/shared/BookDescription";
@@ -29,6 +29,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types/book";
 import { useSummaryGeneration } from "@/hooks/useSummaryGeneration";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useReadList, type ReadingStatus } from "@/hooks/useReadList";
+import { ReadingListDropdown } from "@/components/shared/ReadingListDropdown";
 
 interface BookDetailViewProps {
   /** Book data to display */
@@ -53,6 +56,22 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
   const [selectedSummaryType, setSelectedSummaryType] =
     useState<SummaryType>("concise");
   const [hasGeneratedSummary, setHasGeneratedSummary] = useState(false); // used when summary is generated the first time
+
+  // Initialize hooks for user interactions
+  const {
+    isFavorited,
+    toggleFavorite,
+    isAuthenticated: isFavoritesAuthenticated,
+  } = useFavorites(book.id);
+
+  const {
+    isInReadList,
+    currentStatus,
+    addBook,
+    removeBook,
+    updateReadingStatus,
+    isAuthenticated: isReadListAuthenticated,
+  } = useReadList(book.id);
 
   // Initialize summary generation hook
   const {
@@ -168,9 +187,86 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
     }
   }, [error, isGenerating]);
 
-  // Handle add to favorites (placeholder for Phase 3)
-  const handleAddToFavorites = () => {
-    toast.info("Add to favorites functionality coming in Phase 3!");
+  // Handle favorite toggle (book already persisted by getBookWithCache)
+  const handleToggleFavorite = async () => {
+    if (!isFavoritesAuthenticated) {
+      toast.error("Please sign in to favorite books");
+      return;
+    }
+
+    try {
+      // Pass only bookId string (book already persisted)
+      await toggleFavorite(book.id);
+      toast.success(
+        isFavorited ? "Removed from favorites" : "Added to favorites"
+      );
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      toast.error("Failed to update favorites. Please try again.");
+    }
+  };
+
+  // Handle reading list actions
+  const handleAddToReadList = async (status?: ReadingStatus) => {
+    if (!isReadListAuthenticated) {
+      toast.error("Please sign in to manage your reading list");
+      return;
+    }
+
+    try {
+      // Pass only bookId string (book already persisted)
+      await addBook(book.id, status);
+      toast.success(
+        `Added to reading list${status ? ` as "${getStatusLabel(status)}"` : ""}`
+      );
+    } catch (error) {
+      console.error("Error adding to reading list:", error);
+      toast.error("Failed to add to reading list. Please try again.");
+    }
+  };
+
+  const handleRemoveFromReadList = async () => {
+    if (!isReadListAuthenticated) {
+      toast.error("Please sign in to manage your reading list");
+      return;
+    }
+
+    try {
+      await removeBook(book.id);
+      toast.success("Removed from reading list");
+    } catch (error) {
+      console.error("Error removing from reading list:", error);
+      toast.error("Failed to remove from reading list. Please try again.");
+    }
+  };
+
+  const handleUpdateStatus = async (status: ReadingStatus) => {
+    if (!isReadListAuthenticated) {
+      toast.error("Please sign in to manage your reading list");
+      return;
+    }
+
+    try {
+      await updateReadingStatus(book.id, status);
+      toast.success(`Updated status to "${getStatusLabel(status)}"`);
+    } catch (error) {
+      console.error("Error updating reading status:", error);
+      toast.error("Failed to update status. Please try again.");
+    }
+  };
+
+  // Helper to get readable status label
+  const getStatusLabel = (status: ReadingStatus) => {
+    switch (status) {
+      case "want-to-read":
+        return "Want to Read";
+      case "reading":
+        return "Reading";
+      case "completed":
+        return "Completed";
+      default:
+        return status;
+    }
   };
 
   const ratingInfo = formatRating(book.averageRating, book.ratingsCount);
@@ -324,7 +420,7 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
                           className="w-full"
                           size="lg"
                         >
-                          <BookOpenIcon className="h-4 w-4 mr-2" />
+                          <BookOpen className="h-4 w-4 mr-2" />
                           View Summary
                         </Button>
                       )}
@@ -356,14 +452,40 @@ export function BookDetailView({ book, className }: BookDetailViewProps) {
 
                   {/* Secondary Actions */}
                   <div className="flex gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={handleAddToFavorites}
-                      className="flex-1"
-                    >
-                      <Heart className="h-4 w-4 mr-2" />
-                      Add to Favorites
-                    </Button>
+                    {/* Favorite Button */}
+                    {isFavoritesAuthenticated ? (
+                      <Button
+                        variant={isFavorited ? "default" : "outline"}
+                        onClick={handleToggleFavorite}
+                        className="flex-1"
+                      >
+                        <Heart
+                          className={cn(
+                            "h-4 w-4 mr-2",
+                            isFavorited && "text-red-400 fill-red-500"
+                          )}
+                        />
+                        {isFavorited ? "Favorited" : "Add to Favorites"}
+                      </Button>
+                    ) : (
+                      <SignInButton mode="modal">
+                        <Button variant="outline" className="flex-1">
+                          <Heart className="h-4 w-4 mr-2" />
+                          Add to Favorites
+                        </Button>
+                      </SignInButton>
+                    )}
+
+                    {/* Reading List Dropdown */}
+                    <ReadingListDropdown
+                      currentStatus={currentStatus}
+                      isInReadList={isInReadList}
+                      onStatusChange={handleUpdateStatus}
+                      onAdd={handleAddToReadList}
+                      onRemove={handleRemoveFromReadList}
+                      variant="button"
+                      isAuthenticated={isReadListAuthenticated}
+                    />
 
                     {book.previewLink && (
                       <Button variant="outline" size="icon" asChild>

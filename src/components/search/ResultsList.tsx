@@ -8,7 +8,7 @@ import {
   BookOpen,
   Loader2,
 } from "lucide-react";
-import { BookCard } from "./BookCard";
+import { BookCard } from "../shared/BookCard";
 import type { Book } from "@/types/book";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,7 +33,7 @@ export interface PaginationInfo {
 // Search results structure
 export interface SearchResults {
   /** Array of books returned from search */
-  books: Book[]
+  books: Book[];
   /** Pagination information */
   pagination: PaginationInfo;
   /** The query that generated these results */
@@ -82,7 +82,7 @@ export const ResultsList: React.FC<ResultsListProps> = ({
   error = null,
   variant = "grid",
   skeletonCount = 12,
-  favoriteBookIds = new Set(),
+  // favoriteBookIds = new Set(),
 
   onFavoriteToggle,
   onPageChange,
@@ -285,7 +285,6 @@ export const ResultsList: React.FC<ResultsListProps> = ({
                   ? "compact"
                   : "default"
             }
-            isFavorite={favoriteBookIds.has(book.id)}
             onFavoriteToggle={onFavoriteToggle}
           />
         ))}

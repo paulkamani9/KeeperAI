@@ -244,3 +244,16 @@ export const cleanupOldBooks = mutation({
     return deletedCount;
   },
 });
+
+/**
+ * Get all books from the database for sitemap generation
+ * Returns all persisted books with their metadata
+ */
+export const getAllBooks = query({
+  args: {},
+  returns: v.array(bookObjectValidator),
+  handler: async (ctx) => {
+    const books = await ctx.db.query("books").collect();
+    return books;
+  },
+});

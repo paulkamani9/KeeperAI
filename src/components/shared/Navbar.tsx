@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Search, Heart, BookOpen } from "lucide-react";
+import { Search, Heart, BookOpen, BookMarked, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/ModeToggle";
@@ -10,6 +10,7 @@ import Logo from "@/components/shared/Logo";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePathname } from "next/navigation";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 interface NavbarProps {
   className?: string;
@@ -30,6 +31,7 @@ interface NavbarProps {
 export default function Navbar({ className }: NavbarProps) {
   const isMobile = useIsMobile();
   const pathname = usePathname();
+  const { isSignedIn, isLoaded } = useUser();
 
   const mobileNavigationItems = [
     {
@@ -42,11 +44,16 @@ export default function Navbar({ className }: NavbarProps) {
       label: "Favorites",
       icon: Heart,
     },
-    {
-      href: "/summaries",
-      label: "Books",
-      icon: BookOpen,
-    },
+    // {
+    //   href: "/readlist",
+    //   label: "Reading List",
+    //   icon: BookMarked,
+    // },
+    // {
+    //   href: "/summaries",
+    //   label: "Books",
+    //   icon: BookOpen,
+    // },
   ];
 
   return (
@@ -80,7 +87,7 @@ export default function Navbar({ className }: NavbarProps) {
             </Link>
           </div>
 
-          {/* Right Section - Navigation Icons + Mode Toggle */}
+          {/* Right Section - Navigation Icons + Auth + Mode Toggle */}
           <div className="flex items-center gap-1">
             {mobileNavigationItems.map((item) => {
               const Icon = item.icon;
@@ -98,11 +105,41 @@ export default function Navbar({ className }: NavbarProps) {
                 </Button>
               );
             })}
+
             <ModeToggle />
+
+            {/* Authentication UI */}
+            {!isLoaded && (
+              <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+            )}
+
+            {isLoaded && !isSignedIn && (
+              <SignInButton mode="modal">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  aria-label="Sign In"
+                >
+                  <User className="h-5 w-5" />
+                </Button>
+              </SignInButton>
+            )}
+
+            {isLoaded && isSignedIn && (
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    avatarBox: "h-6 w-6",
+                  },
+                }}
+              />
+            )}
           </div>
         </>
       ) : (
-        // Desktop Layout: Mode Toggle Only (sidebar has its own trigger)
+        // Desktop Layout: Auth + Mode Toggle (sidebar has its own trigger)
         <>
           {/* Left Section - Empty (sidebar has its own trigger) */}
           <div />
@@ -110,8 +147,53 @@ export default function Navbar({ className }: NavbarProps) {
           {/* Center Section - Empty */}
           <div />
 
-          {/* Right Section - Mode Toggle */}
-          <div className="flex items-center">
+          {/* Right Section - Auth + Mode Toggle */}
+          <div className="flex items-center gap-4">
+            {/* Authentication UI */}
+            {!isLoaded && (
+              <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+            )}
+
+            {isLoaded && !isSignedIn && (
+              <SignInButton mode="modal">
+                <Button variant="outline" size="sm">
+                  <User className="h-4 w-4 mr-2" />
+                  Sign In
+                </Button>
+              </SignInButton>
+            )}
+
+            {isLoaded && isSignedIn && (
+              <div className="flex items-center gap-4">
+                <Link href="/favorites">
+                  <Button variant="ghost" size="sm">
+                    <Heart className="h-4 w-4 mr-2" />
+                    Favorites
+                  </Button>
+                </Link>
+                <Link href="/readlist">
+                  <Button variant="ghost" size="sm">
+                    <BookMarked className="h-4 w-4 mr-2" />
+                    Reading List
+                  </Button>
+                </Link>
+                <Link href="/saved-summaries">
+                  <Button variant="ghost" size="sm">
+                    <BookOpen className="h-4 w-4 mr-2" />
+                    Saved
+                  </Button>
+                </Link>
+                <UserButton
+                  afterSignOutUrl="/"
+                  appearance={{
+                    elements: {
+                      avatarBox: "h-7 w-7",
+                    },
+                  }}
+                />
+              </div>
+            )}
+
             <ModeToggle />
           </div>
         </>
